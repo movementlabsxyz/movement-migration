@@ -117,12 +117,14 @@ impl Migrationish for Migrate {
 
 		let waypoint =
 			generate_waypoint::<AptosVMBlockExecutor>(&db_rw, &aptos_genesis_transaction)
+				.context("failed to generate waypoint")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 		maybe_bootstrap::<AptosVMBlockExecutor>(&db_rw, &aptos_genesis_transaction, waypoint)
+			.context("failed to bootstrap")
 			.map_err(|e| MigrationError::Internal(e.into()))?;
 
 		// re-execute the blocks
-		for res in movement_executor.iter_blocks().map_err(|e| {
+		for res in movement_executor.iter_blocks(0).map_err(|e| {
 			MigrationError::Internal(format!("failed to iterate over blocks: {}", e).into())
 		})? {
 			let (start_version, _end_version, block) = res
@@ -135,14 +137,26 @@ impl Migrationish for Migrate {
 			// We'll add a flag variable to support this shortly.
 			let latest_version = db_reader
 				.get_latest_ledger_info_version()
+				.context("failed to get latest ledger info version")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 
-			let (_parent_start_version, _parent_end_version, parent_block_event) = db_reader
+			let parent_block_id = match db_reader
 				.get_block_info_by_version(start_version)
-				.map_err(|e| MigrationError::Internal(e.into()))?;
-
-			let parent_block_id =
-				parent_block_event.hash().map_err(|e| MigrationError::Internal(e.into()))?;
+				.context("failed to get block info by version")
+			{
+				Ok(block_info) => {
+					let (_parent_start_version, _parent_end_version, parent_block_event) =
+						block_info;
+					parent_block_event.hash().map_err(|e| MigrationError::Internal(e.into()))?
+				}
+				Err(_e) => {
+					// genesis block
+					movement_executor
+						.genesis_block_hash()
+						.context("failed to get genesis block hash")
+						.map_err(|e| MigrationError::Internal(e.into()))?
+				}
+			};
 
 			let state_view = db_reader
 				.state_view_at_version(Some(latest_version))

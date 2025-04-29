@@ -13,7 +13,7 @@ pub mod test {
 
 	#[tokio::test]
 	#[tracing_test::traced_test]
-	async fn test_global_storage_includess_null() -> Result<(), anyhow::Error> {
+	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {
 		// form the executor
 		let (movement_opt_executor, _temp_dir, private_key, _receiver) =
 			MovementOptExecutor::try_generated().await?;

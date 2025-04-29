@@ -19,6 +19,7 @@ members = [
     # util
     "util/include-dir",
     "util/movement-syncing",
+    "util/bcs-ext",
 
 ]
 
@@ -157,6 +158,7 @@ migration-e2e-test-types = { path = "checks/e2e/util/types" }
 ## util
 include-dir = { path = "util/include-dir" }
 movement-syncing = { path = "util/movement-syncing" }
+bcs-ext = { path = "util/bcs-ext" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

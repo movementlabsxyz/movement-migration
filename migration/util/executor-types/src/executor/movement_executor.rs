@@ -1,4 +1,5 @@
 use either::Either;
+use maptos_opt_executor::aptos_crypto::HashValue;
 use maptos_opt_executor::aptos_storage_interface::state_view::DbStateView;
 use maptos_opt_executor::aptos_storage_interface::DbReader;
 use maptos_opt_executor::aptos_types::state_store::state_key::StateKey;
@@ -69,10 +70,18 @@ impl MovementExecutor {
 		}
 	}
 
+	/// Gets the genesis block hash.
+	pub fn genesis_block_hash(&self) -> Result<HashValue, anyhow::Error> {
+		let db_reader = self.opt_executor().db_reader();
+		let (_start, _end, block_event) = db_reader.get_block_info_by_version(0)?;
+		Ok(block_event.hash()?)
+	}
+
 	/// Iterates over all blocks in the db.
-	pub fn iter_blocks(&self) -> Result<BlockIterator<'_>, anyhow::Error> {
+	pub fn iter_blocks(&self, version: u64) -> Result<BlockIterator<'_>, anyhow::Error> {
 		let latest_version = self.latest_ledger_version()?;
-		Ok(BlockIterator { executor: self, version: 0, latest_version })
+		println!("latest_version: {}", latest_version);
+		Ok(BlockIterator { executor: self, version, latest_version })
 	}
 
 	/// Gets the genesis transaction.
