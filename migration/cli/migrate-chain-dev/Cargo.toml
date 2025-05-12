@@ -16,7 +16,7 @@ dotenv = { workspace = true }
 anyhow = { workspace = true }
 clap-markdown-ext = { workspace = true }
 orfile = { workspace = true }
-mtma-core = { workspace = true }
+mtma-migrate-chain-core = { workspace = true }
 jemallocator = { workspace = true }
 mtma-null-core = { workspace = true }
 migration-executor-test-global-storage-injective-criterion = { workspace = true }

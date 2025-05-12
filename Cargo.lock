@@ -14640,6 +14640,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "mtma-migrate-chain-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap 4.5.36",
+ "clap-markdown-ext",
+ "dotenv",
+ "orfile",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
 name = "mtma-migrate-chain-dev"
 version = "0.0.1"
 dependencies = [
@@ -14657,7 +14671,7 @@ dependencies = [
  "migration-executor-test-global-storage-not-empty-criterion",
  "migration-executor-test-types",
  "movement-syncing",
- "mtma-core",
+ "mtma-migrate-chain-core",
  "mtma-null-core",
  "orfile",
  "rand 0.7.3",

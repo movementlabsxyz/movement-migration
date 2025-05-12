@@ -149,6 +149,7 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 ### core
 mtma-core = { path = "migration/core/mtma" }
 mtma-null-core = { path = "migration/core/mtma-null" }
+mtma-migrate-chain-core = { path = "migration/core/mtma-migrate-chain" }
 
 ### preludes
 migration-executor-preludes = { path = "checks/executor/preludes" }
