@@ -11,18 +11,28 @@ use std::sync::Arc;
 pub use aptos_executor::block_executor;
 pub use aptos_types;
 pub use aptos_types::state_store::TStateView;
+use std::path::PathBuf;
+
+use movement_aptos_core::Config as MovementAptosConfig;
 
 /// The MovementAptos executor as would be presented in the criterion.
+#[derive(Clone)]
 pub struct MovementAptosExecutor {
+	/// The db dir into which the aptos db was migrated.
+	db_dir_path: PathBuf,
+
 	/// The block executor.
 	///
 	/// We will have this remain private because I don't think we want people mutating it in the criterion.
-	block_executor: MovementAptosBlockExecutor<AptosVMBlockExecutor>,
+	block_executor: Arc<MovementAptosBlockExecutor<AptosVMBlockExecutor>>,
 }
 
 impl MovementAptosExecutor {
-	pub fn new(block_executor: MovementAptosBlockExecutor<AptosVMBlockExecutor>) -> Self {
-		Self { block_executor }
+	pub fn new(
+		block_executor: MovementAptosBlockExecutor<AptosVMBlockExecutor>,
+		db_dir_path: PathBuf,
+	) -> Self {
+		Self { block_executor: Arc::new(block_executor), db_dir_path }
 	}
 
 	/// Borrows the block executor.
@@ -33,6 +43,11 @@ impl MovementAptosExecutor {
 	/// Gets an [Arc] to the db reader.
 	pub fn db_reader(&self) -> Arc<dyn DbReader> {
 		self.block_executor().db.reader.clone()
+	}
+
+	/// Gets the db dir path
+	pub fn db_dir_path(&self) -> &PathBuf {
+		&self.db_dir_path
 	}
 
 	/// Gets the state view at a given version.
@@ -47,6 +62,11 @@ impl MovementAptosExecutor {
 	/// Gets the all [StateKey]s in the global storage dating back to an original version. None is treated as 0 or all versions.
 	pub fn global_state_keys_from_version(&self, version: Option<u64>) -> GlobalStateKeyIterable {
 		GlobalStateKeyIterable { db_reader: self.db_reader(), version: version.unwrap_or(0) }
+	}
+
+	/// Forms a [MovementAptosConfig] with the given db dir path.
+	pub fn test_movement_aptos_config(&self) -> Result<MovementAptosConfig, anyhow::Error> {
+		Ok(MovementAptosConfig::test_node_config(self.db_dir_path())?)
 	}
 }
 

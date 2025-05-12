@@ -2,9 +2,7 @@ use aptos_config::config::NodeConfig;
 use kestrel::State;
 use std::path::PathBuf;
 pub mod rest_api;
-use kestrel::fulfill::custom::Custom;
 pub use rest_api::RestApi;
-use rest_api::WaitForRestApi;
 
 /// Errors thrown when running [MovementAptos].
 #[derive(Debug, thiserror::Error)]
@@ -32,6 +30,11 @@ impl MovementAptos {
 		create_global_rayon_pool: bool,
 	) -> Self {
 		Self { node_config, log_file, create_global_rayon_pool, rest_api: State::new() }
+	}
+
+	pub fn from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
+		let movement_aptos = MovementAptos::new(config, None, false);
+		Ok(movement_aptos)
 	}
 
 	/// Borrow the rest api state

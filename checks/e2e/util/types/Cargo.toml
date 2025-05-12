@@ -9,12 +9,15 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
+migration-executor-test-types = { workspace = true }
+migration-e2e-types = { workspace = true }
 serde = { workspace = true }
 anyhow = { workspace = true }
 hex = { workspace = true }
 movement-client = { workspace = true }
 aptos-rest-client = { workspace = true }
 thiserror = { workspace = true }
+tokio = { workspace = true }
 
 [lints]
 workspace = true

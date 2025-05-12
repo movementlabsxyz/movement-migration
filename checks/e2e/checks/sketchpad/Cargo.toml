@@ -1,0 +1,28 @@
+[package]
+name = "migration-e2e-checks-sketchpad"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+migration-e2e-types = { workspace = true }
+migration-e2e-test-types = { workspace = true }
+anyhow = { workspace = true }
+mtma-null-core = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+rand = { workspace = true }
+kestrel = { workspace = true }
+migration-executor-preludes = { workspace = true }
+migration-executor-test-types = { workspace = true }
+
+[dev-dependencies]
+tracing-test = { workspace = true }
+tracing = { workspace = true }
+
+[lints]
+workspace = true

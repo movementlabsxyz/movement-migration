@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 use crate::movement_aptos::MovementAptos;
+use aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NodeConfigWrapper(NodeConfig);
@@ -53,6 +54,29 @@ pub struct Config {
 }
 
 impl Config {
+	/// Builds a single validator node test config with the given db dir.
+	pub fn test_node_config(db_dir: &PathBuf) -> Result<Self, ConfigError> {
+		let rng = rand::thread_rng();
+
+		let node_config = create_single_node_test_config(
+			&None,
+			&None,
+			db_dir.as_path(),
+			true,
+			false,
+			true,
+			&aptos_cached_packages::head_release_bundle().clone(),
+			rng,
+		)
+		.map_err(|e| ConfigError::Internal(e.into()))?;
+
+		Ok(Config {
+			node_config: NodeConfigWrapper(node_config),
+			log_file: None,
+			create_global_rayon_pool: false,
+		})
+	}
+
 	/// Builds the config into a [MovementAptos] runner.
 	pub fn build(&self) -> Result<MovementAptos, ConfigError> {
 		Ok(MovementAptos::new(

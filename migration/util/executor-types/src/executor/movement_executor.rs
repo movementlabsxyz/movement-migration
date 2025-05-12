@@ -3,11 +3,13 @@ use maptos_opt_executor::aptos_storage_interface::state_view::DbStateView;
 use maptos_opt_executor::aptos_storage_interface::DbReader;
 use maptos_opt_executor::aptos_types::state_store::state_key::StateKey;
 pub use maptos_opt_executor::Executor as MovementOptExecutor;
+use movement_util::common_args::MovementArgs;
 use std::sync::Arc;
 
 use anyhow::Context;
 pub use maptos_opt_executor;
 pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
+use std::path::PathBuf;
 use tracing::debug;
 /// The Movement executor as would be presented in the criterion.
 pub struct MovementExecutor {
@@ -20,6 +22,18 @@ pub struct MovementExecutor {
 impl MovementExecutor {
 	pub fn new(opt_executor: MovementOptExecutor) -> Self {
 		Self { opt_executor }
+	}
+
+	pub async fn from_dir(dir: PathBuf) -> Result<Self, anyhow::Error> {
+		let movement_args = MovementArgs { movement_path: Some(dir.clone().display().to_string()) };
+
+		let config = movement_args.config().await?;
+		let maptos_config = config.execution_config.maptos_config;
+
+		let (sender, _receiver) = futures_channel::mpsc::channel(1024);
+		let opt_executor = MovementOptExecutor::try_from_config(maptos_config, sender).await?;
+
+		Ok(Self::new(opt_executor))
 	}
 
 	/// Borrows the opt executor.

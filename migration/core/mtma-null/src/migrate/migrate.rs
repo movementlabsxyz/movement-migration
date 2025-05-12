@@ -96,7 +96,7 @@ impl Migrationish for Migrate {
 		// form the executor
 		let aptos_executor = MovementAptosBlockExecutor::new(db_rw);
 
-		Ok(MovementAptosExecutor::new(aptos_executor))
+		Ok(MovementAptosExecutor::new(aptos_executor, db_dir))
 	}
 }
 
