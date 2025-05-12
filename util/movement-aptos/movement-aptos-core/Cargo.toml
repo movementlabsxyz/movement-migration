@@ -1,0 +1,33 @@
+[package]
+name = "movement-aptos-core"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+thiserror = { workspace = true }
+serde = { workspace = true }
+anyhow = { workspace = true }
+hex = { workspace = true }
+syncador = { workspace = true }
+tokio = { workspace = true }
+aptos-node = { workspace = true }
+aptos-config = { workspace = true }
+serde_json = { workspace = true }
+clap = { workspace = true }
+jsonlvar = { workspace = true }
+orfile = { workspace = true }
+kestrel = { workspace = true }
+reqwest = { workspace = true }
+[dev-dependencies]
+uuid = { workspace = true }
+chrono = { workspace = true }
+aptos-cached-packages = { workspace = true }
+rand = { workspace = true }
+
+[lints]
+workspace = true
