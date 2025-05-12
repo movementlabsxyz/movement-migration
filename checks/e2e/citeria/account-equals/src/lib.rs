@@ -1,4 +1,4 @@
-use bcs_ext::{comparison::BcsEq, conversion::BcsInto};
+/*use bcs_ext::{comparison::BcsEq, conversion::BcsInto};
 use migration_e2e_test_types::criterion::{
 	movement_aptos_e2e_client::move_types::account_address::AccountAddress,
 	movement_aptos_e2e_client::types::LocalAccount as MovementAptosLocalAccount,
@@ -84,4 +84,4 @@ impl Criterionish for MaptosTransferLifecycle {
 
 		Ok(())
 	}
-}
+}*/

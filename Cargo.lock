@@ -12308,7 +12308,7 @@ version = "0.0.1"
 dependencies = [
  "bcs 0.1.4",
  "bcs-ext",
- "migration-executor-test-types",
+ "migration-e2e-test-types",
 ]
 
 [[package]]
@@ -14388,6 +14388,7 @@ dependencies = [
  "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=dd5d4116bc96e5f300158dc1907a2e21ef23aa55)",
  "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=dd5d4116bc96e5f300158dc1907a2e21ef23aa55)",
  "bcs 0.1.4",
+ "bcs-ext",
  "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",

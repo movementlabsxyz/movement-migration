@@ -9,7 +9,7 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-migration-executor-test-types = { workspace = true }
+migration-e2e-test-types = { workspace = true }
 bcs = { workspace = true }
 bcs-ext = { workspace = true }
 
