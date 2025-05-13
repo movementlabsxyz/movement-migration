@@ -1,4 +1,4 @@
-use aptos_config::config::NodeConfig;
+pub use aptos_config::config::NodeConfig;
 use clap::Parser;
 use jsonlvar::Jsonl;
 use orfile::Orfile;
@@ -11,6 +11,26 @@ use aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NodeConfigWrapper(NodeConfig);
+
+impl NodeConfigWrapper {
+	pub fn new(node_config: NodeConfig) -> Self {
+		Self(node_config)
+	}
+
+	pub fn node_config(&self) -> &NodeConfig {
+		&self.0
+	}
+
+	pub fn into_inner(self) -> NodeConfig {
+		self.0
+	}
+}
+
+impl From<NodeConfigWrapper> for NodeConfig {
+	fn from(value: NodeConfigWrapper) -> Self {
+		value.into_inner()
+	}
+}
 
 impl FromStr for NodeConfigWrapper {
 	type Err = ConfigError;

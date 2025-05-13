@@ -13,7 +13,7 @@ pub use aptos_types;
 pub use aptos_types::state_store::TStateView;
 use std::path::PathBuf;
 
-use movement_aptos_core::Config as MovementAptosConfig;
+use movement_aptos_core::{Config as MovementAptosConfig, NodeConfig};
 
 /// The MovementAptos executor as would be presented in the criterion.
 #[derive(Clone)]
@@ -67,6 +67,13 @@ impl MovementAptosNode {
 	/// Forms a [MovementAptosConfig] with the given db dir path.
 	pub fn test_movement_aptos_config(&self) -> Result<MovementAptosConfig, anyhow::Error> {
 		Ok(MovementAptosConfig::test_node_config(self.db_dir_path())?)
+	}
+
+	/// Forms a [NodeConfig] with the given db dir path.
+	pub fn node_config(&self) -> Result<NodeConfig, anyhow::Error> {
+		let config = self.test_movement_aptos_config()?;
+
+		Ok(config.node_config.into_inner())
 	}
 }
 
