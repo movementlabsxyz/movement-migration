@@ -1,5 +1,5 @@
 [package]
-name = "migration-node-preludes"
+name = "mtma-node-preludes"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -19,9 +19,9 @@ aptos-types = { workspace = true }
 thiserror = { workspace = true }
 aptos-storage-interface = { workspace = true }
 either = { workspace = true }
-migration-node-types = { workspace = true }
+mtma-node-types = { workspace = true }
 chrono = { workspace = true }
-migration-node-test-types = { workspace = true }
+mtma-node-test-types = { workspace = true }
 rand = { workspace = true }
 
 [lints]

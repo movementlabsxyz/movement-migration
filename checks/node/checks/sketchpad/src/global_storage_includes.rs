@@ -1,9 +1,9 @@
 #[cfg(test)]
 pub mod test {
 
-	use migration_node_preludes::basic::BasicPrelude;
-	use migration_node_test_global_storage_includes_criterion::GlobalStorageIncludes;
-	use migration_node_test_types::{
+	use mtma_node_preludes::basic::BasicPrelude;
+	use mtma_node_test_global_storage_includes_criterion::GlobalStorageIncludes;
+	use mtma_node_test_types::{
 		check::checked_migration,
 		criterion::movement_executor::{MovementNode, MovementOptExecutor},
 		prelude::PreludeGenerator,

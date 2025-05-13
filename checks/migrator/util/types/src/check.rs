@@ -1,6 +1,6 @@
 use crate::criterion::{Criterionish, MovementAptosMigratorClient, MovementMigratorClient};
-use migration_migrator_types::{migration::Migrationish, migrator::MovementMigrator};
-use migration_node_test_types::prelude::Prelude;
+use mtma_migrator_types::{migration::Migrationish, migrator::MovementMigrator};
+use mtma_node_test_types::prelude::Prelude;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]

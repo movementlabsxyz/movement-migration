@@ -19,11 +19,11 @@ orfile = { workspace = true }
 mtma-core = { workspace = true }
 jemallocator = { workspace = true }
 mtma-node-null-core = { workspace = true }
-migration-node-test-global-storage-injective-criterion = { workspace = true }
-migration-node-test-global-storage-includes-criterion = { workspace = true }
-migration-node-test-global-storage-not-empty-criterion = { workspace = true }
-migration-node-preludes = { workspace = true }
-migration-node-test-types = { workspace = true }
+mtma-node-test-global-storage-injective-criterion = { workspace = true }
+mtma-node-test-global-storage-includes-criterion = { workspace = true }
+mtma-node-test-global-storage-not-empty-criterion = { workspace = true }
+mtma-node-preludes = { workspace = true }
+mtma-node-test-types = { workspace = true }
 movement-syncing = { workspace = true }
 maptos-execution-util = { workspace = true }
 chrono = { workspace = true }

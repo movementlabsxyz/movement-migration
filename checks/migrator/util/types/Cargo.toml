@@ -1,5 +1,5 @@
 [package]
-name = "migration-migrator-test-types"
+name = "mtma-migrator-test-types"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,8 +9,8 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-migration-node-test-types = { workspace = true }
-migration-migrator-types = { workspace = true }
+mtma-node-test-types = { workspace = true }
+mtma-migrator-types = { workspace = true }
 serde = { workspace = true }
 anyhow = { workspace = true }
 hex = { workspace = true }

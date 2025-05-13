@@ -1,5 +1,5 @@
 [package]
-name = "migration-migrator-types"
+name = "mtma-node-types"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,7 +9,6 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-migration-node-types = { workspace = true }
 serde = { workspace = true }
 anyhow = { workspace = true }
 hex = { workspace = true }
@@ -21,12 +20,11 @@ thiserror = { workspace = true }
 aptos-storage-interface = { workspace = true }
 either = { workspace = true }
 tracing = { workspace = true }
-movement-core = { workspace = true }
 movement-aptos-core = { workspace = true }
-kestrel = { workspace = true }
-movement-client = { workspace = true }
-aptos-rest-client = { workspace = true }
-aptos-config = { workspace = true }
+futures-channel = { workspace = true }
+tokio = { workspace = true }
+# todo: get rid of namespace conflict
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 
 [lints]
 workspace = true

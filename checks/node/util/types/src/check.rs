@@ -1,6 +1,6 @@
 use crate::criterion::{Criterionish, MovementNode};
 use crate::prelude::Prelude;
-use migration_node_types::migration::Migrationish;
+use mtma_node_types::migration::Migrationish;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]

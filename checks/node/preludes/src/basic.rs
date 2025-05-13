@@ -1,4 +1,4 @@
-use migration_node_test_types::{
+use mtma_node_test_types::{
 	criterion::movement_executor::maptos_opt_executor::{
 		aptos_crypto::ed25519::Ed25519PrivateKey,
 		aptos_sdk::{

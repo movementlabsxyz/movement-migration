@@ -7,7 +7,7 @@ pub use crate::migrator::movement_aptos_migrator::{
 pub use crate::migrator::movement_migrator::MovementMigrator;
 use std::future::Future;
 
-use migration_node_types::migration::Migrationish as ExecutorMigrationish;
+use mtma_node_types::migration::Migrationish as ExecutorMigrationish;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]

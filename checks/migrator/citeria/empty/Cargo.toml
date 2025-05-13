@@ -1,5 +1,5 @@
 [package]
-name = "migration-migrator-test-empty-criterion"
+name = "mtma-migrator-test-empty-criterion"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,7 +9,7 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-migration-node-test-types = { workspace = true }
+mtma-node-test-types = { workspace = true }
 
 
 [lints]

@@ -1,10 +1,10 @@
 #[cfg(test)]
 pub mod test {
 
-	use migration_migrator_test_types::check::checked_migration;
-	use migration_migrator_types::migrator::MovementMigrator;
-	use migration_node_test_types::prelude::{Prelude, PreludeError};
+	use mtma_migrator_test_types::check::checked_migration;
+	use mtma_migrator_types::migrator::MovementMigrator;
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
+	use mtma_node_test_types::prelude::{Prelude, PreludeError};
 
 	#[tokio::test]
 	#[tracing_test::traced_test]

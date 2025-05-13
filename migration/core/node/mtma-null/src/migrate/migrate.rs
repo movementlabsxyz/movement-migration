@@ -1,10 +1,10 @@
 use aptos_config::config::StorageDirPaths;
 use aptos_db::AptosDB;
 use aptos_storage_interface::DbReaderWriter;
-use migration_node_types::executor::{
+use mtma_node_types::executor::{
 	movement_aptos_executor::MovementAptosBlockExecutor, MovementAptosNode, MovementNode,
 };
-use migration_node_types::migration::{MigrationError, Migrationish};
+use mtma_node_types::migration::{MigrationError, Migrationish};
 
 use anyhow::Context;
 use std::fs;

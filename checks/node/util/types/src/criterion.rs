@@ -1,8 +1,8 @@
-pub use migration_node_types::executor::movement_aptos_executor;
-pub use migration_node_types::executor::movement_executor;
+pub use mtma_node_types::executor::movement_aptos_executor;
+pub use mtma_node_types::executor::movement_executor;
 
-pub use migration_node_types::executor::movement_aptos_executor::MovementAptosNode;
-pub use migration_node_types::executor::movement_executor::MovementNode;
+pub use mtma_node_types::executor::movement_aptos_executor::MovementAptosNode;
+pub use mtma_node_types::executor::movement_executor::MovementNode;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]

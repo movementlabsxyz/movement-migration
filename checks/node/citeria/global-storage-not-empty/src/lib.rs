@@ -1,4 +1,4 @@
-use migration_node_test_types::criterion::{
+use mtma_node_test_types::criterion::{
 	Criterion, CriterionError, Criterionish, MovementAptosNode, MovementNode,
 };
 pub struct GlobalStorageNotEmpty;

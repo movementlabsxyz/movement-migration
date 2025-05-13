@@ -1,5 +1,5 @@
 [package]
-name = "migration-node-test-global-storage-injective-criterion"
+name = "mtma-node-test-global-storage-injective-criterion"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,7 +9,7 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-migration-node-test-types = { workspace = true }
+mtma-node-test-types = { workspace = true }
 anyhow = { workspace = true }
 tracing = { workspace = true }
 
