@@ -13371,202 +13371,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-e2e-checks-sketchpad"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "chrono",
- "kestrel",
- "migration-e2e-test-types",
- "migration-e2e-types",
- "migration-executor-preludes",
- "migration-executor-test-types",
- "mtma-null-core",
- "rand 0.7.3",
- "tokio",
- "tracing",
- "tracing-test",
-]
-
-[[package]]
-name = "migration-e2e-test-empty-criterion"
-version = "0.0.1"
-dependencies = [
- "migration-executor-test-types",
-]
-
-[[package]]
-name = "migration-e2e-test-types"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "hex",
- "migration-e2e-types",
- "migration-executor-test-types",
- "movement-client",
- "serde",
- "thiserror 1.0.69",
- "tokio",
-]
-
-[[package]]
-name = "migration-e2e-types"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "either",
- "hex",
- "kestrel",
- "maptos-opt-executor",
- "migration-executor-types",
- "movement-aptos-core",
- "movement-client",
- "movement-core",
- "serde",
- "thiserror 1.0.69",
- "tracing",
-]
-
-[[package]]
-name = "migration-executor-checks-mainnet"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "chrono",
- "futures",
- "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
- "movement-syncing",
- "mtma-null-core",
- "rand 0.7.3",
- "sysinfo 0.34.2",
- "tokio",
- "tracing",
- "tracing-test",
-]
-
-[[package]]
-name = "migration-executor-checks-sketchpad"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "chrono",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
- "mtma-null-core",
- "rand 0.7.3",
- "tokio",
- "tracing",
- "tracing-test",
-]
-
-[[package]]
-name = "migration-executor-preludes"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "chrono",
- "either",
- "hex",
- "maptos-opt-executor",
- "migration-executor-test-types",
- "migration-executor-types",
- "rand 0.7.3",
- "serde",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "migration-executor-test-empty-criterion"
-version = "0.0.1"
-dependencies = [
- "migration-executor-test-types",
-]
-
-[[package]]
-name = "migration-executor-test-global-storage-includes-criterion"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "migration-executor-test-types",
- "tracing",
-]
-
-[[package]]
-name = "migration-executor-test-global-storage-injective-criterion"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "migration-executor-test-types",
- "tracing",
-]
-
-[[package]]
-name = "migration-executor-test-global-storage-not-empty-criterion"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "migration-executor-test-types",
-]
-
-[[package]]
-name = "migration-executor-test-types"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "chrono",
- "either",
- "hex",
- "maptos-opt-executor",
- "migration-executor-types",
- "serde",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "migration-executor-types"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
- "either",
- "futures-channel",
- "hex",
- "maptos-opt-executor",
- "movement-aptos-core",
- "movement-util 0.3.4",
- "serde",
- "thiserror 1.0.69",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "migrations_internals"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -15530,14 +15334,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15559,14 +15363,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15588,14 +15392,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15631,18 +15435,18 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-check",
  "mtma-check-dev",
  "mtma-core",
  "mtma-migrate",
  "mtma-migrate-dev",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "mtma-track",
  "mtma-track-dev",
  "orfile",
@@ -15666,14 +15470,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15695,14 +15499,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15724,14 +15528,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15753,14 +15557,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15782,14 +15586,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15811,14 +15615,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15829,7 +15633,25 @@ dependencies = [
 ]
 
 [[package]]
-name = "mtma-null-core"
+name = "mtma-migrator-checks-sketchpad"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "kestrel",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-types",
+ "rand 0.7.3",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-migrator-null-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -15842,7 +15664,7 @@ dependencies = [
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "migration-executor-types",
+ "mtma-node-types",
  "orfile",
  "serde",
  "thiserror 1.0.69",
@@ -15850,6 +15672,208 @@ dependencies = [
  "tracing",
  "uuid",
  "walkdir",
+]
+
+[[package]]
+name = "mtma-migrator-test-empty-criterion"
+version = "0.0.1"
+dependencies = [
+ "mtma-node-test-types",
+]
+
+[[package]]
+name = "mtma-migrator-test-types"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "hex",
+ "movement-client",
+ "mtma-migrator-types",
+ "mtma-node-test-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
+name = "mtma-migrator-types"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "either",
+ "hex",
+ "kestrel",
+ "maptos-opt-executor",
+ "movement-aptos-core",
+ "movement-client",
+ "movement-core",
+ "mtma-node-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tracing",
+]
+
+[[package]]
+name = "mtma-node-checks-mainnet"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "futures",
+ "maptos-execution-util",
+ "movement-syncing",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
+ "rand 0.7.3",
+ "sysinfo 0.34.2",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-node-checks-sketchpad"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
+ "rand 0.7.3",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-node-null-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-db 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "chrono",
+ "clap 4.5.36",
+ "clap-markdown-ext",
+ "dotenv",
+ "mtma-node-types",
+ "orfile",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+ "uuid",
+ "walkdir",
+]
+
+[[package]]
+name = "mtma-node-preludes"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "chrono",
+ "either",
+ "hex",
+ "maptos-opt-executor",
+ "mtma-node-test-types",
+ "mtma-node-types",
+ "rand 0.7.3",
+ "serde",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "mtma-node-test-empty-criterion"
+version = "0.0.1"
+dependencies = [
+ "mtma-node-test-types",
+]
+
+[[package]]
+name = "mtma-node-test-global-storage-includes-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "mtma-node-test-types",
+ "tracing",
+]
+
+[[package]]
+name = "mtma-node-test-global-storage-injective-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "mtma-node-test-types",
+ "tracing",
+]
+
+[[package]]
+name = "mtma-node-test-global-storage-not-empty-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "mtma-node-test-types",
+]
+
+[[package]]
+name = "mtma-node-test-types"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "chrono",
+ "either",
+ "hex",
+ "maptos-opt-executor",
+ "mtma-node-types",
+ "serde",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "mtma-node-types"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "either",
+ "futures-channel",
+ "hex",
+ "maptos-opt-executor",
+ "movement-aptos-core",
+ "movement-util 0.3.4",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -15864,14 +15888,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
@@ -15893,14 +15917,14 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
  "movement-syncing",
  "mtma-core",
- "mtma-null-core",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
  "orfile",
  "rand 0.7.3",
  "serde",
