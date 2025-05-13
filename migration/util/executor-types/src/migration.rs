@@ -14,6 +14,7 @@ pub enum MigrationError {
 	Internal(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
+/// Describes a type capable of migration a [MovementExecutor] to a [MovementAptosExecutor].
 pub trait Migrationish {
 	/// Whether the criterion is satisfied by the given movement and movement_aptos executors.
 	fn migrate(
