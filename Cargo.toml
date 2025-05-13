@@ -97,12 +97,13 @@ sysinfo = "0.34.2"
 
 
 # movement
-maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
-movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
-syncador =  { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
-movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
-maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
-movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
+maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+syncador =  { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+aptos-framework-pre-l1-merge-release = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
 
 # aptos-core
 aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
@@ -156,10 +157,10 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 ### core
 mtma-core = { path = "migration/core/mtma" }
 #### migrator
-mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
-
+mtma-migrator-null-core = { path = "migration/core/migrator/null" }
+mtma-migrator-pre-l1-merge-core = { path = "migration/core/migrator/pre-l1-merge" }
 #### node
-mtma-node-null-core = { path = "migration/core/node/mtma-null" }
+mtma-node-null-core = { path = "migration/core/node/null" }
 
 ### preludes
 mtma-node-preludes = { path = "checks/node/preludes" }
