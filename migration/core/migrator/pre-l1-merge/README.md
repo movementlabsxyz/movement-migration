@@ -1,2 +1,2 @@
-# `mtma-null`
-A "null" migration that does nothing but for the Movement Aptos Executor Struct from the Movement Struct. 
+# `mtma-migrator-pre-l1-merge`
+Use the [`pre-l1-merge`](https://github.com/movementlabsxyz/movement/tree/main/protocol-units/execution/maptos/framework/releases/pre-l1-merge) release from `movement` to perform the over the wire framework migration. Additionally, runs the [`mtma-node-null-core`](/migration/core/node/null/README.md) migration. 
