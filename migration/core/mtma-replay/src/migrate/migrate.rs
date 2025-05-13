@@ -28,6 +28,7 @@ use migration_executor_types::{
 	migration::{MigrationError, Migrationish},
 };
 use std::path::Path;
+use migration_executor_types::executor::movement_executor::maptos_opt_executor::aptos_types::transaction::Transaction as MovementTransaction;
 
 /// Converts a [MovementBlock] to a [MovementAptosBlock].
 pub fn movement_block_to_movement_aptos_block(
@@ -106,11 +107,23 @@ impl Migrationish for Migrate {
 				MigrationError::Internal(format!("failed to get genesis transaction: {}", e).into())
 			})?;
 
-			movement_genesis_txn.bcs_into().map_err(|e| {
-				MigrationError::Internal(
-					format!("failed to convert genesis transaction: {}", e).into(),
-				)
-			})?
+			// extract the write set payload
+			let write_set_payload: WriteSetPayload = match movement_genesis_txn {
+				MovementTransaction::GenesisTransaction(write_set_payload) => {
+					write_set_payload.bcs_into().map_err(|e| {
+						MigrationError::Internal(
+							format!("failed to extract change set: {}", e).into(),
+						)
+					})?
+				}
+				val => {
+					return Err(MigrationError::Internal(
+						format!("failed to extract change set: {:?}", val).into(),
+					))
+				}
+			};
+
+			Transaction::GenesisTransaction(write_set_payload)
 		} else {
 			let genesis = aptos_vm_genesis::test_genesis_change_set_and_validators(Some(1));
 			Transaction::GenesisTransaction(WriteSetPayload::Direct(genesis.0))
@@ -128,7 +141,6 @@ impl Migrationish for Migrate {
 				.map_err(|e| MigrationError::Internal(e.into()))?
 				.context("no ledger info with sigs")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
-		println!("ledger_info_with_sigs: {:?}", ledger_info_with_sigs);
 
 		// form the executor
 		let movement_aptos_executor = MovementAptosBlockExecutor::new(db_rw);

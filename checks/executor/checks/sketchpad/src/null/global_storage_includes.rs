@@ -8,7 +8,7 @@ pub mod test {
 		criterion::movement_executor::{MovementExecutor, MovementOptExecutor},
 		prelude::PreludeGenerator,
 	};
-	use mtma_replay_core::config::Config as MtmaNullConfig;
+	use mtma_null_core::config::Config as MtmaNullConfig;
 
 	#[tokio::test]
 	#[tracing_test::traced_test]
