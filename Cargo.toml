@@ -19,6 +19,7 @@ members = [
     # util
     "util/include-dir",
     "util/movement-syncing",
+    "util/bcs-ext",
 
 ]
 
@@ -93,20 +94,24 @@ sysinfo = "0.34.2"
 # movement
 maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-syncador =  { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 
 # aptos-core
-aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-vm = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-rest-client = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-storage-interface = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-db = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos_schemadb = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-config = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
+aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-executor-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-vm = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-rest-client = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-storage-interface = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-db = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos_schemadb = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-config = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+aptos-crypto = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
+bcs = { git = "https://github.com/aptos-labs/bcs.git", rev = "d31fab9d81748e2594be5cd5cdf845786a30562d" }
+aptos-vm-genesis = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6", default-features = false }
 # model checking and verification
 
 
@@ -132,6 +137,7 @@ clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ex
 ### core
 mtma-core = { path = "migration/core/mtma" }
 mtma-null-core = { path = "migration/core/mtma-null" }
+mtma-replay-core = { path = "migration/core/mtma-replay" }
 
 ### preludes
 migration-executor-preludes = { path = "checks/executor/preludes" }
@@ -153,6 +159,7 @@ migration-e2e-test-types = { path = "checks/e2e/util/types" }
 ## util
 include-dir = { path = "util/include-dir" }
 movement-syncing = { path = "util/movement-syncing" }
+bcs-ext = { path = "util/bcs-ext" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

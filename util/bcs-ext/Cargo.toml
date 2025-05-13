@@ -1,5 +1,5 @@
 [package]
-name = "migration-e2e-test-empty-criterion"
+name = "bcs-ext"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,10 +9,9 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-migration-executor-test-types = { workspace = true }
+serde = { workspace = true }
 bcs = { workspace = true }
-bcs-ext = { workspace = true }
-
+thiserror = { workspace = true }
 
 [lints]
 workspace = true

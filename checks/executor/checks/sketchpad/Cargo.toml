@@ -12,6 +12,7 @@ rust-version = { workspace = true }
 migration-executor-test-types = { workspace = true }
 anyhow = { workspace = true }
 mtma-null-core = { workspace = true }
+mtma-replay-core = { workspace = true }
 migration-executor-test-global-storage-injective-criterion = { workspace = true }
 migration-executor-test-global-storage-includes-criterion = { workspace = true }
 migration-executor-test-global-storage-not-empty-criterion = { workspace = true }
