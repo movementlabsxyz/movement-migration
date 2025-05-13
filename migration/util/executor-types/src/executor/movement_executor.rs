@@ -78,10 +78,10 @@ impl MovementExecutor {
 	}
 
 	/// Iterates over all blocks in the db.
-	pub fn iter_blocks(&self, version: u64) -> Result<BlockIterator<'_>, anyhow::Error> {
+	pub fn iter_blocks(&self, start_version: u64) -> Result<BlockIterator<'_>, anyhow::Error> {
 		let latest_version = self.latest_ledger_version()?;
 		println!("latest_version: {}", latest_version);
-		Ok(BlockIterator { executor: self, version, latest_version })
+		Ok(BlockIterator { executor: self, version: start_version, latest_version })
 	}
 
 	/// Gets the genesis transaction.
