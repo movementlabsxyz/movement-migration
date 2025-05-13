@@ -3,6 +3,7 @@ use aptos_config::config::NodeConfig;
 use aptos_rest_client::Client as MovementAptosRestClient;
 use kestrel::WaitCondition;
 use movement_aptos_core::MovementAptos;
+use mtma_node_types::executor::MovementAptosNode;
 
 /// An enum supporting different types of runners.
 ///
@@ -27,10 +28,18 @@ impl MovementAptosMigrator {
 		Self { runner }
 	}
 
+	/// Builds a [MovementAptosMigrator] from a [NodeConfig].
 	pub fn from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
 		let movement_aptos = MovementAptos::from_config(config)?;
 		let runner = Runner::MovementAptos(movement_aptos);
 		Ok(Self::new(runner))
+	}
+
+	/// Builds a [MovementAptosMigrator] from a [MovementAptosNode].
+	pub fn from_movement_aptos_node(node: MovementAptosNode) -> Result<Self, anyhow::Error> {
+		// get the config from the node
+		let config = node.node_config()?;
+		Ok(Self::from_config(config)?)
 	}
 
 	/// Rest Api url for the runner.
@@ -62,5 +71,21 @@ impl MovementAptosMigrator {
 				anyhow::anyhow!("failed to parse Movement Aptos rest api url: {}", e)
 			})?);
 		Ok(rest_client)
+	}
+}
+
+impl TryFrom<NodeConfig> for MovementAptosMigrator {
+	type Error = anyhow::Error;
+
+	fn try_from(config: NodeConfig) -> Result<Self, Self::Error> {
+		Ok(Self::from_config(config)?)
+	}
+}
+
+impl TryFrom<MovementAptosNode> for MovementAptosMigrator {
+	type Error = anyhow::Error;
+
+	fn try_from(node: MovementAptosNode) -> Result<Self, Self::Error> {
+		Ok(Self::from_movement_aptos_node(node)?)
 	}
 }
