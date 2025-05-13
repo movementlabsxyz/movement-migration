@@ -1,10 +1,10 @@
 use aptos_config::config::StorageDirPaths;
 use aptos_db::AptosDB;
 use aptos_storage_interface::DbReaderWriter;
-use migration_executor_types::executor::{
-	movement_aptos_executor::MovementAptosBlockExecutor, MovementAptosExecutor, MovementExecutor,
+use migration_node_types::executor::{
+	movement_aptos_executor::MovementAptosBlockExecutor, MovementAptosNode, MovementNode,
 };
-use migration_executor_types::migration::{MigrationError, Migrationish};
+use migration_node_types::migration::{MigrationError, Migrationish};
 
 use anyhow::Context;
 use std::fs;
@@ -44,8 +44,8 @@ pub struct Migrate;
 impl Migrationish for Migrate {
 	async fn migrate(
 		&self,
-		movement_executor: &MovementExecutor,
-	) -> Result<MovementAptosExecutor, MigrationError> {
+		movement_executor: &MovementNode,
+	) -> Result<MovementAptosNode, MigrationError> {
 		// Get the db path from the opt executor.
 		let old_db_dir = movement_executor
 			.opt_executor()
@@ -96,7 +96,7 @@ impl Migrationish for Migrate {
 		// form the executor
 		let aptos_executor = MovementAptosBlockExecutor::new(db_rw);
 
-		Ok(MovementAptosExecutor::new(aptos_executor, db_dir))
+		Ok(MovementAptosNode::new(aptos_executor, db_dir))
 	}
 }
 

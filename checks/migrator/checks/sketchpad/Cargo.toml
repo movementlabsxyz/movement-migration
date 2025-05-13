@@ -1,0 +1,28 @@
+[package]
+name = "migration-migrator-checks-sketchpad"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+migration-migrator-types = { workspace = true }
+migration-migrator-test-types = { workspace = true }
+anyhow = { workspace = true }
+mtma-node-null-core = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+rand = { workspace = true }
+kestrel = { workspace = true }
+migration-node-preludes = { workspace = true }
+migration-node-test-types = { workspace = true }
+
+[dev-dependencies]
+tracing-test = { workspace = true }
+tracing = { workspace = true }
+
+[lints]
+workspace = true

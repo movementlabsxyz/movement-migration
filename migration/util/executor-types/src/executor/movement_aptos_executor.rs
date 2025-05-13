@@ -17,7 +17,7 @@ use movement_aptos_core::Config as MovementAptosConfig;
 
 /// The MovementAptos executor as would be presented in the criterion.
 #[derive(Clone)]
-pub struct MovementAptosExecutor {
+pub struct MovementAptosNode {
 	/// The db dir into which the aptos db was migrated.
 	db_dir_path: PathBuf,
 
@@ -27,7 +27,7 @@ pub struct MovementAptosExecutor {
 	block_executor: Arc<MovementAptosBlockExecutor<AptosVMBlockExecutor>>,
 }
 
-impl MovementAptosExecutor {
+impl MovementAptosNode {
 	pub fn new(
 		block_executor: MovementAptosBlockExecutor<AptosVMBlockExecutor>,
 		db_dir_path: PathBuf,

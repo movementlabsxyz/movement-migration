@@ -12,14 +12,14 @@ pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStat
 use std::path::PathBuf;
 use tracing::debug;
 /// The Movement executor as would be presented in the criterion.
-pub struct MovementExecutor {
+pub struct MovementNode {
 	/// The opt executor.
 	///
 	/// We will have this remain private because I don't think we want people mutating it in the criterion.
 	opt_executor: MovementOptExecutor,
 }
 
-impl MovementExecutor {
+impl MovementNode {
 	pub fn new(opt_executor: MovementOptExecutor) -> Self {
 		Self { opt_executor }
 	}

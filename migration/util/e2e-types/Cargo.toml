@@ -1,5 +1,5 @@
 [package]
-name = "migration-e2e-types"
+name = "migration-migrator-types"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,7 +9,7 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-migration-executor-types = { workspace = true }
+migration-node-types = { workspace = true }
 serde = { workspace = true }
 anyhow = { workspace = true }
 hex = { workspace = true }

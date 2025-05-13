@@ -1,6 +1,3 @@
-use kestrel::{fulfill::custom::CustomProcessor, fulfill::FulfillError};
-use tokio::sync::mpsc::Receiver;
-
 #[derive(Debug, Clone)]
 pub struct RestApi {
 	/// The Rest Api url.

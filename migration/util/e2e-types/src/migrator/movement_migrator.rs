@@ -2,7 +2,7 @@ use anyhow::Context;
 use kestrel::WaitCondition;
 pub use maptos_opt_executor;
 pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
-use migration_executor_types::executor::MovementExecutor;
+use migration_node_types::executor::MovementNode;
 use movement_client::rest_client::Client as MovementRestClient;
 use movement_core::Movement;
 
@@ -76,11 +76,11 @@ impl MovementMigrator {
 		Ok(rest_client)
 	}
 
-	/// Produces the [MovementExecutor] from the runner.
-	pub async fn executor(&self) -> Result<MovementExecutor, anyhow::Error> {
+	/// Produces the [MovementNode] from the runner.
+	pub async fn executor(&self) -> Result<MovementNode, anyhow::Error> {
 		match &self.runner {
 			Runner::Movement(movement) => {
-				MovementExecutor::from_dir(movement.workspace_path().to_path_buf()).await
+				MovementNode::from_dir(movement.workspace_path().to_path_buf()).await
 			}
 		}
 	}

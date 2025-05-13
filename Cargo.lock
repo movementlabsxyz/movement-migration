@@ -13371,16 +13371,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-e2e-checks-sketchpad"
+name = "migration-migrator-checks-sketchpad"
 version = "0.0.1"
 dependencies = [
  "anyhow",
  "chrono",
  "kestrel",
- "migration-e2e-test-types",
- "migration-e2e-types",
- "migration-executor-preludes",
- "migration-executor-test-types",
+ "migration-migrator-test-types",
+ "migration-migrator-types",
+ "migration-node-preludes",
+ "migration-node-test-types",
  "mtma-node-null-core",
  "rand 0.7.3",
  "tokio",
@@ -13389,21 +13389,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-e2e-test-empty-criterion"
+name = "migration-migrator-test-empty-criterion"
 version = "0.0.1"
 dependencies = [
- "migration-executor-test-types",
+ "migration-node-test-types",
 ]
 
 [[package]]
-name = "migration-e2e-test-types"
+name = "migration-migrator-test-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
  "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
  "hex",
- "migration-e2e-types",
- "migration-executor-test-types",
+ "migration-migrator-types",
+ "migration-node-test-types",
  "movement-client",
  "serde",
  "thiserror 1.0.69",
@@ -13411,7 +13411,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-e2e-types"
+name = "migration-migrator-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -13425,7 +13425,7 @@ dependencies = [
  "hex",
  "kestrel",
  "maptos-opt-executor",
- "migration-executor-types",
+ "migration-node-types",
  "movement-aptos-core",
  "movement-client",
  "movement-core",
@@ -13435,18 +13435,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-executor-checks-mainnet"
+name = "migration-node-checks-mainnet"
 version = "0.0.1"
 dependencies = [
  "anyhow",
  "chrono",
  "futures",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-node-null-core",
  "rand 0.7.3",
@@ -13457,16 +13457,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-executor-checks-sketchpad"
+name = "migration-node-checks-sketchpad"
 version = "0.0.1"
 dependencies = [
  "anyhow",
  "chrono",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "mtma-node-null-core",
  "rand 0.7.3",
  "tokio",
@@ -13475,7 +13475,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-executor-preludes"
+name = "migration-node-preludes"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -13487,48 +13487,48 @@ dependencies = [
  "either",
  "hex",
  "maptos-opt-executor",
- "migration-executor-test-types",
- "migration-executor-types",
+ "migration-node-test-types",
+ "migration-node-types",
  "rand 0.7.3",
  "serde",
  "thiserror 1.0.69",
 ]
 
 [[package]]
-name = "migration-executor-test-empty-criterion"
+name = "migration-node-test-empty-criterion"
 version = "0.0.1"
 dependencies = [
- "migration-executor-test-types",
+ "migration-node-test-types",
 ]
 
 [[package]]
-name = "migration-executor-test-global-storage-includes-criterion"
+name = "migration-node-test-global-storage-includes-criterion"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "migration-executor-test-types",
+ "migration-node-test-types",
  "tracing",
 ]
 
 [[package]]
-name = "migration-executor-test-global-storage-injective-criterion"
+name = "migration-node-test-global-storage-injective-criterion"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "migration-executor-test-types",
+ "migration-node-test-types",
  "tracing",
 ]
 
 [[package]]
-name = "migration-executor-test-global-storage-not-empty-criterion"
+name = "migration-node-test-global-storage-not-empty-criterion"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "migration-executor-test-types",
+ "migration-node-test-types",
 ]
 
 [[package]]
-name = "migration-executor-test-types"
+name = "migration-node-test-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -13540,13 +13540,13 @@ dependencies = [
  "either",
  "hex",
  "maptos-opt-executor",
- "migration-executor-types",
+ "migration-node-types",
  "serde",
  "thiserror 1.0.69",
 ]
 
 [[package]]
-name = "migration-executor-types"
+name = "migration-node-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -15530,11 +15530,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15559,11 +15559,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15588,11 +15588,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15631,11 +15631,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-check",
  "mtma-check-dev",
@@ -15666,11 +15666,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15695,11 +15695,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15724,11 +15724,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15753,11 +15753,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15782,11 +15782,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15811,11 +15811,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15842,7 +15842,7 @@ dependencies = [
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "migration-executor-types",
+ "migration-node-types",
  "orfile",
  "serde",
  "thiserror 1.0.69",
@@ -15866,7 +15866,7 @@ dependencies = [
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "migration-executor-types",
+ "migration-node-types",
  "orfile",
  "serde",
  "thiserror 1.0.69",
@@ -15888,11 +15888,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
@@ -15917,11 +15917,11 @@ dependencies = [
  "futures",
  "jemallocator",
  "maptos-execution-util",
- "migration-executor-preludes",
- "migration-executor-test-global-storage-includes-criterion",
- "migration-executor-test-global-storage-injective-criterion",
- "migration-executor-test-global-storage-not-empty-criterion",
- "migration-executor-test-types",
+ "migration-node-preludes",
+ "migration-node-test-global-storage-includes-criterion",
+ "migration-node-test-global-storage-injective-criterion",
+ "migration-node-test-global-storage-not-empty-criterion",
+ "migration-node-test-types",
  "movement-syncing",
  "mtma-core",
  "mtma-node-null-core",
