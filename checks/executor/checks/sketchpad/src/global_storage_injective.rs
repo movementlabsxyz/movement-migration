@@ -8,7 +8,7 @@ pub mod test {
 		criterion::movement_executor::{MovementExecutor, MovementOptExecutor},
 		prelude::PreludeGenerator,
 	};
-	use mtma_null_core::config::Config as MtmaNullConfig;
+	use mtma_node_null_core::config::Config as MtmaNullConfig;
 
 	#[tokio::test]
 	async fn test_global_storage_injective_null() -> Result<(), anyhow::Error> {

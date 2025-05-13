@@ -6,7 +6,9 @@ members = [
 
     # migration
     "migration/cli/*",
-    "migration/core/*",
+    "migration/core/mtma",
+    "migration/core/node/*",
+    "migration/core/migrator/*",
     "migration/util/*",
     # executor
     "checks/executor/util/*",
@@ -152,7 +154,11 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 
 ### core
 mtma-core = { path = "migration/core/mtma" }
-mtma-null-core = { path = "migration/core/mtma-null" }
+#### migrator
+mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
+
+#### node
+mtma-node-null-core = { path = "migration/core/node/mtma-null" }
 
 ### preludes
 migration-executor-preludes = { path = "checks/executor/preludes" }

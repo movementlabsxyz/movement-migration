@@ -12,7 +12,7 @@ rust-version = { workspace = true }
 migration-e2e-types = { workspace = true }
 migration-e2e-test-types = { workspace = true }
 anyhow = { workspace = true }
-mtma-null-core = { workspace = true }
+mtma-node-null-core = { workspace = true }
 tokio = { workspace = true }
 chrono = { workspace = true }
 rand = { workspace = true }

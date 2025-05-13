@@ -1,5 +1,5 @@
 [package]
-name = "mtma-null-core"
+name = "mtma-migrator-null-core"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

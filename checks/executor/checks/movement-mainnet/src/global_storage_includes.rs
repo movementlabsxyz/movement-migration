@@ -10,7 +10,7 @@ pub mod test {
 		prelude::Prelude,
 	};
 	use movement_syncing::db::DbSync;
-	use mtma_null_core::config::Config as MtmaNullConfig;
+	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use sysinfo::Disks;
 
 	#[tokio::test]

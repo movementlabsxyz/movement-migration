@@ -8,8 +8,8 @@ use migration_executor_test_types::{
 	prelude::Prelude,
 };
 use movement_syncing::db::DbSync;
-use mtma_null_core::config::Config as MtmaNullConfig;
-use mtma_null_core::Config;
+use mtma_node_null_core::config::Config as MtmaNullConfig;
+use mtma_node_null_core::Config;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
