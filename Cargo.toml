@@ -6,17 +6,19 @@ members = [
 
     # migration
     "migration/cli/*",
-    "migration/core/*",
+    "migration/core/mtma",
+    "migration/core/node/*",
+    "migration/core/migrator/*",
     "migration/util/*",
     # executor
-    "checks/executor/util/*",
-    "checks/executor/citeria/*",
-    "checks/executor/checks/*",
-    "checks/executor/preludes",
+    "checks/node/util/*",
+    "checks/node/citeria/*",
+    "checks/node/checks/*",
+    "checks/node/preludes",
     # e2e
-    "checks/e2e/util/*",
-    "checks/e2e/citeria/*",
-    "checks/e2e/checks/*",
+    "checks/migrator/util/*",
+    "checks/migrator/citeria/*",
+    "checks/migrator/checks/*",
     # util
     "util/movement/*",
     "util/movement-aptos/*",
@@ -152,24 +154,28 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 
 ### core
 mtma-core = { path = "migration/core/mtma" }
-mtma-null-core = { path = "migration/core/mtma-null" }
+#### migrator
+mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
+
+#### node
+mtma-node-null-core = { path = "migration/core/node/mtma-null" }
 
 ### preludes
-migration-executor-preludes = { path = "checks/executor/preludes" }
+mtma-node-preludes = { path = "checks/node/preludes" }
 
 ### util
-migration-executor-types = { path = "migration/util/executor-types" }
-migration-e2e-types = { path = "migration/util/e2e-types" }
+mtma-node-types = { path = "migration/util/node-types" }
+mtma-migrator-types = { path = "migration/util/migrator-types" }
 ## checks
 ### executor
-migration-executor-test-types = { path = "checks/executor/util/types" }
-migration-executor-test-global-storage-injective-criterion = { path = "checks/executor/citeria/global-storage-injective" }
-migration-executor-test-global-storage-includes-criterion = { path = "checks/executor/citeria/global-storage-includes" }
-migration-executor-test-global-storage-not-empty-criterion = { path = "checks/executor/citeria/global-storage-not-empty" }
+mtma-node-test-types = { path = "checks/node/util/types" }
+mtma-node-test-global-storage-injective-criterion = { path = "checks/node/citeria/global-storage-injective" }
+mtma-node-test-global-storage-includes-criterion = { path = "checks/node/citeria/global-storage-includes" }
+mtma-node-test-global-storage-not-empty-criterion = { path = "checks/node/citeria/global-storage-not-empty" }
 
 
 ### e2e
-migration-e2e-test-types = { path = "checks/e2e/util/types" }
+mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 
 ## util
 movement-syncing = { path = "util/movement/movement-syncing" }
