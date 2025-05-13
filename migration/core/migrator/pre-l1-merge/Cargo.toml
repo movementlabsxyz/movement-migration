@@ -19,6 +19,7 @@ thiserror = { workspace = true }
 orfile = { workspace = true }
 mtma-node-types = { workspace = true }
 mtma-migrator-types = { workspace = true }
+mtma-node-null-core = { workspace = true }
 aptos-db = { workspace = true }
 aptos-storage-interface = { workspace = true }
 aptos-config = { workspace = true }

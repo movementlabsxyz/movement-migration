@@ -1,6 +1,7 @@
 use crate::Migrate;
 use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::ReleaseSigner;
 use clap::Parser;
+use mtma_node_null_core::Config as MtmaNodeNullConfig;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -17,7 +18,11 @@ pub enum MigrateConfigError {
 /// This is the frontend for the core API.
 #[derive(Parser, Debug, Default, Serialize, Deserialize, Clone)]
 #[clap(help_expected = true)]
-pub struct Config {}
+pub struct Config {
+	/// The config for the mtma-node-null.
+	#[clap(flatten)]
+	mtma_node_null: MtmaNodeNullConfig,
+}
 
 impl Config {
 	/// Builds the release signer from the config.
@@ -33,6 +38,9 @@ impl Config {
 	where
 		S: ReleaseSigner + Debug + Clone + Send + Sync + 'static,
 	{
-		Ok(Migrate { release_signer: self.build_release_signer()? })
+		let mtma_node_null =
+			self.mtma_node_null.build().map_err(|e| MigrateConfigError::Build(e.into()))?;
+
+		Ok(Migrate { release_signer: self.build_release_signer()?, mtma_node_null })
 	}
 }

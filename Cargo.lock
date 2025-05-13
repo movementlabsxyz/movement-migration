@@ -15725,6 +15725,7 @@ dependencies = [
  "clap-markdown-ext",
  "dotenv",
  "mtma-migrator-types",
+ "mtma-node-null-core",
  "mtma-node-types",
  "orfile",
  "serde",
