@@ -70,7 +70,7 @@ where
 			.context("failed to release with pre-l1-merge")
 			.map_err(|e| MigrationError::Internal(e.into()))?;
 
-		// migrate the with `mtma-node-null`
+		// migrate with `mtma-node-null`
 		// NOTE: we're using the blanket implementation to upcast from a node migration to a migrator migration
 		let movement_aptos_migrator = self
 			.mtma_node_null
