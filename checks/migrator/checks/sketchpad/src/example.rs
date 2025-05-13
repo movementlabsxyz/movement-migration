@@ -8,7 +8,7 @@ pub mod test {
 
 	#[tokio::test]
 	#[tracing_test::traced_test]
-	async fn test_global_storage_includess_null() -> Result<(), anyhow::Error> {
+	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {
 		// Form the migrator.
 		let mut movement_migrator = MovementMigrator::try_temp()?;
 
