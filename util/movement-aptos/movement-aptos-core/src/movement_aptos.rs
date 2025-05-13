@@ -1,6 +1,8 @@
 use aptos_config::config::NodeConfig;
 use kestrel::State;
 use std::path::PathBuf;
+use std::sync::mpsc::{channel, Receiver, Sender};
+use std::thread;
 pub mod rest_api;
 pub use rest_api::RestApi;
 
@@ -42,20 +44,40 @@ impl MovementAptos {
 		&self.rest_api
 	}
 
-	/// Runs the internal node logic
-	pub(crate) fn run_node(&self) -> Result<(), MovementAptosError> {
-		aptos_node::start(
-			self.node_config.clone(),
-			self.log_file.clone(),
-			self.create_global_rayon_pool,
-		)
-		.map_err(|e| MovementAptosError::Internal(e.into()))?;
+	/// Runs the internal node logic with shutdown support
+	pub(crate) fn run_node_with_shutdown(
+		&self,
+		shutdown_rx: Receiver<()>,
+	) -> Result<(), MovementAptosError> {
+		let node_config = self.node_config.clone();
+		let log_file = self.log_file.clone();
+		let create_global_rayon_pool = self.create_global_rayon_pool;
 
-		Ok(())
+		let handle: thread::JoinHandle<Result<(), MovementAptosError>> = thread::spawn(move || {
+			// Start the node in a separate thread
+			let node_handle = thread::spawn(move || {
+				aptos_node::start(node_config, log_file, create_global_rayon_pool)
+					.map_err(|e| MovementAptosError::Internal(e.into()))
+			});
+
+			// Wait for shutdown signal
+			let _ = shutdown_rx.recv();
+
+			// Force terminate the process since the node doesn't support graceful shutdown
+			std::process::exit(0);
+		});
+
+		match handle.join() {
+			Ok(result) => result.map_err(|e| MovementAptosError::Internal(e.into())),
+			Err(_) => Err(MovementAptosError::Internal(Box::new(std::io::Error::new(
+				std::io::ErrorKind::Other,
+				"Node thread panicked",
+			)))),
+		}
 	}
 
 	/// Runs the node and fills state.
-	pub async fn run(&self) -> Result<(), MovementAptosError> {
+	pub async fn run(self, shutdown_rx: Receiver<()>) -> Result<(), MovementAptosError> {
 		let rest_api = RestApi {
 			rest_api_url: format!(
 				"http://{}:{}",
@@ -66,15 +88,13 @@ impl MovementAptos {
 
 		let runner = self.clone();
 		let runner_task = kestrel::task(async move {
-			runner.run_node()?;
+			runner.run_node_with_shutdown(shutdown_rx)?;
 			Ok::<_, MovementAptosError>(())
 		});
 
-		// rest api state
 		let rest_api_state = self.rest_api.clone();
 		let rest_api_polling = kestrel::task(async move {
 			loop {
-				// wait for the rest api to be ready
 				let response = reqwest::get(rest_api.rest_api_url.clone())
 					.await
 					.map_err(|e| MovementAptosError::Internal(e.into()))?;
@@ -82,12 +102,11 @@ impl MovementAptos {
 					rest_api_state.write().set(rest_api).await;
 					break;
 				}
+				tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
 			}
-
 			Ok::<_, MovementAptosError>(())
 		});
 
-		// await the runner
 		runner_task.await.map_err(|e| MovementAptosError::Internal(e.into()))??;
 		rest_api_polling.await.map_err(|e| MovementAptosError::Internal(e.into()))??;
 
@@ -101,19 +120,18 @@ mod tests {
 	use aptos_node::create_single_node_test_config;
 	use rand::thread_rng;
 	use std::path::Path;
+	use tokio::time::timeout;
 
-	#[tokio::test]
+	#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 	async fn test_movement_aptos() -> Result<(), anyhow::Error> {
-		// open in a new db
 		let unique_id = uuid::Uuid::new_v4();
 		let timestamp = chrono::Utc::now().timestamp_millis();
-		let db_dir = Path::new(".debug").join(format!(
+		let db_dir = Path::new(".info").join(format!(
 			"movement-aptos-db-{}-{}",
 			timestamp,
 			unique_id.to_string().split('-').next().unwrap()
 		));
 
-		// create parent dirs
 		std::fs::create_dir_all(db_dir.clone())?;
 
 		let rng = thread_rng();
@@ -130,8 +148,34 @@ mod tests {
 
 		let movement_aptos = MovementAptos::new(node_config, None, false);
 		let rest_api_state = movement_aptos.rest_api().read().clone();
-		movement_aptos.run().await?;
-		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
+
+		let (shutdown_tx, shutdown_rx) = channel();
+
+		let node_handle = kestrel::task(async move { movement_aptos.run(shutdown_rx).await });
+
+		let rest_api = match timeout(
+			tokio::time::Duration::from_secs(30),
+			rest_api_state.wait_for(tokio::time::Duration::from_secs(30)),
+		)
+		.await
+		{
+			Ok(result) => result?,
+			Err(_) => {
+				kestrel::end!(node_handle)?;
+				return Err(anyhow::anyhow!("REST API wait timed out after 30 seconds"));
+			}
+		};
+
+		let client = reqwest::Client::new();
+		let response = client.get(&rest_api.rest_api_url).send().await?;
+		assert!(response.status().is_success(), "REST API should be accessible");
+
+		// Trigger shutdown
+		drop(shutdown_tx);
+
+		kestrel::end!(node_handle)?;
+
+		std::fs::remove_dir_all(db_dir)?;
 
 		Ok(())
 	}
