@@ -23,11 +23,12 @@ jsonlvar = { workspace = true }
 orfile = { workspace = true }
 kestrel = { workspace = true }
 reqwest = { workspace = true }
+aptos-cached-packages = { workspace = true }
+rand = { workspace = true }
+
 [dev-dependencies]
 uuid = { workspace = true }
 chrono = { workspace = true }
-aptos-cached-packages = { workspace = true }
-rand = { workspace = true }
 
 [lints]
 workspace = true
