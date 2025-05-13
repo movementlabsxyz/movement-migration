@@ -14387,6 +14387,7 @@ dependencies = [
  "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=dd5d4116bc96e5f300158dc1907a2e21ef23aa55)",
  "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=dd5d4116bc96e5f300158dc1907a2e21ef23aa55)",
  "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=dd5d4116bc96e5f300158dc1907a2e21ef23aa55)",
+ "aptos-vm-genesis 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=dd5d4116bc96e5f300158dc1907a2e21ef23aa55)",
  "bcs 0.1.4",
  "bcs-ext",
  "chrono",

@@ -1,12 +1,16 @@
+use anyhow::Context;
 use aptos_config::config::StorageDirPaths;
 use aptos_crypto::HashValue;
 use aptos_db::AptosDB;
 use aptos_executor::db_bootstrapper::generate_waypoint;
 use aptos_executor::db_bootstrapper::maybe_bootstrap;
 use aptos_executor_types::BlockExecutorTrait;
+use aptos_storage_interface::state_store::state_view::db_state_view::DbStateViewAtVersion;
 use aptos_storage_interface::DbReaderWriter;
 use aptos_types::on_chain_config::{OnChainConfig, OnChainExecutionConfig};
 use aptos_types::transaction::Transaction;
+use aptos_types::transaction::WriteSetPayload;
+use bcs_ext::conversion::BcsInto;
 use migration_executor_types::executor::{
 	movement_aptos_executor::{AptosVMBlockExecutor, MovementAptosBlockExecutor},
 	MovementAptosExecutor, MovementExecutor,
@@ -23,12 +27,9 @@ use migration_executor_types::{
 	},
 	migration::{MigrationError, Migrationish},
 };
-
-use anyhow::Context;
-use aptos_storage_interface::state_store::state_view::db_state_view::DbStateViewAtVersion;
-use bcs_ext::conversion::BcsInto;
 use std::path::Path;
 
+/// Converts a [MovementBlock] to a [MovementAptosBlock].
 pub fn movement_block_to_movement_aptos_block(
 	block: MovementBlock,
 ) -> Result<MovementAptosBlock, MigrationError> {
@@ -62,7 +63,10 @@ pub enum MigrateError {
 
 /// The migration struct will be use to run a migration from Movement to Movement Aptos by replaying all blocks from the Movement Aptos db.
 #[derive(Debug, Clone)]
-pub struct Migrate;
+pub struct Migrate {
+	/// Whether to use the migrated genesis.
+	pub use_migrated_genesis: bool,
+}
 
 impl Migrationish for Migrate {
 	async fn migrate(
@@ -77,7 +81,7 @@ impl Migrationish for Migrate {
 			timestamp,
 			unique_id.to_string().split('-').next().unwrap()
 		));
-		let aptos_db = AptosDB::open(
+		let movement_aptos_db = AptosDB::open(
 			StorageDirPaths::from_path(db_dir.clone()),
 			false,
 			Default::default(),
@@ -95,28 +99,31 @@ impl Migrationish for Migrate {
 		.map_err(|e| MigrationError::Internal(e.into()))?;
 
 		// form the db reader writer
-		let db_rw = DbReaderWriter::new(aptos_db);
+		let db_rw = DbReaderWriter::new(movement_aptos_db);
 
-		// add the genesis transaction from the movement db to the aptos db
-		let movement_genesis_txn = movement_executor.genesis_transaction().map_err(|e| {
-			MigrationError::Internal(format!("failed to get genesis transaction: {}", e).into())
-		})?;
-		let aptos_genesis_transaction: Transaction =
+		let genesis_txn: Transaction = if self.use_migrated_genesis {
+			let movement_genesis_txn = movement_executor.genesis_transaction().map_err(|e| {
+				MigrationError::Internal(format!("failed to get genesis transaction: {}", e).into())
+			})?;
+
 			movement_genesis_txn.bcs_into().map_err(|e| {
 				MigrationError::Internal(
 					format!("failed to convert genesis transaction: {}", e).into(),
 				)
-			})?;
+			})?
+		} else {
+			let genesis = aptos_vm_genesis::test_genesis_change_set_and_validators(Some(1));
+			Transaction::GenesisTransaction(WriteSetPayload::Direct(genesis.0))
+		};
 
 		// generate the waypoint
-		let waypoint =
-			generate_waypoint::<AptosVMBlockExecutor>(&db_rw, &aptos_genesis_transaction)
-				.context("failed to generate waypoint")
-				.map_err(|e| MigrationError::Internal(e.into()))?;
+		let waypoint = generate_waypoint::<AptosVMBlockExecutor>(&db_rw, &genesis_txn)
+			.context("failed to generate waypoint")
+			.map_err(|e| MigrationError::Internal(e.into()))?;
 
 		// maybe bootstrap the aptos db
 		let ledger_info_with_sigs =
-			maybe_bootstrap::<AptosVMBlockExecutor>(&db_rw, &aptos_genesis_transaction, waypoint)
+			maybe_bootstrap::<AptosVMBlockExecutor>(&db_rw, &genesis_txn, waypoint)
 				.context("failed to bootstrap")
 				.map_err(|e| MigrationError::Internal(e.into()))?
 				.context("no ledger info with sigs")
@@ -124,14 +131,14 @@ impl Migrationish for Migrate {
 		println!("ledger_info_with_sigs: {:?}", ledger_info_with_sigs);
 
 		// form the executor
-		let aptos_executor = MovementAptosBlockExecutor::new(db_rw.clone());
+		let movement_aptos_executor = MovementAptosBlockExecutor::new(db_rw);
 
-		aptos_executor
+		movement_aptos_executor
 			.reset()
 			.context("failed to reset")
 			.map_err(|e| MigrationError::Internal(e.into()))?;
 
-		aptos_executor
+		movement_aptos_executor
 			.commit_ledger(ledger_info_with_sigs)
 			.context("failed to commit ledger")
 			.map_err(|e| MigrationError::Internal(e.into()))?;
@@ -140,11 +147,11 @@ impl Migrationish for Migrate {
 		for res in movement_executor.iter_blocks(1).map_err(|e| {
 			MigrationError::Internal(format!("failed to iterate over blocks: {}", e).into())
 		})? {
-			let (start_version, _end_version, block) = res
+			let (start_version, end_version, block) = res
 				.context("failed to get block while iterating over blocks")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 
-			let db_reader = db_rw.reader.clone();
+			let db_reader = movement_aptos_executor.db.reader.clone();
 
 			// get the latest ledger version
 			let latest_ledger_version = db_reader
@@ -152,37 +159,37 @@ impl Migrationish for Migrate {
 				.context("failed to get latest ledger version")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 
+			println!(
+				"latest_ledger_version: {}, start_version: {}, end_version: {}",
+				latest_ledger_version, start_version, end_version
+			);
+
 			// form the state view
 			let state_view = db_reader
-				.state_view_at_version(Some(latest_ledger_version))
+				.state_view_at_version(Some(latest_ledger_version + 1))
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 
 			let block_executor_onchain_config = OnChainExecutionConfig::fetch_config(&state_view)
-				.unwrap_or_else(OnChainExecutionConfig::default_if_missing)
+				.context("onchain execution config not found; it should exist")
+				.map_err(|e| MigrationError::Internal(e.into()))?
 				.block_executor_onchain_config();
 
+			// convert the movement block to a movement aptos block
 			let movement_aptos_block = movement_block_to_movement_aptos_block(block)?;
 
-			aptos_executor
+			// get the parent block id
+			let parent_block_id = movement_aptos_executor.committed_block_id();
+
+			movement_aptos_executor
 				.execute_and_update_state(
 					movement_aptos_block,
-					HashValue::zero(),
+					parent_block_id,
 					block_executor_onchain_config,
 				)
 				.context("failed to execute and update state")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 		}
 
-		Ok(MovementAptosExecutor::new(aptos_executor))
-	}
-}
-
-impl Migrate {
-	/// Run the migration.
-	///
-	/// Note: we will use `run` or a domain-specific term for the core structs in our system,
-	/// and `execute` for the CLI structs in our system.
-	pub async fn run(&self) -> Result<(), MigrateError> {
-		unimplemented!()
+		Ok(MovementAptosExecutor::new(movement_aptos_executor))
 	}
 }

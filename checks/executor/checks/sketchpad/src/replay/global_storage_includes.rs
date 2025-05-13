@@ -8,7 +8,6 @@ pub mod test {
 		criterion::movement_executor::{MovementExecutor, MovementOptExecutor},
 		prelude::PreludeGenerator,
 	};
-	use mtma_null_core::config::Config as MtmaNullConfig;
 	use mtma_replay_core::config::Config as MtmaReplayConfig;
 
 	#[tokio::test]
@@ -25,7 +24,7 @@ pub mod test {
 			.await?;
 
 		// form the migration
-		let migration_config = MtmaReplayConfig::default();
+		let migration_config = MtmaReplayConfig::default().use_migrated_genesis(true);
 		let migration = migration_config.build()?;
 
 		// run the checked migration

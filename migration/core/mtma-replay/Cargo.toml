@@ -23,6 +23,7 @@ aptos-storage-interface = { workspace = true }
 aptos-config = { workspace = true }
 aptos-executor = { workspace = true }
 aptos-vm = { workspace = true }
+aptos-vm-genesis = { workspace = true }
 chrono = { workspace = true }
 walkdir = { workspace = true }
 uuid = { workspace = true }

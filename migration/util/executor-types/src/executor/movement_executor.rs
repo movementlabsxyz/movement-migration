@@ -89,7 +89,7 @@ impl MovementExecutor {
 		// get genesis transaction from db
 		let db_reader = self.opt_executor().db_reader();
 		let genesis_transaction =
-			db_reader.get_transaction_by_version(0, self.latest_ledger_version()?, false)?;
+			db_reader.get_transaction_by_version(0, self.latest_ledger_version()?, true)?;
 		Ok(genesis_transaction.transaction)
 	}
 }

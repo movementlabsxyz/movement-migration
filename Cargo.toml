@@ -111,6 +111,7 @@ aptos-config = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev 
 aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "dd5d4116bc96e5f300158dc1907a2e21ef23aa55", default-features = false }
 aptos-crypto = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "dd5d4116bc96e5f300158dc1907a2e21ef23aa55", default-features = false }
 bcs = { git = "https://github.com/aptos-labs/bcs.git", rev = "d31fab9d81748e2594be5cd5cdf845786a30562d" }
+aptos-vm-genesis = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "dd5d4116bc96e5f300158dc1907a2e21ef23aa55", default-features = false }
 # model checking and verification
 
 
