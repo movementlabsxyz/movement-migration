@@ -97,24 +97,25 @@ sysinfo = "0.34.2"
 
 
 # movement
-maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-syncador =  { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
+movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
+syncador =  { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
+maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "911472ff166af592c3b16d78fc64ed17eb29e550" }
 
 # aptos-core
-aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-vm = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-rest-client = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-storage-interface = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-db = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos_schemadb = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-config = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-node = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-cached-packages = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
+aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-vm = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-rest-client = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-storage-interface = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-db = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos_schemadb = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-config = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-node = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
+aptos-cached-packages = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "51f3f3d9ccccad16fbfc95e70ed15282e490eec6" }
 
 
 # secure-signing
@@ -180,7 +181,7 @@ mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 ## util
 movement-syncing = { path = "util/movement/movement-syncing" }
 movement-core = { path = "util/movement/movement-core" }
-movement-util = { path = "util/movement/movement-util" }
+movement-core-util = { path = "util/movement/movement-core-util" }
 movement-aptos-core = { path = "util/movement-aptos/movement-aptos-core" }
 
 [workspace.lints.clippy]
