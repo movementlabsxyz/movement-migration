@@ -70,17 +70,13 @@ where
 			.context("failed to release with pre-l1-merge")
 			.map_err(|e| MigrationError::Internal(e.into()))?;
 
-		// migrate the node
-		let movement_aptos_node = self
+		// migrate the with `mtma-node-null`
+		// NOTE: we're using the blanket implementation to upcast from a node migration to a migrator migration
+		let movement_aptos_migrator = self
 			.mtma_node_null
 			.migrate(movement_migrator)
 			.await
 			.context("failed to migrate node with mtma-node-null")
-			.map_err(|e| MigrationError::Internal(e.into()))?;
-
-		let movement_aptos_migrator = movement_aptos_node
-			.try_into()
-			.context("failed to convert movement aptos node to movement aptos migrator")
 			.map_err(|e| MigrationError::Internal(e.into()))?;
 
 		// return the movement aptos migrator
