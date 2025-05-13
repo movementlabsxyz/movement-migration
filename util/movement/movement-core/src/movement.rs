@@ -9,9 +9,12 @@ use std::collections::BTreeSet;
 use std::str::FromStr;
 pub mod faucet;
 pub mod rest_api;
+use std::path::PathBuf;
 
 use faucet::{Faucet, ParseFaucet};
 use rest_api::{ParseRestApi, RestApi};
+use std::path::Path;
+use std::sync::Arc;
 
 vendor_workspace!(MovementWorkspace, "movement");
 
@@ -149,8 +152,9 @@ impl Default for Overlays {
 	}
 }
 
+#[derive(Clone)]
 pub struct Movement {
-	workspace: MovementWorkspace,
+	workspace: Arc<MovementWorkspace>,
 	overlays: Overlays,
 	rest_api: State<RestApi>,
 	faucet: State<Faucet>,
@@ -166,7 +170,12 @@ pub enum MovementError {
 impl Movement {
 	/// Creates a new [Movement] with the given workspace and overlays.
 	pub fn new(workspace: MovementWorkspace, overlays: Overlays) -> Self {
-		Self { workspace, overlays, rest_api: State::new(), faucet: State::new() }
+		Self {
+			workspace: Arc::new(workspace),
+			overlays,
+			rest_api: State::new(),
+			faucet: State::new(),
+		}
 	}
 
 	/// Creates a new [Movement] with a temporary workspace.
@@ -275,6 +284,22 @@ impl Movement {
 			.map_err(|e| MovementError::Internal(e.into()))?;
 
 		Ok(())
+	}
+
+	/// Gets the workspace path.
+	pub fn workspace_path(&self) -> &Path {
+		&self.workspace.get_workspace_path()
+	}
+
+	/// Gets the db dir.
+	pub fn db_dir(&self) -> PathBuf {
+		// this is fixed for now
+		self.workspace
+			.get_workspace_path()
+			.join(".movement")
+			.join("maptos")
+			.join("27")
+			.join(".maptos")
 	}
 }
 
