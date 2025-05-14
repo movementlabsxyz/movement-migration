@@ -1,2 +1,13 @@
-movement-to-movement-aptos
-mtma-executor-util
+movement
+mtma-check
+mtma-check-dev
+mtma-migrate
+mtma-migrate-dev
+mtma-migrate-chain
+mtma-migrate-chain-dev
+mtma-migrate-node
+mtma-migrate-node-dev
+mtma-track
+mtma-track-dev
+mtma
+mtma-dev

@@ -18,10 +18,17 @@ We otherwise recommend reading the [checks](./checks/README.md) and working down
 | Task | Description |
 |------|-------------|
 | [Upcoming Events](https://github.com/movementlabsxyz/movement-migration/issues?q=is%3Aissue%20state%3Aopen%20label%3Apriority%3Ahigh%2Cpriority%3Amedium%20label%3Aevent) | High-priority `event` issues with planned completion dates. |
-| [Release Candidates](https://github.com/movementlabsxyz/movement-migraton/issues?q=is%3Aissue%20state%3Aopen%20label%3Arelease-candidate) | Feature-complete versions linked to events. |
+| [Release Candidates](https://github.com/movementlabsxyz/movement-migration/issues?q=is%3Aissue%20state%3Aopen%20label%3Arelease-candidate%20) | Feature-complete versions linked to events. |
 | [Features & Bugs](https://github.com/movementlabsxyz/movement-migration/issues?q=is%3Aissue%20state%3Aopen%20label%3Afeature%2Cbug%20label%3Apriority%3Aurgent%2Cpriority%3Ahigh) | High-priority `feature` and `bug` issues. |
 
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) file for additional contribution guidelines.
+
+## Strategies
+The migration is organized into passes, which are categorized as follows:
+
+- [`node`](/migration/core/node) for migration passes that take place with access to node processes, memory, and disk.
+- `transaction` is suggested but not broken out for all over-the-wire/transaction-based migration passes. 
+- [`migrator`](migration/core/migrator) for migration passes that take place with direct or indirect access to all other levels of abstraction--everything that is needed to migrate. 
 
 ## Organization
 
