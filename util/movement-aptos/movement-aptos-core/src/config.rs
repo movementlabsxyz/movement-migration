@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::str::FromStr;
 
-use crate::movement_aptos::MovementAptos;
+use crate::movement_aptos::{runtime, MovementAptos};
 use aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -66,11 +66,6 @@ pub struct Config {
 	#[orfile(config)]
 	#[clap(long)]
 	pub log_file: Option<PathBuf>,
-
-	/// Whether to create a global rayon pool.
-	#[orfile(config)]
-	#[clap(long)]
-	pub create_global_rayon_pool: bool,
 }
 
 impl Config {
@@ -90,19 +85,15 @@ impl Config {
 		)
 		.map_err(|e| ConfigError::Internal(e.into()))?;
 
-		Ok(Config {
-			node_config: NodeConfigWrapper(node_config),
-			log_file: None,
-			create_global_rayon_pool: false,
-		})
+		Ok(Config { node_config: NodeConfigWrapper(node_config), log_file: None })
 	}
 
 	/// Builds the config into a [MovementAptos] runner.
-	pub fn build(&self) -> Result<MovementAptos, ConfigError> {
-		Ok(MovementAptos::new(
+	pub fn build(&self) -> Result<MovementAptos<runtime::TokioTest>, ConfigError> {
+		Ok(MovementAptos::<runtime::TokioTest>::try_new(
 			self.node_config.0.clone(),
 			self.log_file.clone(),
-			self.create_global_rayon_pool,
-		))
+		)
+		.map_err(|e| ConfigError::Internal(e.into()))?)
 	}
 }

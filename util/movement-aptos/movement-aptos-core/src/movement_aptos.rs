@@ -2,7 +2,10 @@ use aptos_config::config::NodeConfig;
 use kestrel::State;
 use std::path::PathBuf;
 pub mod rest_api;
+pub mod runtime;
 pub use rest_api::RestApi;
+
+use runtime::Runtime;
 
 /// Errors thrown when running [MovementAptos].
 #[derive(Debug, thiserror::Error)]
@@ -12,28 +15,46 @@ pub enum MovementAptosError {
 }
 
 #[derive(Clone)]
-pub struct MovementAptos {
+pub struct MovementAptos<R>
+where
+	R: Runtime,
+{
 	/// The [NodeConfig] for the Aptos node.
 	pub node_config: NodeConfig,
 	/// The path to the log file.
 	pub log_file: Option<PathBuf>,
 	/// Whether to create a global rayon pool.
-	pub create_global_rayon_pool: bool,
+	pub create_global_rayon_pool: std::marker::PhantomData<R>,
 	/// The [MovementAptosRestApi] for the Aptos node.
 	pub rest_api: State<RestApi>,
 }
 
-impl MovementAptos {
-	pub fn new(
+impl<R> MovementAptos<R>
+where
+	R: Runtime,
+{
+	/// If you have something that marks your ability to get a runtime, you can use this.
+	pub fn new(node_config: NodeConfig, log_file: Option<PathBuf>, _runtime: R) -> Self {
+		Self {
+			node_config,
+			log_file,
+			create_global_rayon_pool: std::marker::PhantomData,
+			rest_api: State::new(),
+		}
+	}
+
+	/// Checks runtime availability and creates a new [MovementAptos].
+	pub fn try_new(
 		node_config: NodeConfig,
 		log_file: Option<PathBuf>,
-		create_global_rayon_pool: bool,
-	) -> Self {
-		Self { node_config, log_file, create_global_rayon_pool, rest_api: State::new() }
+	) -> Result<Self, anyhow::Error> {
+		let runtime = R::try_new()?;
+		let movement_aptos = MovementAptos::new(node_config, log_file, runtime);
+		Ok(movement_aptos)
 	}
 
 	pub fn from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
-		let movement_aptos = MovementAptos::new(config, None, false);
+		let movement_aptos = MovementAptos::new(config, None, R::try_new()?);
 		Ok(movement_aptos)
 	}
 
@@ -47,7 +68,7 @@ impl MovementAptos {
 		aptos_node::start(
 			self.node_config.clone(),
 			self.log_file.clone(),
-			self.create_global_rayon_pool,
+			R::create_global_rayon_pool(),
 		)
 		.map_err(|e| MovementAptosError::Internal(e.into()))?;
 
@@ -102,7 +123,7 @@ mod tests {
 	use rand::thread_rng;
 	use std::path::Path;
 
-	#[tokio::test]
+	#[tokio::test(flavor = "multi_thread")]
 	async fn test_movement_aptos() -> Result<(), anyhow::Error> {
 		// open in a new db
 		let unique_id = uuid::Uuid::new_v4();
@@ -128,7 +149,7 @@ mod tests {
 			rng,
 		)?;
 
-		let movement_aptos = MovementAptos::new(node_config, None, false);
+		let movement_aptos = MovementAptos::<runtime::TokioTest>::try_new(node_config, None)?;
 		let rest_api_state = movement_aptos.rest_api().read().clone();
 		movement_aptos.run().await?;
 		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
