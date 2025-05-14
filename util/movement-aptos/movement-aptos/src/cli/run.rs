@@ -1,5 +1,5 @@
 use clap::Parser;
-use movement_aptos_core::Config;
+use movement_aptos_core_inner::Config;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
 

@@ -2,7 +2,10 @@ use aptos_config::config::NodeConfig;
 use kestrel::State;
 use std::path::PathBuf;
 pub mod rest_api;
+use anyhow::Context;
+use kestrel::process::{command::Command, ProcessOperations};
 pub use rest_api::RestApi;
+use std::path::Path;
 
 /// Errors thrown when running [MovementAptos].
 #[derive(Debug, thiserror::Error)]
@@ -21,19 +24,43 @@ pub struct MovementAptos {
 	pub create_global_rayon_pool: bool,
 	/// The [MovementAptosRestApi] for the Aptos node.
 	pub rest_api: State<RestApi>,
+	/// Whether or not to multiprocess
+	pub multiprocess: bool,
+	/// The workspace for the multiprocessing should it occur
+	///
+	/// TODO: this can be tied into a single struct with `multiprocess` and both can be tied in to a type-safe runtime.
+	pub workspace: PathBuf,
 }
 
 impl MovementAptos {
-	pub fn new(
+	pub fn try_new(
 		node_config: NodeConfig,
 		log_file: Option<PathBuf>,
 		create_global_rayon_pool: bool,
-	) -> Self {
-		Self { node_config, log_file, create_global_rayon_pool, rest_api: State::new() }
+		multiprocess: bool,
+	) -> Result<Self, MovementAptosError> {
+		// create a .debug dir
+		let timestamp = chrono::Utc::now().timestamp_millis();
+		let unique_id = uuid::Uuid::new_v4();
+		let debug_dir = Path::new(".debug").join(format!(
+			"movement-aptos-core-{}-{}",
+			timestamp,
+			unique_id.to_string().split('-').next().unwrap()
+		));
+		std::fs::create_dir_all(debug_dir.clone())
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		Ok(Self {
+			node_config,
+			log_file,
+			create_global_rayon_pool,
+			rest_api: State::new(),
+			multiprocess,
+			workspace: debug_dir,
+		})
 	}
 
 	pub fn from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
-		let movement_aptos = MovementAptos::new(config, None, false);
+		let movement_aptos = MovementAptos::try_new(config, None, false, false)?;
 		Ok(movement_aptos)
 	}
 
@@ -43,13 +70,55 @@ impl MovementAptos {
 	}
 
 	/// Runs the internal node logic
-	pub(crate) fn run_node(&self) -> Result<(), MovementAptosError> {
+	pub(crate) fn run_node_in_thread(&self) -> Result<(), MovementAptosError> {
 		aptos_node::start(
 			self.node_config.clone(),
 			self.log_file.clone(),
 			self.create_global_rayon_pool,
 		)
 		.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		Ok(())
+	}
+
+	pub(crate) async fn run_node_in_process(&self) -> Result<(), MovementAptosError> {
+		// write the config to a file
+		let config_path = self.workspace.join("config.json");
+		std::fs::write(
+			config_path.clone(),
+			serde_json::to_string(&self.node_config)
+				.map_err(|e| MovementAptosError::Internal(e.into()))?,
+		)
+		.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		// spawn the node in a new process
+		let command = Command::line(
+			"movement-aptos",
+			vec![
+				"run",
+				"using",
+				"--config-path",
+				config_path
+					.to_str()
+					.context("Failed to convert config path to str")
+					.map_err(|e| MovementAptosError::Internal(e.into()))?,
+			],
+			Some(&self.workspace),
+			false,
+			vec![],
+			vec![],
+		);
+		command.run().await.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		Ok(())
+	}
+
+	pub(crate) async fn run_node(&self) -> Result<(), MovementAptosError> {
+		if self.multiprocess {
+			self.run_node_in_process().await?;
+		} else {
+			self.run_node_in_thread()?;
+		}
 
 		Ok(())
 	}
@@ -66,7 +135,7 @@ impl MovementAptos {
 
 		let runner = self.clone();
 		let runner_task = kestrel::task(async move {
-			runner.run_node()?;
+			runner.run_node().await?;
 			Ok::<_, MovementAptosError>(())
 		});
 
@@ -128,7 +197,7 @@ mod tests {
 			rng,
 		)?;
 
-		let movement_aptos = MovementAptos::new(node_config, None, false);
+		let movement_aptos = MovementAptos::try_new(node_config, None, false, false)?;
 		let rest_api_state = movement_aptos.rest_api().read().clone();
 		movement_aptos.run().await?;
 		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;

@@ -99,10 +99,14 @@ impl Config {
 
 	/// Builds the config into a [MovementAptos] runner.
 	pub fn build(&self) -> Result<MovementAptos, ConfigError> {
-		Ok(MovementAptos::new(
+		Ok(MovementAptos::try_new(
 			self.node_config.0.clone(),
 			self.log_file.clone(),
-			self.create_global_rayon_pool,
-		))
+			// CLI should always create a global rayon pool
+			false,
+			// CLI should not multiprocess, it will run natively
+			false,
+		)
+		.map_err(|e| ConfigError::Internal(e.into()))?)
 	}
 }

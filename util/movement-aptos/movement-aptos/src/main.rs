@@ -8,7 +8,7 @@ use dotenv::dotenv;
 use movement_aptos::cli;
 use tracing_subscriber::EnvFilter;
 
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<(), anyhow::Error> {
 	// Load environment variables from .env file.
 	dotenv().ok();
