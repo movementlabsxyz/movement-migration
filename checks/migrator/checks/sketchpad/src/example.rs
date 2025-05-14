@@ -4,7 +4,7 @@ pub mod test {
 	use mtma_migrator_test_types::check::checked_migration;
 	use mtma_migrator_types::migrator::MovementMigrator;
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
-	use mtma_node_test_types::prelude::{Prelude, PreludeError};
+	use mtma_node_test_types::prelude::Prelude;
 
 	#[tokio::test]
 	#[tracing_test::traced_test]
