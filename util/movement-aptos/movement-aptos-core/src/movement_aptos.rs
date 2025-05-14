@@ -23,8 +23,8 @@ where
 	pub node_config: NodeConfig,
 	/// The path to the log file.
 	pub log_file: Option<PathBuf>,
-	/// Whether to create a global rayon pool.
-	pub create_global_rayon_pool: std::marker::PhantomData<R>,
+	/// The runtime for the Aptos node.
+	pub runtime: std::marker::PhantomData<R>,
 	/// The [MovementAptosRestApi] for the Aptos node.
 	pub rest_api: State<RestApi>,
 }
@@ -35,12 +35,7 @@ where
 {
 	/// If you have something that marks your ability to get a runtime, you can use this.
 	pub fn new(node_config: NodeConfig, log_file: Option<PathBuf>, _runtime: R) -> Self {
-		Self {
-			node_config,
-			log_file,
-			create_global_rayon_pool: std::marker::PhantomData,
-			rest_api: State::new(),
-		}
+		Self { node_config, log_file, runtime: std::marker::PhantomData, rest_api: State::new() }
 	}
 
 	/// Checks runtime availability and creates a new [MovementAptos].
