@@ -95,10 +95,14 @@ where
 		let rest_api_state = self.rest_api.clone();
 		let rest_api_polling = kestrel::task(async move {
 			loop {
+				tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+				println!("POLLING REST API: {:?}", rest_api);
 				// wait for the rest api to be ready
 				let response = reqwest::get(rest_api.rest_api_url.clone())
 					.await
 					.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+				println!("REST API RESPONSE: {:?}", response);
 				if response.status().is_success() {
 					rest_api_state.write().set(rest_api).await;
 					break;
@@ -151,8 +155,15 @@ mod tests {
 
 		let movement_aptos = MovementAptos::<runtime::TokioTest>::try_new(node_config, None)?;
 		let rest_api_state = movement_aptos.rest_api().read().clone();
-		movement_aptos.run().await?;
+
+		let movement_aptos_task = kestrel::task(async move {
+			movement_aptos.run().await?;
+			Ok::<_, MovementAptosError>(())
+		});
+
 		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
+
+		kestrel::end!(movement_aptos_task)?;
 
 		Ok(())
 	}
