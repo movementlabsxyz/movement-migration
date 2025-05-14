@@ -36,18 +36,11 @@ where
 	}
 
 	/// Whether the criterion is satisfied by the given movement and movement_aptos executors.
-<<<<<<< HEAD:checks/migrator/util/types/src/criterion.rs
-	pub fn satisfies(
+	pub async fn satisfies(
 		&self,
 		movement_e2e_client: &MovementMigrator,
 		movement_aptos_e2e_client: &MovementAptosMigrator,
-=======
-	pub async fn satisfies(
-		&mut self,
-		movement_e2e_client: &MovementE2eClient,
-		movement_aptos_e2e_client: &MovementAptosE2eClient,
->>>>>>> f89d50a195634be28beb1d01bdcff87409e86863:checks/e2e/util/types/src/criterion.rs
 	) -> Result<(), CriterionError> {
-		self.0.satisfies(movement_e2e_client, movement_aptos_e2e_client).await
+		self.0.satisfies(movement_e2e_client, movement_aptos_e2e_client)
 	}
 }
