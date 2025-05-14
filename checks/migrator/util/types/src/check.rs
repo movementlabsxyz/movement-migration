@@ -1,5 +1,5 @@
-use crate::criterion::{Criterionish, MovementAptosMigratorClient, MovementMigratorClient};
-use mtma_migrator_types::{migration::Migrationish, migrator::MovementMigrator};
+use crate::criterion::{Criterionish, MovementMigrator};
+use mtma_migrator_types::migration::Migrationish;
 use mtma_node_test_types::prelude::Prelude;
 
 /// Errors thrown when working with the [Config].
@@ -38,24 +38,10 @@ pub async fn checked_migration(
 		.await
 		.map_err(|e| CheckError::Migration(e.into()))?;
 
-	// get the e2e clients
-	let movement_e2e_client = MovementMigratorClient::new(
-		movement_migrator
-			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(300))
-			.await
-			.map_err(|e| CheckError::Internal(e.into()))?,
-	);
-	let movement_aptos_e2e_client = MovementAptosMigratorClient::new(
-		movement_aptos_migrator
-			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(300))
-			.await
-			.map_err(|e| CheckError::Internal(e.into()))?,
-	);
-
 	// Run the criteria
 	for criterion in criteria {
 		criterion
-			.satisfies(&movement_e2e_client, &movement_aptos_e2e_client)
+			.satisfies(&movement_migrator, &movement_aptos_migrator)
 			.map_err(|e| CheckError::Criteria(e.into()))?;
 	}
 

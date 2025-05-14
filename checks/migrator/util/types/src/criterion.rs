@@ -1,7 +1,8 @@
-pub mod movement_aptos_migrator_client;
-pub mod movement_migrator_client;
-pub use movement_aptos_migrator_client::MovementAptosMigratorClient;
-pub use movement_migrator_client::MovementMigratorClient;
+pub use mtma_migrator_types::migrator::movement_aptos_migrator;
+pub use mtma_migrator_types::migrator::movement_migrator;
+
+pub use mtma_migrator_types::migrator::MovementAptosMigrator;
+pub use mtma_migrator_types::migrator::MovementMigrator;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
@@ -16,8 +17,8 @@ pub trait Criterionish {
 	/// Whether the criterion is satisfied by the given movement and movement_aptos executors.
 	fn satisfies(
 		&self,
-		movement_e2e_client: &MovementMigratorClient,
-		movement_aptos_e2e_client: &MovementAptosMigratorClient,
+		movement_e2e_client: &MovementMigrator,
+		movement_aptos_e2e_client: &MovementAptosMigrator,
 	) -> Result<(), CriterionError>;
 }
 
@@ -37,8 +38,8 @@ where
 	/// Whether the criterion is satisfied by the given movement and movement_aptos executors.
 	pub fn satisfies(
 		&self,
-		movement_e2e_client: &MovementMigratorClient,
-		movement_aptos_e2e_client: &MovementAptosMigratorClient,
+		movement_e2e_client: &MovementMigrator,
+		movement_aptos_e2e_client: &MovementAptosMigrator,
 	) -> Result<(), CriterionError> {
 		self.0.satisfies(movement_e2e_client, movement_aptos_e2e_client)
 	}
