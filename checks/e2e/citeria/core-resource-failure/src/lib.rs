@@ -74,7 +74,7 @@ impl CoreResourceScriptForbidden {
 }
 
 impl Criterionish for CoreResourceScriptForbidden {
-	fn satisfies(
+	async fn satisfies(
 		&mut self,
 		movement_client: &MovementE2eClient,
 		movement_aptos_client: &MovementAptosE2eClient,

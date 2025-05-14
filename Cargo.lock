@@ -7763,6 +7763,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bcs-ext"
+version = "0.0.1"
+dependencies = [
+ "bcs 0.1.4",
+ "serde",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "bech32"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -15688,6 +15697,7 @@ dependencies = [
  "anyhow",
  "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
  "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
+ "bcs 0.1.4",
  "hex",
  "movement-client",
  "mtma-migrator-types",

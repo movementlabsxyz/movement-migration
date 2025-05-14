@@ -19,6 +19,7 @@ aptos-rest-client = { workspace = true }
 aptos-sdk = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
+bcs = { workspace = true }
 
 [lints]
 workspace = true

@@ -54,9 +54,9 @@ impl MaptosTransferLifecycle {
 }
 
 impl Criterionish for MaptosTransferLifecycle {
-	fn satisfies(
+	async fn satisfies(
 		&mut self,
-		movement_e2e_client: &MovementE2eClient,
+		_movement_e2e_client: &MovementE2eClient,
 		movement_aptos_e2e_client: &MovementAptosE2eClient,
 	) -> Result<(), CriterionError> {
 		let module_id = ModuleId::new(

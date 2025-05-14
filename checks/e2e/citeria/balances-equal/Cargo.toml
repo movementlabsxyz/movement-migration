@@ -1,5 +1,5 @@
 [package]
-name = "mtma-migrator-test-governance-criterion"
+name = "migration-e2e-test-balances-equal-criterion"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,9 +9,9 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-mtma-node-test-types = { workspace = true }
-migration-executor-test-types = { workspace = true }
-anyhow = { workspace = true }
+migration-e2e-test-types = { workspace = true }
+bcs = { workspace = true }
+bcs-ext = { workspace = true }
 
 
 [lints]

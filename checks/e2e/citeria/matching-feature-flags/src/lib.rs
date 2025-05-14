@@ -25,7 +25,7 @@ impl GlobalFeatureCheck {
 }
 
 impl Criterionish for GlobalFeatureCheck {
-	fn satisfies(
+	async fn satisfies(
 		&mut self,
 		movement_e2e_client: &MovementE2eClient,
 		movement_aptos_e2e_client: &MovementAptosE2eClient,
