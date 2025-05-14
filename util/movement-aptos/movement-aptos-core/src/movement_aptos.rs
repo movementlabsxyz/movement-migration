@@ -64,15 +64,37 @@ where
 	}
 
 	/// Runs the internal node logic
-	pub(crate) fn run_node(&self) -> Result<(), MovementAptosError> {
-		aptos_node::start(
-			self.node_config.clone(),
-			self.log_file.clone(),
-			R::create_global_rayon_pool(),
-		)
-		.map_err(|e| MovementAptosError::Internal(e.into()))?;
+	pub(crate) async fn run_node(&self) -> Result<(), MovementAptosError> {
+		// Clone necessary data for the closure
+		let node_config = self.node_config.clone();
+		let log_file = self.log_file.clone();
 
-		Ok(())
+		// Spawn the blocking task
+		let blocking_task_result = tokio::task::spawn_blocking(move || {
+			// This closure runs on a blocking thread
+			aptos_node::start(
+				node_config,
+				log_file,
+				R::create_global_rayon_pool(), // Assuming R is in scope and its result is Send
+			)
+			// The closure should return the direct result from aptos_node::start.
+			// The error type from aptos_node::start (let's call it AptosNodeError)
+			// needs to be Send + 'static for the closure.
+		})
+		.await;
+
+		match blocking_task_result {
+			Ok(Ok(())) => Ok(()), // aptos_node::start succeeded
+			Ok(Err(aptos_node_err)) => {
+				// aptos_node::start failed. We need aptos_node_err to be convertible
+				// into the Box<dyn Error> for MovementAptosError::Internal.
+				Err(MovementAptosError::Internal(aptos_node_err.into()))
+			}
+			Err(join_err) => {
+				// spawn_blocking task failed (e.g., panicked or was cancelled by Tokio)
+				Err(MovementAptosError::Internal(Box::new(join_err)))
+			}
+		}
 	}
 
 	/// Runs the node and fills state.
@@ -87,7 +109,7 @@ where
 
 		let runner = self.clone();
 		let runner_task = kestrel::task(async move {
-			runner.run_node()?;
+			runner.run_node().await?;
 			Ok::<_, MovementAptosError>(())
 		});
 
@@ -162,6 +184,8 @@ mod tests {
 		});
 
 		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
+
+		println!("ENDING MOVEMENT APTOS");
 
 		kestrel::end!(movement_aptos_task)?;
 
