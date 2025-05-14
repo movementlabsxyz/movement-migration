@@ -24,7 +24,7 @@ movement-aptos-core = { workspace = true }
 futures-channel = { workspace = true }
 tokio = { workspace = true }
 # todo: get rid of namespace conflict
-movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+movement-util = { workspace = true }
 
 [lints]
 workspace = true
