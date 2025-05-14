@@ -2,9 +2,10 @@ use aptos_config::config::NodeConfig;
 use kestrel::State;
 use std::path::PathBuf;
 pub mod rest_api;
-use anyhow::Context;
 use kestrel::process::{command::Command, ProcessOperations};
 pub mod runtime;
+use crate::config::{Config, NodeConfigWrapper};
+use anyhow::Context;
 pub use rest_api::RestApi;
 use std::path::Path;
 
@@ -69,18 +70,23 @@ where
 		let runtime = R::try_new()?;
 
 		// create a .debug dir
-		let timestamp = chrono::Utc::now().timestamp_millis();
-		let unique_id = uuid::Uuid::new_v4();
-		let debug_dir = Path::new(".debug").join(format!(
-			"movement-aptos-core-{}-{}",
-			timestamp,
-			unique_id.to_string().split('-').next().unwrap()
-		));
-		std::fs::create_dir_all(debug_dir.clone())
-			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		let db_dir = if multiprocess {
+			let timestamp = chrono::Utc::now().timestamp_millis();
+			let unique_id = uuid::Uuid::new_v4();
+			let debug_dir = Path::new(".debug").join(format!(
+				"movement-aptos-core-{}-{}",
+				timestamp,
+				unique_id.to_string().split('-').next().unwrap()
+			));
+			std::fs::create_dir_all(debug_dir.clone())
+				.map_err(|e| MovementAptosError::Internal(e.into()))?;
+			debug_dir
+		} else {
+			Path::new("").to_path_buf()
+		};
 
 		let movement_aptos =
-			MovementAptos::new(node_config, log_file, runtime, multiprocess, debug_dir);
+			MovementAptos::new(node_config, log_file, runtime, multiprocess, db_dir);
 		Ok(movement_aptos)
 	}
 
@@ -131,12 +137,20 @@ where
 	pub(crate) async fn run_node_in_process(&self) -> Result<(), MovementAptosError> {
 		// write the config to a file
 		let config_path = self.workspace.join("config.json");
+		let config = Config {
+			node_config: NodeConfigWrapper(self.node_config.clone()),
+			log_file: self.log_file.clone(),
+		};
 		std::fs::write(
 			config_path.clone(),
-			serde_json::to_string(&self.node_config)
-				.map_err(|e| MovementAptosError::Internal(e.into()))?,
+			serde_json::to_string(&config).map_err(|e| MovementAptosError::Internal(e.into()))?,
 		)
 		.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		// create node_config data dir
+		let data_dir = self.node_config.storage.dir.clone();
+		std::fs::create_dir_all(data_dir.clone())
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
 
 		// spawn the node in a new process
 		let command = Command::line(
@@ -150,7 +164,7 @@ where
 					.context("Failed to convert config path to str")
 					.map_err(|e| MovementAptosError::Internal(e.into()))?,
 			],
-			Some(&self.workspace),
+			None,
 			false,
 			vec![],
 			vec![],

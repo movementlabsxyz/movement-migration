@@ -10,7 +10,7 @@ use crate::movement_aptos::{runtime, MovementAptos};
 use aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct NodeConfigWrapper(NodeConfig);
+pub struct NodeConfigWrapper(pub(crate) NodeConfig);
 
 impl NodeConfigWrapper {
 	pub fn new(node_config: NodeConfig) -> Self {
