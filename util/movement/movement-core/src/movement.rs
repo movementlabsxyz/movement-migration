@@ -303,19 +303,6 @@ impl Movement {
 	}
 }
 
-impl Drop for Movement {
-	fn drop(&mut self) {
-		// Get the real path of the workspace, following symlinks
-		if let Ok(real_path) = std::fs::canonicalize(self.workspace.get_workspace_path()) {
-			std::process::Command::new("docker-compose")
-				.arg("down")
-				.current_dir(real_path)
-				.output()
-				.unwrap();
-		}
-	}
-}
-
 #[cfg(test)]
 mod tests {
 	use super::*;
