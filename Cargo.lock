@@ -14916,6 +14916,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "movement-aptos"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap 4.5.36",
+ "clap-markdown-ext",
+ "dotenv",
+ "jemallocator",
+ "movement-aptos-core",
+ "mtma-core",
+ "orfile",
+ "serde",
+ "tokio",
+ "tracing",
+ "tracing-subscriber 0.3.19",
+]
+
+[[package]]
 name = "movement-aptos-core"
 version = "0.0.1"
 dependencies = [
