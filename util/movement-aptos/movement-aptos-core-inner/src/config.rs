@@ -10,7 +10,7 @@ use crate::movement_aptos::{runtime, MovementAptos};
 use aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct NodeConfigWrapper(NodeConfig);
+pub struct NodeConfigWrapper(pub(crate) NodeConfig);
 
 impl NodeConfigWrapper {
 	pub fn new(node_config: NodeConfig) -> Self {
@@ -74,7 +74,7 @@ impl Config {
 		let rng = rand::thread_rng();
 
 		let node_config = create_single_node_test_config(
-			&None,
+			&Some(db_dir.join("config.json")),
 			&None,
 			db_dir.as_path(),
 			true,
@@ -93,6 +93,7 @@ impl Config {
 		Ok(MovementAptos::<runtime::TokioTest>::try_new(
 			self.node_config.0.clone(),
 			self.log_file.clone(),
+			false,
 		)
 		.map_err(|e| ConfigError::Internal(e.into()))?)
 	}

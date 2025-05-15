@@ -136,6 +136,10 @@
               cp $(pwd)/.githooks/pre-commit $(pwd)/.git/hooks/pre-commit
               chmod +x $(pwd)/.git/hooks/pre-commit
 
+              # Hack
+              # Build the movement-aptos binary, so that we can spawn it and avoid tokio runtime deallocation limitations. 
+              cargo build --bin movement-aptos
+
               cat <<'EOF'
                MOVEMENT => MAPTOS
               EOF

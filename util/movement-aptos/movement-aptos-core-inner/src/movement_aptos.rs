@@ -2,7 +2,9 @@ use aptos_config::config::NodeConfig;
 use kestrel::State;
 use std::path::PathBuf;
 pub mod rest_api;
+use kestrel::process::{command::Command, ProcessOperations};
 pub mod runtime;
+use crate::config::{Config, NodeConfigWrapper};
 pub use rest_api::RestApi;
 
 use runtime::Runtime;
@@ -27,6 +29,12 @@ where
 	pub runtime: std::marker::PhantomData<R>,
 	/// The [MovementAptosRestApi] for the Aptos node.
 	pub rest_api: State<RestApi>,
+	/// Whether or not to multiprocess
+	pub multiprocess: bool,
+	/// The workspace for the multiprocessing should it occur
+	///
+	/// TODO: this can be tied into a single struct with `multiprocess` and both can be tied in to a type-safe runtime.
+	pub workspace: PathBuf,
 }
 
 impl<R> MovementAptos<R>
@@ -34,22 +42,41 @@ where
 	R: Runtime,
 {
 	/// If you have something that marks your ability to get a runtime, you can use this.
-	pub fn new(node_config: NodeConfig, log_file: Option<PathBuf>, _runtime: R) -> Self {
-		Self { node_config, log_file, runtime: std::marker::PhantomData, rest_api: State::new() }
+	pub fn new(
+		node_config: NodeConfig,
+		log_file: Option<PathBuf>,
+		_runtime: R,
+		multiprocess: bool,
+		workspace: PathBuf,
+	) -> Self {
+		Self {
+			node_config,
+			log_file,
+			runtime: std::marker::PhantomData,
+			rest_api: State::new(),
+			multiprocess,
+			workspace,
+		}
 	}
 
 	/// Checks runtime availability and creates a new [MovementAptos].
 	pub fn try_new(
 		node_config: NodeConfig,
 		log_file: Option<PathBuf>,
+		multiprocess: bool,
 	) -> Result<Self, anyhow::Error> {
 		let runtime = R::try_new()?;
-		let movement_aptos = MovementAptos::new(node_config, log_file, runtime);
+
+		// create a .debug dir
+		let db_dir = node_config.storage.dir().clone();
+
+		let movement_aptos =
+			MovementAptos::new(node_config, log_file, runtime, multiprocess, db_dir);
 		Ok(movement_aptos)
 	}
 
 	pub fn from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
-		let movement_aptos = MovementAptos::new(config, None, R::try_new()?);
+		let movement_aptos = MovementAptos::try_new(config, None, true)?;
 		Ok(movement_aptos)
 	}
 
@@ -59,7 +86,8 @@ where
 	}
 
 	/// Runs the internal node logic
-	pub(crate) async fn run_node(&self) -> Result<(), MovementAptosError> {
+	pub(crate) async fn run_node_in_thread(&self) -> Result<(), MovementAptosError> {
+		println!("Running node in thread");
 		// Clone necessary data for the closure
 		let node_config = self.node_config.clone();
 		let log_file = self.log_file.clone();
@@ -90,6 +118,60 @@ where
 				Err(MovementAptosError::Internal(Box::new(join_err)))
 			}
 		}
+	}
+
+	pub(crate) async fn run_node_in_process(&self) -> Result<(), MovementAptosError> {
+		println!("Running node in process");
+		// write the config to a file
+		let config_path = self.workspace.join("config.json");
+		let config = Config {
+			node_config: NodeConfigWrapper(self.node_config.clone()),
+			log_file: self.log_file.clone(),
+		};
+
+		let serialized_config =
+			serde_json::to_string(&config).map_err(|e| MovementAptosError::Internal(e.into()))?;
+		println!("Serialized config: {:?}", serialized_config);
+
+		// create node_config data dir
+		let data_dir = self.node_config.get_data_dir();
+		tokio::fs::create_dir_all(data_dir)
+			.await
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		println!("Data dir: {:?}", data_dir);
+
+		// write the config to the file
+		// seems to be blocking here
+		// perhaps somehow being opened in read?
+		tokio::fs::write(config_path.clone(), serialized_config)
+			.await
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		println!("Config path: {:?}", config_path);
+
+		// spawn the node in a new process
+		println!("Spawning node in process");
+		let command = Command::line(
+			"movement-aptos",
+			vec!["run", "using", "--config-path", "config.json"],
+			Some(&self.workspace),
+			false,
+			vec![],
+			vec![],
+		);
+		command.run().await.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		Ok(())
+	}
+
+	pub(crate) async fn run_node(&self) -> Result<(), MovementAptosError> {
+		if self.multiprocess {
+			self.run_node_in_process().await?;
+		} else {
+			self.run_node_in_thread().await?;
+		}
+
+		Ok(())
 	}
 
 	/// Runs the node and fills state.
@@ -156,10 +238,10 @@ mod tests {
 		));
 
 		// create parent dirs
-		std::fs::create_dir_all(db_dir.clone())?;
+		tokio::fs::create_dir_all(db_dir.clone()).await?;
 
 		let rng = thread_rng();
-		let node_config = create_single_node_test_config(
+		let mut node_config = create_single_node_test_config(
 			&None,
 			&None,
 			db_dir.as_path(),
@@ -169,8 +251,9 @@ mod tests {
 			&aptos_cached_packages::head_release_bundle().clone(),
 			rng,
 		)?;
+		node_config.set_data_dir(db_dir.clone());
 
-		let movement_aptos = MovementAptos::<runtime::TokioTest>::try_new(node_config, None)?;
+		let movement_aptos = MovementAptos::<runtime::TokioTest>::try_new(node_config, None, true)?;
 		let rest_api_state = movement_aptos.rest_api().read().clone();
 
 		let movement_aptos_task = kestrel::task(async move {
@@ -178,7 +261,9 @@ mod tests {
 			Ok::<_, MovementAptosError>(())
 		});
 
-		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
+		// You can comment and uncomment this to see that the rest api wait for is not causing the problem
+		// tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
+		rest_api_state.wait_for(tokio::time::Duration::from_secs(10)).await?;
 
 		println!("ENDING MOVEMENT APTOS");
 
