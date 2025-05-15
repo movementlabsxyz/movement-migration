@@ -1,0 +1,30 @@
+[package]
+name = "mtma-node-types"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+serde = { workspace = true }
+anyhow = { workspace = true }
+hex = { workspace = true }
+maptos-opt-executor = { workspace = true }
+aptos-executor = { workspace = true }
+aptos-vm = { workspace = true }
+aptos-types = { workspace = true }
+thiserror = { workspace = true }
+aptos-storage-interface = { workspace = true }
+either = { workspace = true }
+tracing = { workspace = true }
+movement-aptos-core = { workspace = true }
+futures-channel = { workspace = true }
+tokio = { workspace = true }
+# todo: get rid of namespace conflict
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+
+[lints]
+workspace = true
