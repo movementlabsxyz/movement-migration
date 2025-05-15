@@ -129,21 +129,36 @@ where
 			log_file: self.log_file.clone(),
 		};
 
-		let serialized_node_config_wrapper = serde_json::to_string(&config.node_config)
+		let serialized_config =
+			serde_json::to_string(&config).map_err(|e| MovementAptosError::Internal(e.into()))?;
+		println!("Serialized config: {:?}", serialized_config);
+
+		// create node_config data dir
+		let data_dir = self.node_config.get_data_dir();
+		tokio::fs::create_dir_all(data_dir)
+			.await
 			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		println!("Data dir: {:?}", data_dir);
+
+		// write the config to the file
+		// seems to be blocking here
+		// perhaps somehow being opened in read?
+		tokio::fs::write(config_path.clone(), serialized_config)
+			.await
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		println!("Config path: {:?}", config_path);
 
 		// spawn the node in a new process
 		println!("Spawning node in process");
 		let command = Command::line(
 			"movement-aptos",
-			vec!["run", "where", "--node-config", &serialized_node_config_wrapper],
-			None, // Note the drop in working directory; now RocksDB will error.
+			vec!["run", "using", "--config-path", "config.json"],
+			Some(&self.workspace),
 			false,
 			vec![],
 			vec![],
 		);
-
-		println!("Spawning command.");
 		command.run().await.map_err(|e| MovementAptosError::Internal(e.into()))?;
 
 		Ok(())
@@ -248,7 +263,7 @@ mod tests {
 
 		// You can comment and uncomment this to see that the rest api wait for is not causing the problem
 		// tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
-		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
+		rest_api_state.wait_for(tokio::time::Duration::from_secs(10)).await?;
 
 		println!("ENDING MOVEMENT APTOS");
 
