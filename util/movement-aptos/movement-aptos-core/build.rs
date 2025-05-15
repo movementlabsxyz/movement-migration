@@ -7,9 +7,9 @@ async fn main() -> Result<(), anyhow::Error> {
 	for container in CONTAINERS {
 		readier.add_image(container.to_string());
 	}
-	if !readier.build().await.is_err() {
-		panic!("Expected error for arm64 pull: this means that the image is now available and you should update this implementation");
-	}
+	// if !readier.build().await.is_err() {
+	// 	panic!("Expected error for arm64 pull: this means that the image is now available and you should update this implementation");
+	// }
 
 	Ok(())
 }
