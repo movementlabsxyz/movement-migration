@@ -99,8 +99,10 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_rest_api() -> Result<(), anyhow::Error> {
-		let (sender, mut receiver) = tokio::sync::mpsc::channel(1);
+		let (sender, mut receiver) = tokio::sync::mpsc::channel(2);
 		let processor = ParseRestApi::test();
+
+		sender.send(String::from("movement-full-node               | 2025-05-06T08:49:06.205999Z  INFO poem::server: listening addr=socket://0.0.0.0:30731")).await?;
 
 		sender.send(String::from("movement-full-node               | 2025-05-06T08:49:06.205999Z  INFO poem::server: listening addr=socket://0.0.0.0:30731")).await?;
 

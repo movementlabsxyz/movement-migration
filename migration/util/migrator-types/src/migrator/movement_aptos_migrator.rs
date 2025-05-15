@@ -2,7 +2,7 @@ use anyhow::Context;
 use aptos_config::config::NodeConfig;
 use aptos_rest_client::Client as MovementAptosRestClient;
 use kestrel::WaitCondition;
-use movement_aptos_core::MovementAptos;
+use movement_aptos_core::{runtime, MovementAptos};
 use mtma_node_types::executor::MovementAptosNode;
 
 /// An enum supporting different types of runners.
@@ -12,7 +12,7 @@ use mtma_node_types::executor::MovementAptosNode;
 #[derive(Clone)]
 pub enum Runner {
 	/// [MovementAptos] runner.
-	MovementAptos(MovementAptos),
+	MovementAptos(MovementAptos<runtime::TokioTest>),
 }
 
 /// The [MovementAptos] migration struct as would be presented in the criterion.
