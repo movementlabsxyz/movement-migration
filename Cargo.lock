@@ -14924,7 +14924,7 @@ dependencies = [
  "clap-markdown-ext",
  "dotenv",
  "jemallocator",
- "movement-aptos-core-inner",
+ "movement-aptos-core",
  "mtma-core",
  "orfile",
  "serde",
@@ -14937,15 +14937,6 @@ dependencies = [
 name = "movement-aptos-core"
 version = "0.0.1"
 dependencies = [
- "cargo_metadata 0.19.2",
- "movement-aptos",
- "movement-aptos-core-inner",
-]
-
-[[package]]
-name = "movement-aptos-core-inner"
-version = "0.0.1"
-dependencies = [
  "anyhow",
  "aptos-cached-packages 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=51f3f3d9ccccad16fbfc95e70ed15282e490eec6)",
  "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=51f3f3d9ccccad16fbfc95e70ed15282e490eec6)",
@@ -14955,8 +14946,10 @@ dependencies = [
  "hex",
  "jsonlvar",
  "kestrel",
+ "movement-aptos-util",
  "orfile",
  "rand 0.7.3",
+ "ready-docker",
  "reqwest 0.12.15",
  "serde",
  "serde_json",
@@ -14965,6 +14958,10 @@ dependencies = [
  "tokio",
  "uuid",
 ]
+
+[[package]]
+name = "movement-aptos-util"
+version = "0.0.1"
 
 [[package]]
 name = "movement-client"
