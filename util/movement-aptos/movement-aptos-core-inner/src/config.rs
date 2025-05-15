@@ -74,7 +74,7 @@ impl Config {
 		let rng = rand::thread_rng();
 
 		let node_config = create_single_node_test_config(
-			&None,
+			&Some(db_dir.join("config.json")),
 			&None,
 			db_dir.as_path(),
 			true,

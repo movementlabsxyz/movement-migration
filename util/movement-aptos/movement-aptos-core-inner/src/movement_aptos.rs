@@ -5,9 +5,7 @@ pub mod rest_api;
 use kestrel::process::{command::Command, ProcessOperations};
 pub mod runtime;
 use crate::config::{Config, NodeConfigWrapper};
-use anyhow::Context;
 pub use rest_api::RestApi;
-use std::path::Path;
 
 use runtime::Runtime;
 
@@ -70,20 +68,7 @@ where
 		let runtime = R::try_new()?;
 
 		// create a .debug dir
-		let db_dir = if multiprocess {
-			let timestamp = chrono::Utc::now().timestamp_millis();
-			let unique_id = uuid::Uuid::new_v4();
-			let debug_dir = Path::new(".debug").join(format!(
-				"movement-aptos-core-{}-{}",
-				timestamp,
-				unique_id.to_string().split('-').next().unwrap()
-			));
-			std::fs::create_dir_all(debug_dir.clone())
-				.map_err(|e| MovementAptosError::Internal(e.into()))?;
-			debug_dir
-		} else {
-			Path::new("").to_path_buf()
-		};
+		let db_dir = node_config.storage.dir().clone();
 
 		let movement_aptos =
 			MovementAptos::new(node_config, log_file, runtime, multiprocess, db_dir);
@@ -102,6 +87,7 @@ where
 
 	/// Runs the internal node logic
 	pub(crate) async fn run_node_in_thread(&self) -> Result<(), MovementAptosError> {
+		println!("Running node in thread");
 		// Clone necessary data for the closure
 		let node_config = self.node_config.clone();
 		let log_file = self.log_file.clone();
@@ -135,36 +121,40 @@ where
 	}
 
 	pub(crate) async fn run_node_in_process(&self) -> Result<(), MovementAptosError> {
+		println!("Running node in process");
 		// write the config to a file
 		let config_path = self.workspace.join("config.json");
 		let config = Config {
 			node_config: NodeConfigWrapper(self.node_config.clone()),
 			log_file: self.log_file.clone(),
 		};
-		std::fs::write(
-			config_path.clone(),
-			serde_json::to_string(&config).map_err(|e| MovementAptosError::Internal(e.into()))?,
-		)
-		.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		let serialized_config =
+			serde_json::to_string(&config).map_err(|e| MovementAptosError::Internal(e.into()))?;
+		println!("Serialized config: {:?}", serialized_config);
 
 		// create node_config data dir
-		let data_dir = self.node_config.storage.dir.clone();
-		std::fs::create_dir_all(data_dir.clone())
+		let data_dir = self.node_config.get_data_dir();
+		tokio::fs::create_dir_all(data_dir)
+			.await
 			.map_err(|e| MovementAptosError::Internal(e.into()))?;
 
+		println!("Data dir: {:?}", data_dir);
+
+		// write the config to the file
+		// seems to be blocking here
+		// perhaps somehow being opened in read?
+		tokio::fs::write(config_path.clone(), serialized_config)
+			.await
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		println!("Config path: {:?}", config_path);
+
 		// spawn the node in a new process
+		println!("Spawning node in process");
 		let command = Command::line(
 			"movement-aptos",
-			vec![
-				"run",
-				"using",
-				"--config-path",
-				config_path
-					.to_str()
-					.context("Failed to convert config path to str")
-					.map_err(|e| MovementAptosError::Internal(e.into()))?,
-			],
-			None,
+			vec!["run", "using", "--config-path", "config.json"],
+			Some(&self.workspace),
 			false,
 			vec![],
 			vec![],
@@ -248,10 +238,10 @@ mod tests {
 		));
 
 		// create parent dirs
-		std::fs::create_dir_all(db_dir.clone())?;
+		tokio::fs::create_dir_all(db_dir.clone()).await?;
 
 		let rng = thread_rng();
-		let node_config = create_single_node_test_config(
+		let mut node_config = create_single_node_test_config(
 			&None,
 			&None,
 			db_dir.as_path(),
@@ -261,6 +251,7 @@ mod tests {
 			&aptos_cached_packages::head_release_bundle().clone(),
 			rng,
 		)?;
+		node_config.set_data_dir(db_dir.clone());
 
 		let movement_aptos = MovementAptos::<runtime::TokioTest>::try_new(node_config, None, true)?;
 		let rest_api_state = movement_aptos.rest_api().read().clone();
@@ -270,7 +261,9 @@ mod tests {
 			Ok::<_, MovementAptosError>(())
 		});
 
-		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
+		// You can comment and uncomment this to see that the rest api wait for is not causing the problem
+		// tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
+		rest_api_state.wait_for(tokio::time::Duration::from_secs(10)).await?;
 
 		println!("ENDING MOVEMENT APTOS");
 
