@@ -154,15 +154,35 @@ where
 
 		// spawn the node in a new process
 		let command = Command::line(
-			"movement-aptos",
+			"docker",
 			vec![
+				// mount the workspace to /app
 				"run",
-				"using",
+				"-v",
+				&format!(
+					"{}:/app",
+					self.workspace
+						.to_str()
+						.context("Failed to convert workspace to str")
+						.map_err(|e| MovementAptosError::Internal(e.into()))?
+				),
+				&movement_aptos_util::VALIDATOR.to_string(),
+				// use the config path
 				"--config-path",
-				config_path
-					.to_str()
-					.context("Failed to convert config path to str")
-					.map_err(|e| MovementAptosError::Internal(e.into()))?,
+				&format!(
+					"/app/{}",
+					config_path
+						.to_str()
+						.context("Failed to convert config path to str")
+						.map_err(|e| MovementAptosError::Internal(e.into()))?
+				),
+				// expose the port
+				"-p",
+				&format!(
+					"{}:{}",
+					self.node_config.api.address.port(),
+					self.node_config.api.address.port()
+				),
 			],
 			None,
 			false,

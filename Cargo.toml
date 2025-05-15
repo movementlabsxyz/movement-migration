@@ -181,9 +181,9 @@ mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 movement-syncing = { path = "util/movement/movement-syncing" }
 movement-core = { path = "util/movement/movement-core" }
 movement-util = { path = "util/movement/movement-util" }
-movement-aptos-core-inner = { path = "util/movement-aptos/movement-aptos-core-inner" }
 movement-aptos = { path = "util/movement-aptos/movement-aptos" }
 movement-aptos-core = { path = "util/movement-aptos/movement-aptos-core" }
+movement-aptos-util = { path = "util/movement-aptos/movement-aptos-util" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
