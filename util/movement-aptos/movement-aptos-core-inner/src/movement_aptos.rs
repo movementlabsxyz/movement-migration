@@ -246,6 +246,10 @@ mod tests {
 			&aptos_cached_packages::head_release_bundle().clone(),
 			rng,
 		)?;
+		node_config.base.working_dir = Some(db_dir.clone());
+		node_config.storage.dir = db_dir.clone();
+
+		// data dir does not get serialized
 		node_config.set_data_dir(db_dir.clone());
 
 		let movement_aptos = MovementAptos::<runtime::Delegated>::try_new(node_config, None, true)?;
