@@ -62,14 +62,15 @@ where
 
 	/// Checks runtime availability and creates a new [MovementAptos].
 	pub fn try_new(
-		node_config: NodeConfig,
+		mut node_config: NodeConfig,
 		log_file: Option<PathBuf>,
 		multiprocess: bool,
 	) -> Result<Self, anyhow::Error> {
 		let runtime = R::try_new()?;
 
 		// create a .debug dir
-		let db_dir = node_config.get_data_dir().to_path_buf();
+		node_config.set_data_dir(node_config.storage.dir().to_path_buf());
+		let db_dir = node_config.storage.dir().to_path_buf();
 
 		let movement_aptos =
 			MovementAptos::new(node_config, log_file, runtime, multiprocess, db_dir);
@@ -246,11 +247,11 @@ mod tests {
 			&aptos_cached_packages::head_release_bundle().clone(),
 			rng,
 		)?;
-		node_config.base.working_dir = Some(db_dir.clone());
+		// node_config.base.working_dir = Some(db_dir.clone());
 		node_config.storage.dir = db_dir.clone();
 
 		// data dir does not get serialized
-		node_config.set_data_dir(db_dir.clone());
+		// node_config.set_data_dir(db_dir.clone());
 
 		let movement_aptos = MovementAptos::<runtime::Delegated>::try_new(node_config, None, true)?;
 		let rest_api_state = movement_aptos.rest_api().read().clone();
