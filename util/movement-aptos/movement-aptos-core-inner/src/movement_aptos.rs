@@ -68,7 +68,7 @@ where
 		let runtime = R::try_new()?;
 
 		// create a .debug dir
-		let db_dir = node_config.storage.dir().clone();
+		let db_dir = node_config.get_data_dir().to_path_buf();
 
 		let movement_aptos =
 			MovementAptos::new(node_config, log_file, runtime, multiprocess, db_dir);
@@ -93,7 +93,7 @@ where
 		let log_file = self.log_file.clone();
 
 		// Spawn the blocking task
-		let blocking_task_result = tokio::task::spawn_blocking(move || {
+		tokio::task::spawn_blocking(move || {
 			// This closure runs on a blocking thread
 			aptos_node::start(
 				node_config,
@@ -104,26 +104,22 @@ where
 			// The error type from aptos_node::start (let's call it AptosNodeError)
 			// needs to be Send + 'static for the closure.
 		})
-		.await;
+		.await
+		.map_err(|e| MovementAptosError::Internal(e.into()))?
+		.map_err(|e| MovementAptosError::Internal(e.into()))?;
 
-		match blocking_task_result {
-			Ok(Ok(())) => Ok(()), // aptos_node::start succeeded
-			Ok(Err(aptos_node_err)) => {
-				// aptos_node::start failed. We need aptos_node_err to be convertible
-				// into the Box<dyn Error> for MovementAptosError::Internal.
-				Err(MovementAptosError::Internal(aptos_node_err.into()))
-			}
-			Err(join_err) => {
-				// spawn_blocking task failed (e.g., panicked or was cancelled by Tokio)
-				Err(MovementAptosError::Internal(Box::new(join_err)))
-			}
-		}
+		Ok(())
 	}
 
+	/// Runs the node in a new process, effectively passing the config to a process which runs [run_node_in_thread] from above.
 	pub(crate) async fn run_node_in_process(&self) -> Result<(), MovementAptosError> {
+		use std::os::unix::fs::MetadataExt;
+		let meta = std::fs::metadata(&self.workspace)
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		println!("UID: {}, GID: {}, Mode: {:o}", meta.uid(), meta.gid(), meta.mode());
+
 		println!("Running node in process");
 		// write the config to a file
-		let config_path = self.workspace.join("config.json");
 		let config = Config {
 			node_config: NodeConfigWrapper(self.node_config.clone()),
 			log_file: self.log_file.clone(),
@@ -137,7 +133,7 @@ where
 		let command = Command::line(
 			"movement-aptos",
 			vec!["run", "where", "--node-config", &serialized_node_config_wrapper],
-			None, // Note the drop in working directory; now RocksDB will error.
+			None,
 			false,
 			vec![],
 			vec![],
@@ -169,7 +165,9 @@ where
 			),
 		};
 
-		let runner = self.clone();
+		self.run_node().await?;
+
+		/*let runner = self.clone();
 		let runner_task = kestrel::task(async move {
 			runner.run_node().await?;
 			Ok::<_, MovementAptosError>(())
@@ -198,7 +196,7 @@ where
 
 		// await the runner
 		runner_task.await.map_err(|e| MovementAptosError::Internal(e.into()))??;
-		rest_api_polling.await.map_err(|e| MovementAptosError::Internal(e.into()))??;
+		rest_api_polling.await.map_err(|e| MovementAptosError::Internal(e.into()))??;*/
 
 		Ok(())
 	}
@@ -211,19 +209,24 @@ mod tests {
 	use rand::thread_rng;
 	use std::path::Path;
 
-	#[tokio::test(flavor = "multi_thread")]
+	#[tokio::test]
 	async fn test_movement_aptos() -> Result<(), anyhow::Error> {
 		// open in a new db
 		let unique_id = uuid::Uuid::new_v4();
 		let timestamp = chrono::Utc::now().timestamp_millis();
-		let db_dir = Path::new(".debug").join(format!(
+		let db_dir = std::env::current_dir()?.join(Path::new(".debug")).join(format!(
 			"movement-aptos-db-{}-{}",
 			timestamp,
 			unique_id.to_string().split('-').next().unwrap()
 		));
 
+		let safe_cwd = PathBuf::from("/tmp");
+		std::env::set_current_dir(&safe_cwd)?;
+
 		// create parent dirs
-		tokio::fs::create_dir_all(db_dir.clone()).await?;
+		{
+			tokio::fs::create_dir_all(db_dir.clone()).await?;
+		}
 
 		let rng = thread_rng();
 		let mut node_config = create_single_node_test_config(
@@ -238,21 +241,22 @@ mod tests {
 		)?;
 		node_config.set_data_dir(db_dir.clone());
 
-		let movement_aptos = MovementAptos::<runtime::TokioTest>::try_new(node_config, None, true)?;
+		let movement_aptos = MovementAptos::<runtime::Delegated>::try_new(node_config, None, true)?;
 		let rest_api_state = movement_aptos.rest_api().read().clone();
 
-		let movement_aptos_task = kestrel::task(async move {
+		/*let movement_aptos_task = kestrel::task(async move {
 			movement_aptos.run().await?;
 			Ok::<_, MovementAptosError>(())
-		});
+		}); */
+		movement_aptos.run().await?;
 
 		// You can comment and uncomment this to see that the rest api wait for is not causing the problem
 		// tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
-		rest_api_state.wait_for(tokio::time::Duration::from_secs(30)).await?;
+		rest_api_state.wait_for(tokio::time::Duration::from_secs(10)).await?;
 
 		println!("ENDING MOVEMENT APTOS");
 
-		kestrel::end!(movement_aptos_task)?;
+		// kestrel::end!(movement_aptos_task)?;
 
 		Ok(())
 	}
