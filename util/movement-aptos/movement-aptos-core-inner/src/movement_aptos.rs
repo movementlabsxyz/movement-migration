@@ -8,6 +8,7 @@ use crate::config::{Config, NodeConfigWrapper};
 pub use rest_api::RestApi;
 
 use runtime::Runtime;
+use tokio::process::Command as TokioCommand;
 
 /// Errors thrown when running [MovementAptos].
 #[derive(Debug, thiserror::Error)]
@@ -119,7 +120,6 @@ where
 		println!("UID: {}, GID: {}, Mode: {:o}", meta.uid(), meta.gid(), meta.mode());
 
 		println!("Running node in process");
-		// write the config to a file
 		let config = Config {
 			node_config: NodeConfigWrapper(self.node_config.clone()),
 			log_file: self.log_file.clone(),
@@ -130,17 +130,24 @@ where
 
 		// spawn the node in a new process
 		println!("Spawning node in process");
-		let command = Command::line(
-			"movement-aptos",
-			vec!["run", "where", "--node-config", &serialized_node_config_wrapper],
-			Some(&self.workspace),
-			false,
-			vec![],
-			vec![],
-		);
+		let mut command = TokioCommand::new("movement-aptos");
+		command
+			.args(&["run", "where", "--node-config", &serialized_node_config_wrapper])
+			.current_dir(&self.workspace)
+			.kill_on_drop(true);
 
 		println!("Spawning command.");
-		command.run().await.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		let mut child = command.spawn().map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		// Wait for the process to complete, but don't capture output
+		// This allows the process to write directly to stdout/stderr
+		let status = child.wait().await.map_err(|e| MovementAptosError::Internal(e.into()))?;
+
+		if !status.success() {
+			return Err(MovementAptosError::Internal(
+				anyhow::anyhow!("Process exited with status: {}", status).into(),
+			));
+		}
 
 		Ok(())
 	}
