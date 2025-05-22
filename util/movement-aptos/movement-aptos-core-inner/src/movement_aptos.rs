@@ -133,7 +133,7 @@ where
 		let command = Command::line(
 			"movement-aptos",
 			vec!["run", "where", "--node-config", &serialized_node_config_wrapper],
-			None,
+			Some(&self.workspace),
 			false,
 			vec![],
 			vec![],
