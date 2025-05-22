@@ -66,6 +66,7 @@
           frameworks.SystemConfiguration
           frameworks.AppKit
           libelf
+          bzip2
         ] ++ lib.optionals stdenv.isLinux [
           udev
           systemd
