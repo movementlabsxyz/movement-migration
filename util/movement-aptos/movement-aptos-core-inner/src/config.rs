@@ -3,6 +3,7 @@ use clap::Parser;
 use jsonlvar::Jsonl;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
+use std::fs::File;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -90,11 +91,22 @@ impl Config {
 
 	/// Builds the config into a [MovementAptos] runner.
 	pub fn build(&self) -> Result<MovementAptos<runtime::TokioTest>, ConfigError> {
-		Ok(MovementAptos::<runtime::TokioTest>::try_new(
-			self.node_config.0.clone(),
-			self.log_file.clone(),
+		// get the workspace dir
+		let workspace_dir =
+			self.node_config.node_config().base.working_dir.clone().unwrap_or_default();
+
+		// get the config path
+		let config_path = workspace_dir.join("config.yaml");
+
+		// write the config to the config path
+		let config_file = File::create(config_path).map_err(|e| ConfigError::Internal(e.into()))?;
+		serde_json::to_writer(config_file, &self.node_config.node_config())
+			.map_err(|e| ConfigError::Internal(e.into()))?;
+
+		Ok(MovementAptos::<runtime::TokioTest>::new(
+			self.node_config.node_config().clone(),
 			false,
-		)
-		.map_err(|e| ConfigError::Internal(e.into()))?)
+			workspace_dir,
+		))
 	}
 }
