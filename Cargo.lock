@@ -14925,7 +14925,6 @@ dependencies = [
  "dotenv",
  "jemallocator",
  "movement-aptos-core",
- "mtma-core",
  "orfile",
  "serde",
  "tokio",

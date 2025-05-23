@@ -16,7 +16,6 @@ dotenv = { workspace = true }
 anyhow = { workspace = true }
 clap-markdown-ext = { workspace = true }
 orfile = { workspace = true }
-mtma-core = { workspace = true }
 jemallocator = { workspace = true }
 movement-aptos-core = { workspace = true }
 tracing = { workspace = true }

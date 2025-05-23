@@ -4,6 +4,7 @@ use std::path::PathBuf;
 pub mod rest_api;
 use kestrel::process::{command::Command, ProcessOperations};
 pub mod runtime;
+use anyhow::Context;
 pub use rest_api::RestApi;
 use runtime::Runtime;
 use std::marker::PhantomData;
@@ -42,6 +43,17 @@ where
 	/// If you have something that marks your ability to get a runtime, you can use this.
 	pub fn new(node_config: NodeConfig, multiprocess: bool, workspace: PathBuf) -> Self {
 		Self { node_config, multiprocess, workspace, rest_api: State::new(), runtime: PhantomData }
+	}
+
+	/// Constructs a new [MovementAptos] from a [NodeConfig].
+	pub fn from_config(config_path: NodeConfig) -> Result<Self, MovementAptosError> {
+		let workspace = config_path
+			.base
+			.working_dir
+			.clone()
+			.context("Working directory not set")
+			.map_err(|e| MovementAptosError::Internal(e.into()))?;
+		Ok(Self::new(config_path, true, workspace))
 	}
 
 	/// Borrow the rest api state
@@ -200,10 +212,7 @@ mod tests {
 			movement_aptos.run().await?;
 			Ok::<_, MovementAptosError>(())
 		});
-		// movement_aptos.run().await?;
 
-		// You can comment and uncomment this to see that the rest api wait for is not causing the problem
-		// tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
 		rest_api_state.wait_for(tokio::time::Duration::from_secs(40)).await?;
 
 		info!("ENDING MOVEMENT APTOS");
