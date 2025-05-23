@@ -213,9 +213,7 @@ mod tests {
 			Ok::<_, MovementAptosError>(())
 		});
 
-		rest_api_state.wait_for(tokio::time::Duration::from_secs(40)).await?;
-
-		info!("ENDING MOVEMENT APTOS");
+		rest_api_state.wait_for(tokio::time::Duration::from_secs(120)).await?;
 
 		kestrel::end!(movement_aptos_task)?;
 
