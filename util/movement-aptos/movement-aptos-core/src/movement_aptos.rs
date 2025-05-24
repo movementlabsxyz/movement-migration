@@ -106,7 +106,14 @@ where
 
 		let command = Command::line(
 			"aptos",
-			vec!["node", "run-localnet", "--config-path", &config_path.to_string_lossy()],
+			vec![
+				"node",
+				"run-localnet",
+				"--test-dir",
+				&self.workspace.to_string_lossy(),
+				"--config-path",
+				&config_path.to_string_lossy(),
+			],
 			Some(&self.workspace),
 			false,
 			vec![],
@@ -202,13 +209,13 @@ mod tests {
 			tokio::fs::create_dir_all(db_dir.clone()).await?;
 		}
 
-		let mut rng = thread_rng();
+		let rng = thread_rng();
 		let mut node_config = create_single_node_test_config(
 			&None,
 			&None,
 			working_dir.as_path(),
-			false,
 			true,
+			false,
 			false,
 			&aptos_cached_packages::head_release_bundle().clone(),
 			rng,
