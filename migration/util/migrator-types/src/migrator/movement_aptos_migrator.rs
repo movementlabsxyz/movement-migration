@@ -1,6 +1,7 @@
 use anyhow::Context;
 use aptos_config::config::NodeConfig;
 use aptos_rest_client::Client as MovementAptosRestClient;
+use aptos_types::account_address::AccountAddress;
 use kestrel::WaitCondition;
 use movement_aptos_core::{runtime, MovementAptos};
 use mtma_node_types::executor::MovementAptosNode;
@@ -71,6 +72,18 @@ impl MovementAptosMigrator {
 				anyhow::anyhow!("failed to parse Movement Aptos rest api url: {}", e)
 			})?);
 		Ok(rest_client)
+	}
+
+	/// Gets a [MovementAptosNode] from the runner.
+	pub async fn node(&self) -> Result<MovementAptosNode, anyhow::Error> {
+		todo!()
+	}
+
+	/// Iterates over all accounts in the movement aptos node.
+	pub async fn iter_accounts(
+		&self,
+	) -> Result<impl Iterator<Item = AccountAddress>, anyhow::Error> {
+		Ok(vec![].into_iter())
 	}
 }
 

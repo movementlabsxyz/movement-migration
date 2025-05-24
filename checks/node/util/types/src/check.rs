@@ -5,13 +5,13 @@ use mtma_node_types::migration::Migrationish;
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
 pub enum CheckError {
-	#[error("failed to run prelude: {0}")]
+	#[error("check encountered an error while running prelude: {0}")]
 	Prelude(#[source] Box<dyn std::error::Error + Send + Sync>),
-	#[error("failed to run migration: {0}")]
+	#[error("check encountered an error while running migration: {0}")]
 	Migration(#[source] Box<dyn std::error::Error + Send + Sync>),
-	#[error("failed to satisfy criteria: {0}")]
+	#[error("check encountered an error while satisfying criteria: {0}")]
 	Criteria(#[source] Box<dyn std::error::Error + Send + Sync>),
-	#[error("internal error: {0}")]
+	#[error("check encountered an internal error: {0}")]
 	Internal(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 

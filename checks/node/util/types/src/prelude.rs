@@ -17,7 +17,7 @@ const DEFAULT_ROUND: u64 = 0;
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
 pub enum PreludeError {
-	#[error("internal error: {0}")]
+	#[error("prelude encountered an internal error: {0}")]
 	Internal(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 

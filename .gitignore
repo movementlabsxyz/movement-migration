@@ -1,6 +1,7 @@
 target
 *.pem
 .debug
+debug
 .env*
 .idea
 .direnv
