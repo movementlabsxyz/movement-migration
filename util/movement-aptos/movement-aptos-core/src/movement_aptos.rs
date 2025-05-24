@@ -56,9 +56,14 @@ where
 		Ok(Self::new(config_path, true, workspace))
 	}
 
-	/// Borrow the rest api state
+	/// Borrow sthe rest api state
 	pub fn rest_api(&self) -> &State<RestApi> {
 		&self.rest_api
+	}
+
+	/// Borrows the [NodeConfig]
+	pub fn node_config(&self) -> &NodeConfig {
+		&self.node_config
 	}
 
 	/// Runs the internal node logic

@@ -3,6 +3,7 @@ pub use mtma_migrator_types::migrator::movement_migrator;
 
 pub use mtma_migrator_types::migrator::MovementAptosMigrator;
 pub use mtma_migrator_types::migrator::MovementMigrator;
+use std::future::Future;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
@@ -19,7 +20,7 @@ pub trait Criterionish {
 		&self,
 		movement_e2e_client: &MovementMigrator,
 		movement_aptos_e2e_client: &MovementAptosMigrator,
-	) -> Result<(), CriterionError>;
+	) -> impl Future<Output = Result<(), CriterionError>>;
 }
 
 /// The criterion type simply
@@ -41,6 +42,6 @@ where
 		movement_e2e_client: &MovementMigrator,
 		movement_aptos_e2e_client: &MovementAptosMigrator,
 	) -> Result<(), CriterionError> {
-		self.0.satisfies(movement_e2e_client, movement_aptos_e2e_client)
+		self.0.satisfies(movement_e2e_client, movement_aptos_e2e_client).await
 	}
 }

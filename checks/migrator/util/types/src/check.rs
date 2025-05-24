@@ -16,15 +16,15 @@ pub enum CheckError {
 }
 
 /// Runs a migration where prelude is executed, the migration is run, and then the criteria are checked.
-pub async fn checked_migration(
+pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	movement_migrator: &mut MovementMigrator,
 	prelude: &Prelude,
 	migration: &impl Migrationish,
-	criteria: Vec<Box<dyn Criterionish + Send + Sync>>,
+	criteria: Vec<T>,
 ) -> Result<(), CheckError> {
 	// Get the executor
 	let mut movement_executor =
-		movement_migrator.executor().await.map_err(|e| CheckError::Internal(e.into()))?;
+		movement_migrator.node().await.map_err(|e| CheckError::Internal(e.into()))?;
 
 	// Run the prelude
 	prelude
@@ -42,6 +42,7 @@ pub async fn checked_migration(
 	for criterion in criteria {
 		criterion
 			.satisfies(&movement_migrator, &movement_aptos_migrator)
+			.await
 			.map_err(|e| CheckError::Criteria(e.into()))?;
 	}
 
