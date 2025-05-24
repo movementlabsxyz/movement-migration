@@ -7,7 +7,7 @@ pub use mtma_migrator_types::migrator::MovementMigrator;
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
 pub enum CriterionError {
-	#[error("failed to build from config: {0}")]
+	#[error("criterion was not satisfied: {0}")]
 	Unsatisfied(#[source] Box<dyn std::error::Error + Send + Sync>),
 	#[error("encountered an error while checking the criterion: {0}")]
 	Internal(#[source] Box<dyn std::error::Error + Send + Sync>),

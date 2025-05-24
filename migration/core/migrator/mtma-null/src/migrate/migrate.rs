@@ -33,7 +33,7 @@ fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
 /// Errors thrown during the migration.
 #[derive(Debug, thiserror::Error)]
 pub enum MigrateError {
-	#[error("failed to migrate: {0}")]
+	#[error("mtma-null migrator failed to migrate: {0}")]
 	Migrate(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 

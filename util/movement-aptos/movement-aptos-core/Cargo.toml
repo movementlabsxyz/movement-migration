@@ -25,10 +25,18 @@ kestrel = { workspace = true }
 reqwest = { workspace = true }
 aptos-cached-packages = { workspace = true }
 rand = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+serde_yaml = { workspace = true }
+tracing = { workspace = true }
 
 [dev-dependencies]
 uuid = { workspace = true }
 chrono = { workspace = true }
+tracing-test = { workspace = true }
+
+[build-dependencies]
+cargo_metadata = { workspace = true }
 
 [lints]
 workspace = true
