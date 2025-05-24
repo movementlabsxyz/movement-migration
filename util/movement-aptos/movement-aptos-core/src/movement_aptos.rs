@@ -106,7 +106,7 @@ where
 
 		let command = Command::line(
 			"aptos",
-			vec!["node", "run-localnet", "--test-config-override", &config_path.to_string_lossy()],
+			vec!["node", "run-localnet", "--config-path", &config_path.to_string_lossy()],
 			Some(&self.workspace),
 			false,
 			vec![],
