@@ -7,9 +7,9 @@ pub use mtma_node_types::executor::movement_executor::MovementNode;
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
 pub enum CriterionError {
-	#[error("the criterion is unsatisfied: {0}")]
+	#[error("the criterion was not satisfied: {0}")]
 	Unsatisfied(#[source] Box<dyn std::error::Error + Send + Sync>),
-	#[error("internal error: {0}")]
+	#[error("criterion encountered an internal error: {0}")]
 	Internal(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
