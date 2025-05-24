@@ -180,6 +180,8 @@ where
 #[cfg(test)]
 mod tests {
 	use super::*;
+	use aptos_node::create_single_node_test_config;
+	use rand::thread_rng;
 	use std::path::Path;
 
 	#[tracing_test::traced_test]
@@ -200,7 +202,17 @@ mod tests {
 			tokio::fs::create_dir_all(db_dir.clone()).await?;
 		}
 
-		let mut node_config = NodeConfig::default();
+		let mut rng = thread_rng();
+		let mut node_config = create_single_node_test_config(
+			&None,
+			&None,
+			working_dir.as_path(),
+			false,
+			true,
+			false,
+			&aptos_cached_packages::head_release_bundle().clone(),
+			rng,
+		)?;
 		node_config.base.working_dir = Some(working_dir.clone());
 		node_config.storage.dir = db_dir.clone();
 
