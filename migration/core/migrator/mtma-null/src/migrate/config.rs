@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
 pub enum MigrateConfigError {
-	#[error("failed to build from config: {0}")]
+	#[error("failed to build mtma-null migrator from config: {0}")]
 	Build(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 

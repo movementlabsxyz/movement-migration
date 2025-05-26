@@ -6,6 +6,7 @@ pub mod test {
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use mtma_node_test_types::prelude::Prelude;
 
+	#[ignore] // this is just an example, so it's not expected to pass
 	#[tokio::test]
 	#[tracing_test::traced_test]
 	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {

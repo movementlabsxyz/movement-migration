@@ -3,6 +3,7 @@ use clap::Parser;
 use jsonlvar::Jsonl;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
+use std::fs::File;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -10,7 +11,7 @@ use crate::movement_aptos::{runtime, MovementAptos};
 use aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct NodeConfigWrapper(NodeConfig);
+pub struct NodeConfigWrapper(pub(crate) NodeConfig);
 
 impl NodeConfigWrapper {
 	pub fn new(node_config: NodeConfig) -> Self {
@@ -74,7 +75,7 @@ impl Config {
 		let rng = rand::thread_rng();
 
 		let node_config = create_single_node_test_config(
-			&None,
+			&Some(db_dir.join("config.json")),
 			&None,
 			db_dir.as_path(),
 			true,
@@ -90,10 +91,22 @@ impl Config {
 
 	/// Builds the config into a [MovementAptos] runner.
 	pub fn build(&self) -> Result<MovementAptos<runtime::TokioTest>, ConfigError> {
-		Ok(MovementAptos::<runtime::TokioTest>::try_new(
-			self.node_config.0.clone(),
-			self.log_file.clone(),
-		)
-		.map_err(|e| ConfigError::Internal(e.into()))?)
+		// get the workspace dir
+		let workspace_dir =
+			self.node_config.node_config().base.working_dir.clone().unwrap_or_default();
+
+		// get the config path
+		let config_path = workspace_dir.join("config.yaml");
+
+		// write the config to the config path
+		let config_file = File::create(config_path).map_err(|e| ConfigError::Internal(e.into()))?;
+		serde_json::to_writer(config_file, &self.node_config.node_config())
+			.map_err(|e| ConfigError::Internal(e.into()))?;
+
+		Ok(MovementAptos::<runtime::TokioTest>::new(
+			self.node_config.node_config().clone(),
+			false,
+			workspace_dir,
+		))
 	}
 }
