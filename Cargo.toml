@@ -20,6 +20,7 @@ members = [
     "checks/migrator/citeria/*",
     "checks/migrator/checks/*",
     # util
+    "util/bcs-ext",
     "util/movement/*",
     "util/movement-aptos/*",
     "util/bcs-ext",
@@ -103,9 +104,10 @@ portpicker = "0.1.0"
 # movement
 maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-syncador =  { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 
 
 # aptos-core
@@ -121,6 +123,9 @@ aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", 
 aptos-node = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 aptos-cached-packages = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 aptos-sdk = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-crypto = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-executor-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-vm-genesis = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 
 
 # secure-signing
@@ -160,6 +165,8 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 
 ### core
 mtma-core = { path = "migration/core/mtma" }
+mtma-null-core = { path = "migration/core/mtma-null" }
+mtma-node-replay-core = { path = "migration/core/node/mtma-replay" }
 #### migrator
 mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
 
@@ -184,12 +191,12 @@ mtma-node-test-global-storage-not-empty-criterion = { path = "checks/node/citeri
 mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 
 ## util
+bcs-ext = { path = "util/bcs-ext" }
 movement-syncing = { path = "util/movement/movement-syncing" }
 movement-core = { path = "util/movement/movement-core" }
-movement-util = { path = "util/movement/movement-util" }
+movement-core-util = { path = "util/movement/movement-util" }
 movement-aptos = { path = "util/movement-aptos/movement-aptos" }
 movement-aptos-core = { path = "util/movement-aptos/movement-aptos-core" }
-bcs-ext = { path = "util/bcs-ext" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

@@ -15069,8 +15069,8 @@ dependencies = [
  "include-vendor",
  "jsonlvar",
  "kestrel",
+ "movement-core-util",
  "movement-types",
- "movement-util 0.0.1",
  "orfile",
  "ready-docker",
  "regex",
@@ -15082,6 +15082,15 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "uuid",
+]
+
+[[package]]
+name = "movement-core-util"
+version = "0.0.1"
+dependencies = [
+ "bcs 0.1.4",
+ "bcs-ext",
+ "mtma-node-test-types",
 ]
 
 [[package]]
@@ -15323,10 +15332,6 @@ dependencies = [
  "serde_with",
  "sha2 0.10.8",
 ]
-
-[[package]]
-name = "movement-util"
-version = "0.0.1"
 
 [[package]]
 name = "movement-util"
@@ -15683,6 +15688,10 @@ dependencies = [
  "mtma-migrator-types",
  "mtma-node-null-core",
  "mtma-node-preludes",
+ "mtma-node-replay-core",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
  "mtma-node-test-types",
  "rand 0.7.3",
  "tokio",
@@ -15792,6 +15801,7 @@ dependencies = [
  "chrono",
  "mtma-node-null-core",
  "mtma-node-preludes",
+ "mtma-node-replay-core",
  "mtma-node-test-global-storage-includes-criterion",
  "mtma-node-test-global-storage-injective-criterion",
  "mtma-node-test-global-storage-not-empty-criterion",
@@ -15844,6 +15854,36 @@ dependencies = [
  "rand 0.7.3",
  "serde",
  "thiserror 1.0.69",
+]
+
+[[package]]
+name = "mtma-node-replay-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-crypto 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-db 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-executor-types 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-vm-genesis 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "bcs 0.1.4",
+ "bcs-ext",
+ "chrono",
+ "clap 4.5.36",
+ "clap-markdown-ext",
+ "dotenv",
+ "mtma-node-types",
+ "orfile",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+ "uuid",
+ "walkdir",
 ]
 
 [[package]]
@@ -15911,7 +15951,7 @@ dependencies = [
  "hex",
  "maptos-opt-executor",
  "movement-aptos-core",
- "movement-util 0.3.4",
+ "movement-util",
  "serde",
  "thiserror 1.0.69",
  "tokio",
