@@ -1,3 +1,4 @@
+pub use movement_client::*;
 pub use movement_util::*;
 
 pub const CONTAINER_REPO: &str = "ghcr.io/movementlabsxyz";
