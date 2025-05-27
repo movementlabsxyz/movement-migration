@@ -5,7 +5,6 @@ pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStat
 use movement_client::rest_client::Client as MovementRestClient;
 use movement_core::Movement;
 use mtma_node_types::executor::MovementNode;
-use mtma_node_types::executor::movement_executor::maptos_opt_executor::aptos_types::account_address::AccountAddress;
 
 /// An enum supporting different types of runners.
 ///
@@ -84,10 +83,5 @@ impl MovementMigrator {
 				MovementNode::from_dir(movement.workspace_path().to_path_buf()).await
 			}
 		}
-	}
-
-	/// Iterates over all accounts in the movement node.
-	pub fn iter_accounts(&self) -> Result<impl Iterator<Item = AccountAddress>, anyhow::Error> {
-		Ok(vec![].into_iter())
 	}
 }

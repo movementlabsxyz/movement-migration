@@ -117,11 +117,11 @@ impl MovementNode {
 
 	/// Iterates over all account keys
 	/// NOTE: does this by checking all transactions and getting the [AccountAddress] signers from them
-	pub fn iter_account_keys(
+	pub fn iter_account_addresses(
 		&self,
 		start_version: u64,
-	) -> Result<AccountKeyIterator<'_>, anyhow::Error> {
-		Ok(AccountKeyIterator::new(self, start_version))
+	) -> Result<AccountAddressIterator<'_>, anyhow::Error> {
+		Ok(AccountAddressIterator::new(self, start_version))
 	}
 }
 
@@ -258,14 +258,14 @@ impl<'a> Iterator for TransactionIterator<'a> {
 	}
 }
 
-pub struct AccountKeyIterator<'a> {
+pub struct AccountAddressIterator<'a> {
 	executor: &'a MovementNode,
 	version: u64,
 	latest_version: u64,
 	current_tx_iter: Option<Box<dyn Iterator<Item = Result<AccountAddress, anyhow::Error>> + 'a>>,
 }
 
-impl<'a> AccountKeyIterator<'a> {
+impl<'a> AccountAddressIterator<'a> {
 	fn new(executor: &'a MovementNode, start_version: u64) -> Self {
 		Self {
 			executor,
@@ -323,7 +323,7 @@ impl<'a> AccountKeyIterator<'a> {
 	}
 }
 
-impl<'a> Iterator for AccountKeyIterator<'a> {
+impl<'a> Iterator for AccountAddressIterator<'a> {
 	type Item = Result<AccountAddress, anyhow::Error>;
 
 	fn next(&mut self) -> Option<Self::Item> {

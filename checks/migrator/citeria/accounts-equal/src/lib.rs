@@ -30,10 +30,16 @@ impl Criterionish for AccountsEqual {
 			.await
 			.map_err(|e| CriterionError::Internal(e.into()))?;
 
-		for account_address in movement_migrator
-			.iter_accounts()
+		let movement_node =
+			movement_migrator.node().await.map_err(|e| CriterionError::Internal(e.into()))?;
+
+		for account_address in movement_node
+			.iter_account_addresses(0)
 			.map_err(|e| CriterionError::Internal(e.into()))?
 		{
+			let account_address =
+				account_address.map_err(|e| CriterionError::Internal(e.into()))?;
+
 			let movement_resource = movement_rest_client
 				.get_account_bcs(account_address)
 				.await
