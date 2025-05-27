@@ -13,9 +13,6 @@ This document contains the help content for the `mtma` command-line program.
 * [`mtma migrate`↴](#mtma-migrate)
 * [`mtma migrate where`↴](#mtma-migrate-where)
 * [`mtma migrate using`↴](#mtma-migrate-using)
-* [`mtma migrate-checked`↴](#mtma-migrate-checked)
-* [`mtma migrate-checked where`↴](#mtma-migrate-checked-where)
-* [`mtma migrate-checked using`↴](#mtma-migrate-checked-using)
 
 ## `mtma`
 
@@ -27,7 +24,6 @@ The `movement-to-aptos` CLI
 
 * `markdown` — Generates markdown for the CLI
 * `migrate` — Migrate from Movement to MovementAptos
-* `migrate-checked` — Migrate from Movement to MovementAptos with checks
 
 
 
@@ -128,51 +124,7 @@ Run migrate with parameters from environment variables, config files, and CLI fl
 
 ###### **Options:**
 
-* `--config-path <CONFIG_PATH>`
-
-
-
-## `mtma migrate-checked`
-
-Migrate from Movement to MovementAptos with checks
-
-**Usage:** `mtma migrate-checked <COMMAND>`
-
-###### **Subcommands:**
-
-* `where` — Run migratechecked with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-* `using` — Run migratechecked with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-
-
-
-## `mtma migrate-checked where`
-
-Run migratechecked with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-
-**Usage:** `mtma migrate-checked where [OPTIONS] --state <STATE>`
-
-###### **Options:**
-
-* `--state <STATE>` — The state to download
-* `--state-source <STATE_SOURCE>` — The string identifying the download source if necessary
-
-
-
-## `mtma migrate-checked using`
-
-Run migratechecked with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-
-**Usage:** `mtma migrate-checked using [OPTIONS] --state <STATE> [EXTRA_ARGS]...`
-
-###### **Arguments:**
-
-* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
-
-###### **Options:**
-
-* `--config-path <CONFIG_PATH>`
-* `--state <STATE>` — The state to download
-* `--state-source <STATE_SOURCE>` — The string identifying the download source if necessary
+* `--config-path <CONFIG_PATH>` — Path to the config file for migrate
 
 
 

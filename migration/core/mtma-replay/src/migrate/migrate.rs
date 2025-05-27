@@ -11,11 +11,12 @@ use aptos_types::on_chain_config::{OnChainConfig, OnChainExecutionConfig};
 use aptos_types::transaction::Transaction;
 use aptos_types::transaction::WriteSetPayload;
 use bcs_ext::conversion::BcsInto;
-use migration_executor_types::executor::{
+use mtma_node_types::executor::movement_executor::maptos_opt_executor::aptos_types::transaction::Transaction as MovementTransaction;
+use mtma_node_types::executor::{
 	movement_aptos_executor::{AptosVMBlockExecutor, MovementAptosBlockExecutor},
-	MovementAptosExecutor, MovementExecutor,
+	MovementAptosNode, MovementNode,
 };
-use migration_executor_types::{
+use mtma_node_types::{
 	executor::{
 		movement_aptos_executor::aptos_types::{
 			block_executor::partitioner::{
@@ -28,7 +29,6 @@ use migration_executor_types::{
 	migration::{MigrationError, Migrationish},
 };
 use std::path::Path;
-use migration_executor_types::executor::movement_executor::maptos_opt_executor::aptos_types::transaction::Transaction as MovementTransaction;
 
 /// Converts a [MovementBlock] to a [MovementAptosBlock].
 pub fn movement_block_to_movement_aptos_block(
@@ -72,8 +72,8 @@ pub struct Migrate {
 impl Migrationish for Migrate {
 	async fn migrate(
 		&self,
-		movement_executor: &MovementExecutor,
-	) -> Result<MovementAptosExecutor, MigrationError> {
+		movement_node: &MovementNode,
+	) -> Result<MovementAptosNode, MigrationError> {
 		// open up a new db
 		let unique_id = uuid::Uuid::new_v4();
 		let timestamp = chrono::Utc::now().timestamp_millis();
@@ -88,8 +88,8 @@ impl Migrationish for Migrate {
 			Default::default(),
 			Default::default(),
 			false,
-			movement_executor.opt_executor().node_config.storage.buffered_state_target_items,
-			movement_executor
+			movement_node.opt_executor().node_config.storage.buffered_state_target_items,
+			movement_node
 				.opt_executor()
 				.node_config
 				.storage
@@ -103,7 +103,7 @@ impl Migrationish for Migrate {
 		let db_rw = DbReaderWriter::new(movement_aptos_db);
 
 		let genesis_txn: Transaction = if self.use_migrated_genesis {
-			let movement_genesis_txn = movement_executor.genesis_transaction().map_err(|e| {
+			let movement_genesis_txn = movement_node.genesis_transaction().map_err(|e| {
 				MigrationError::Internal(format!("failed to get genesis transaction: {}", e).into())
 			})?;
 
@@ -156,7 +156,7 @@ impl Migrationish for Migrate {
 			.map_err(|e| MigrationError::Internal(e.into()))?;
 
 		// re-execute the blocks
-		for res in movement_executor.iter_blocks(1).map_err(|e| {
+		for res in movement_node.iter_blocks(1).map_err(|e| {
 			MigrationError::Internal(format!("failed to iterate over blocks: {}", e).into())
 		})? {
 			let (start_version, end_version, block) = res
@@ -202,6 +202,6 @@ impl Migrationish for Migrate {
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 		}
 
-		Ok(MovementAptosExecutor::new(movement_aptos_executor))
+		Ok(MovementAptosNode::new(movement_aptos_executor, db_dir))
 	}
 }

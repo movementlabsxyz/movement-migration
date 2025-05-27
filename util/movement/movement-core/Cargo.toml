@@ -1,0 +1,39 @@
+[package]
+name = "movement-core"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+thiserror = { workspace = true }
+serde = { workspace = true }
+anyhow = { workspace = true }
+hex = { workspace = true }
+syncador = { workspace = true }
+movement-types = { workspace = true }
+tempdir = { workspace = true }
+uuid = { workspace = true }
+include-vendor = { workspace = true }
+tokio = { workspace = true }
+jsonlvar = { workspace = true }
+orfile = { workspace = true }
+clap = { workspace = true }
+kestrel = { workspace = true }
+strip-ansi-escapes = { workspace = true }
+regex = { workspace = true }
+reqwest = { workspace = true }
+movement-core-util = { workspace = true }
+
+[build-dependencies]
+include-vendor = { workspace = true }
+cargo_metadata = { workspace = true }
+ready-docker = { workspace = true }
+movement-core-util = { workspace = true }
+tokio = { workspace = true }
+
+[lints]
+workspace = true
