@@ -1,6 +1,9 @@
 target
 *.pem
 .debug
+debug
 .env*
 .idea
 .direnv
+.vendors
+.DS_Store

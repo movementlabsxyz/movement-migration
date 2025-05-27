@@ -6,19 +6,22 @@ members = [
 
     # migration
     "migration/cli/*",
-    "migration/core/*",
+    "migration/core/mtma",
+    "migration/core/node/*",
+    "migration/core/migrator/*",
     "migration/util/*",
     # executor
-    "checks/executor/util/*",
-    "checks/executor/citeria/*",
-    "checks/executor/checks/*",
-    "checks/executor/preludes",
+    "checks/node/util/*",
+    "checks/node/citeria/*",
+    "checks/node/checks/*",
+    "checks/node/preludes",
     # e2e
-    "checks/e2e/util/*",
-    "checks/e2e/citeria/*",
+    "checks/migrator/util/*",
+    "checks/migrator/citeria/*",
+    "checks/migrator/checks/*",
     # util
-    "util/include-dir",
-    "util/movement-syncing",
+    "util/movement/*",
+    "util/movement-aptos/*",
 
 ]
 
@@ -39,8 +42,10 @@ async-trait = "0.1.71"
 clap = { version = "4.4.10", features = ["derive"] }
 dotenv = "0.15.0"
 futures = "0.3.17"
+futures-channel = "0.3.17"
 serde = "1.0"
 serde_json = "1.0.140"
+serde_yaml = "0.8.24"
 serde_derive = "1.0"
 thiserror = "1.0.50"
 tracing = "0.1.40"
@@ -85,10 +90,13 @@ jemallocator = { version = "0.5.0", features = [
     "unprefixed_malloc_on_supported_platforms",
 ] }
 jemalloc-sys = "0.5.4"
+reqwest = { version = "0.12.11", features = ["json"] }
 
 either = "1.8.1"
 tempdir = "0.3.7"
 sysinfo = "0.34.2"
+portpicker = "0.1.0"
+
 
 # movement
 maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
@@ -98,16 +106,17 @@ movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev 
 maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 
 # aptos-core
-aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-vm = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-rest-client = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-storage-interface = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-db = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos_schemadb = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-config = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "2941ee2b5876ab93cfb8010154c9466d7d593ed9" }
-# model checking and verification
+aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-vm = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-rest-client = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-storage-interface = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-db = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos_schemadb = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-config = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-db-indexer = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-node = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
+aptos-cached-packages = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 
 
 # secure-signing
@@ -116,43 +125,66 @@ secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signin
 secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
 
 # kestrel 
-kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
-jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
-commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "85e2f681ae3e54b29bb18d4ed7ca750116173321" }
+kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
+jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
+commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
+include-dir = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
+include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
+ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
 
 # orfile
-orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "d02299214e5aa202130cd1eb9593ce8064d1ec69" }
+orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "b49cb42495816fa00a1107be5bbf41aff3a8255d" }
 
 # docs
 clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ext.git", rev = "8f54fe424504bf37fb01dc69aaed8166e429fe6a" }
 
 # internal
 ## migration
+### cli
+mtma = { path = "migration/cli/mtma" }
+mtma-dev = { path = "migration/cli/mtma-dev" }
+mtma-check = { path = "migration/cli/check" }
+mtma-check-dev = { path = "migration/cli/check-dev" }
+mtma-migrate = { path = "migration/cli/migrate" }
+mtma-migrate-dev = { path = "migration/cli/migrate-dev" }
+mtma-migrate-chain = { path = "migration/cli/migrate-chain" }
+mtma-migrate-chain-dev = { path = "migration/cli/migrate-chain-dev" }
+mtma-migrate-node = { path = "migration/cli/migrate-node" }
+mtma-migrate-node-dev = { path = "migration/cli/migrate-node-dev" }
+mtma-track = { path = "migration/cli/track" }
+mtma-track-dev = { path = "migration/cli/track-dev" }
 
 ### core
 mtma-core = { path = "migration/core/mtma" }
-mtma-null-core = { path = "migration/core/mtma-null" }
+#### migrator
+mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
+
+#### node
+mtma-node-null-core = { path = "migration/core/node/mtma-null" }
 
 ### preludes
-migration-executor-preludes = { path = "checks/executor/preludes" }
+mtma-node-preludes = { path = "checks/node/preludes" }
 
 ### util
-migration-executor-types = { path = "migration/util/executor-types" }
-
+mtma-node-types = { path = "migration/util/node-types" }
+mtma-migrator-types = { path = "migration/util/migrator-types" }
 ## checks
 ### executor
-migration-executor-test-types = { path = "checks/executor/util/types" }
-migration-executor-test-global-storage-injective-criterion = { path = "checks/executor/citeria/global-storage-injective" }
-migration-executor-test-global-storage-includes-criterion = { path = "checks/executor/citeria/global-storage-includes" }
-migration-executor-test-global-storage-not-empty-criterion = { path = "checks/executor/citeria/global-storage-not-empty" }
+mtma-node-test-types = { path = "checks/node/util/types" }
+mtma-node-test-global-storage-injective-criterion = { path = "checks/node/citeria/global-storage-injective" }
+mtma-node-test-global-storage-includes-criterion = { path = "checks/node/citeria/global-storage-includes" }
+mtma-node-test-global-storage-not-empty-criterion = { path = "checks/node/citeria/global-storage-not-empty" }
 
 
 ### e2e
-migration-e2e-test-types = { path = "checks/e2e/util/types" }
+mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 
 ## util
-include-dir = { path = "util/include-dir" }
-movement-syncing = { path = "util/movement-syncing" }
+movement-syncing = { path = "util/movement/movement-syncing" }
+movement-core = { path = "util/movement/movement-core" }
+movement-util = { path = "util/movement/movement-util" }
+movement-aptos = { path = "util/movement-aptos/movement-aptos" }
+movement-aptos-core = { path = "util/movement-aptos/movement-aptos-core" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
