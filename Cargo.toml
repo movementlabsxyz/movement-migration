@@ -104,6 +104,7 @@ movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev
 syncador =  { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
 
 # aptos-core
 aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
@@ -182,7 +183,7 @@ mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 ## util
 movement-syncing = { path = "util/movement/movement-syncing" }
 movement-core = { path = "util/movement/movement-core" }
-movement-util = { path = "util/movement/movement-util" }
+movement-core-util = { path = "util/movement/movement-util" }
 movement-aptos = { path = "util/movement-aptos/movement-aptos" }
 movement-aptos-core = { path = "util/movement-aptos/movement-aptos-core" }
 

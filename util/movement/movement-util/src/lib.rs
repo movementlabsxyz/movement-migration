@@ -1,3 +1,5 @@
+pub use movement_util::*;
+
 pub const CONTAINER_REPO: &str = "ghcr.io/movementlabsxyz";
 pub const CONTAINER_REV: &str = "c2372ff";
 

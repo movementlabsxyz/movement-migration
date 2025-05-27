@@ -15050,8 +15050,8 @@ dependencies = [
  "include-vendor",
  "jsonlvar",
  "kestrel",
+ "movement-core-util",
  "movement-types",
- "movement-util 0.0.1",
  "orfile",
  "ready-docker",
  "regex",
@@ -15063,6 +15063,13 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "uuid",
+]
+
+[[package]]
+name = "movement-core-util"
+version = "0.0.1"
+dependencies = [
+ "movement-util",
 ]
 
 [[package]]
@@ -15304,10 +15311,6 @@ dependencies = [
  "serde_with",
  "sha2 0.10.8",
 ]
-
-[[package]]
-name = "movement-util"
-version = "0.0.1"
 
 [[package]]
 name = "movement-util"
@@ -15890,7 +15893,7 @@ dependencies = [
  "hex",
  "maptos-opt-executor",
  "movement-aptos-core",
- "movement-util 0.3.4",
+ "movement-util",
  "serde",
  "thiserror 1.0.69",
  "tokio",
