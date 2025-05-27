@@ -1,5 +1,5 @@
 [package]
-name = "migration-migrator-test-accounts-equal-criterion"
+name = "mtma-migrator-test-accounts-equal-criterion"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }

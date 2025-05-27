@@ -189,7 +189,7 @@ mtma-node-test-global-storage-not-empty-criterion = { path = "checks/node/citeri
 
 ### e2e
 mtma-migrator-test-types = { path = "checks/migrator/util/types" }
-
+mtma-migrator-test-accounts-equal-criterion = { path = "checks/migrator/citeria/accounts-equal" }
 ## util
 bcs-ext = { path = "util/bcs-ext" }
 movement-syncing = { path = "util/movement/movement-syncing" }

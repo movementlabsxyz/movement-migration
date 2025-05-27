@@ -1,1 +1,1 @@
-pub mod example;
+pub mod accounts_equal;

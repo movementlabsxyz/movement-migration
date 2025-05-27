@@ -5,6 +5,7 @@ use maptos_opt_executor::aptos_storage_interface::DbReader;
 use maptos_opt_executor::aptos_types::state_store::state_key::StateKey;
 use maptos_opt_executor::aptos_types::transaction::Version;
 use maptos_opt_executor::aptos_types::{
+	account_address::AccountAddress,
 	block_executor::partitioner::{ExecutableBlock, ExecutableTransactions},
 	transaction::signature_verified_transaction::into_signature_verified_block,
 	transaction::Transaction,
@@ -105,6 +106,23 @@ impl MovementNode {
 			db_reader.get_transaction_by_version(0, self.latest_ledger_version()?, true)?;
 		Ok(genesis_transaction.transaction)
 	}
+
+	/// Iterates over all transactions in the db.
+	pub fn iter_transactions(
+		&self,
+		start_version: u64,
+	) -> Result<TransactionIterator<'_>, anyhow::Error> {
+		Ok(TransactionIterator::new(self, start_version, self.latest_ledger_version()?))
+	}
+
+	/// Iterates over all account keys
+	/// NOTE: does this by checking all transactions and getting the [AccountAddress] signers from them
+	pub fn iter_account_keys(
+		&self,
+		start_version: u64,
+	) -> Result<AccountKeyIterator<'_>, anyhow::Error> {
+		Ok(AccountKeyIterator::new(self, start_version))
+	}
 }
 
 pub struct BlockIterator<'a> {
@@ -183,5 +201,132 @@ impl GlobalStateKeyIterable {
 		});
 
 		Ok(Box::new(iter))
+	}
+}
+
+pub struct TransactionIterator<'a> {
+	executor: &'a MovementNode,
+	version: u64,
+	latest_version: u64,
+	current_block_iter: Option<Box<dyn Iterator<Item = Transaction> + 'a>>,
+}
+
+impl<'a> TransactionIterator<'a> {
+	fn new(executor: &'a MovementNode, version: u64, latest_version: u64) -> Self {
+		Self { executor, version, latest_version, current_block_iter: None }
+	}
+}
+
+impl<'a> Iterator for TransactionIterator<'a> {
+	type Item = Result<Transaction, anyhow::Error>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		// If we have a current block iterator, try to get the next transaction from it
+		if let Some(iter) = &mut self.current_block_iter {
+			if let Some(tx) = iter.next() {
+				return Some(Ok(tx));
+			}
+			// If we've exhausted the current block's transactions, clear the iterator
+			self.current_block_iter = None;
+		}
+
+		// If we've reached the end, we're done
+		if self.version > self.latest_version {
+			return None;
+		}
+
+		// Get the next block
+		let mut block_iterator = match self.executor.iter_blocks(self.version) {
+			Ok(iter) => iter,
+			Err(e) => return Some(Err(e)),
+		};
+
+		// Get the next block and update version
+		let (_, end_version, block) = match block_iterator.next() {
+			Some(Ok(block_info)) => block_info,
+			Some(Err(e)) => return Some(Err(e)),
+			None => return None,
+		};
+		self.version = end_version + 1;
+
+		// Create an iterator for this block's transactions
+		self.current_block_iter =
+			Some(Box::new(block.transactions.into_txns().into_iter().map(|tx| tx.into_inner())));
+
+		// Recursively call next to get the first transaction from the new block
+		self.next()
+	}
+}
+
+pub struct AccountKeyIterator<'a> {
+	executor: &'a MovementNode,
+	version: u64,
+	latest_version: u64,
+	current_tx_iter: Option<Box<dyn Iterator<Item = Result<AccountAddress, anyhow::Error>> + 'a>>,
+}
+
+impl<'a> AccountKeyIterator<'a> {
+	fn new(executor: &'a MovementNode, start_version: u64) -> Self {
+		Self {
+			executor,
+			version: start_version,
+			latest_version: executor.latest_ledger_version().unwrap_or(u64::MAX),
+			current_tx_iter: None,
+		}
+	}
+
+	fn get_next_address(&mut self) -> Option<Result<AccountAddress, anyhow::Error>> {
+		// If we don't have a transaction iterator, get one
+		if self.current_tx_iter.is_none() {
+			match self.executor.iter_transactions(self.version) {
+				Ok(iter) => {
+					// Create an iterator that extracts account addresses from transactions
+					let addresses_iter = iter.flat_map(|tx_result| {
+						match tx_result {
+							Ok(tx) => {
+								// Extract account address from transaction
+								match <maptos_opt_executor::aptos_types::transaction::Transaction as TryInto<Transaction>>::try_into(tx) {
+									Ok(t) => {
+										if let Ok(user_tx) = maptos_opt_executor::aptos_types::transaction::SignedTransaction::try_from(t) {
+											vec![Ok(user_tx.sender())]
+										} else {
+											Vec::new() // Skip non-user transactions
+										}
+									}
+									_ => Vec::new(), // Skip non-user transactions
+								}
+							}
+							Err(e) => vec![Err(e)],
+						}
+					});
+					self.current_tx_iter = Some(Box::new(addresses_iter));
+				}
+				Err(e) => return Some(Err(e)),
+			}
+		}
+
+		// Try to get the next address from our iterator
+		if let Some(iter) = &mut self.current_tx_iter {
+			if let Some(addr_result) = iter.next() {
+				return Some(addr_result);
+			}
+		}
+
+		// If we've exhausted the current iterator, move to next version
+		self.current_tx_iter = None;
+		self.version += 1;
+		if self.version <= self.latest_version {
+			self.get_next_address()
+		} else {
+			None
+		}
+	}
+}
+
+impl<'a> Iterator for AccountKeyIterator<'a> {
+	type Item = Result<AccountAddress, anyhow::Error>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		self.get_next_address()
 	}
 }

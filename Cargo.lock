@@ -13380,16 +13380,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "migration-migrator-test-accounts-equal-criterion"
-version = "0.0.1"
-dependencies = [
- "bcs 0.1.4",
- "bcs-ext",
- "mtma-migrator-test-types",
- "tokio",
-]
-
-[[package]]
 name = "migrations_internals"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -15684,6 +15674,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "kestrel",
+ "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
  "mtma-node-null-core",
@@ -15721,6 +15712,16 @@ dependencies = [
  "tracing",
  "uuid",
  "walkdir",
+]
+
+[[package]]
+name = "mtma-migrator-test-accounts-equal-criterion"
+version = "0.0.1"
+dependencies = [
+ "bcs 0.1.4",
+ "bcs-ext",
+ "mtma-migrator-test-types",
+ "tokio",
 ]
 
 [[package]]
