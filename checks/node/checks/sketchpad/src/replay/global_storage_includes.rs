@@ -2,13 +2,13 @@
 pub mod test {
 
 	use mtma_node_preludes::basic::BasicPrelude;
+	use mtma_node_replay_core::config::Config as MtmaReplayConfig;
 	use mtma_node_test_global_storage_includes_criterion::GlobalStorageIncludes;
 	use mtma_node_test_types::{
 		check::checked_migration,
 		criterion::movement_executor::{MovementNode, MovementOptExecutor},
 		prelude::PreludeGenerator,
 	};
-	use mtma_replay_core::config::Config as MtmaReplayConfig;
 
 	#[tokio::test]
 	#[tracing_test::traced_test]

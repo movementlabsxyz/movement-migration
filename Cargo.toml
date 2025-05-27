@@ -10,7 +10,7 @@ members = [
     "migration/core/node/*",
     "migration/core/migrator/*",
     "migration/util/*",
-    "migration/core/mtma-replay",
+    "migration/core/mtma-node-replay",
     # executor
     "checks/node/util/*",
     "checks/node/citeria/*",
@@ -164,7 +164,7 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 ### core
 mtma-core = { path = "migration/core/mtma" }
 mtma-null-core = { path = "migration/core/mtma-null" }
-mtma-replay-core = { path = "migration/core/mtma-replay" }
+mtma-node-replay-core = { path = "migration/core/mtma-node-replay" }
 #### migrator
 mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
 
