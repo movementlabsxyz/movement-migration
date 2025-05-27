@@ -5,5 +5,5 @@ debug
 .env*
 .idea
 .direnv
-.vendors
 .DS_Store
+.vendors

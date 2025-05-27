@@ -1,5 +1,5 @@
 [package]
-name = "movement-core-util"
+name = "mtma-migrator-test-account-equals-criterion"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,7 +9,7 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-mtma-node-test-types = { workspace = true }
+mtma-migrator-test-types = { workspace = true }
 bcs = { workspace = true }
 bcs-ext = { workspace = true }
 

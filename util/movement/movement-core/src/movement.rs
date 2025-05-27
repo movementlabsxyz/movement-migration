@@ -214,7 +214,7 @@ impl Movement {
 	/// Runs the movement with the given overlays.
 	pub async fn run(&self) -> Result<(), MovementError> {
 		// set the CONTAINER_REV environment variable
-		std::env::set_var("CONTAINER_REV", movement_util::CONTAINER_REV);
+		std::env::set_var("CONTAINER_REV", movement_core_util::CONTAINER_REV);
 
 		let overlays = self.overlays.to_overlay_args();
 
