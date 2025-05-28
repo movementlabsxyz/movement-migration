@@ -35,23 +35,12 @@ impl MovementNode {
 	}
 
 	pub async fn try_from_dir(dir: PathBuf) -> Result<Self, anyhow::Error> {
-		let movement_args = MovementArgs { movement_path: Some(dir.clone().display().to_string()) };
-
-		// print the tokio::fs:metadata for the dir and dir/config.json
-		println!("dir: {:?}", dir);
-		let dir_metadata = tokio::fs::metadata(dir.clone()).await?;
-		println!("dir metadata: {:?}", dir_metadata);
-		let config_metadata = tokio::fs::metadata(dir.join("config.json")).await?;
-		println!("config metadata: {:?}", config_metadata);
-
-		// because the config.json is in a nix shell, it will be reassigned read-only permissions
-		// reassing it to be 755
-		tokio::fs::set_permissions(dir.join("config.json"), Permissions::from_mode(0o755))
-			.await
-			.context("failed to reset permissions on config.json")?;
+		let movement_args =
+			MovementArgs { movement_path: Some(dir.join(".movement").display().to_string()) };
 
 		let config = movement_args.config().await.context("failed to get movement config")?;
 		let maptos_config = config.execution_config.maptos_config;
+		println!("maptos config: {:?}", maptos_config);
 
 		let (sender, _receiver) = futures_channel::mpsc::channel(1024);
 		let opt_executor = MovementOptExecutor::try_from_config(maptos_config, sender)
