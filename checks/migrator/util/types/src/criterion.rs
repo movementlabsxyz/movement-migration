@@ -1,4 +1,4 @@
-use movement_client::rest_client::Client as MovementRestClient;
+use mtma_types::movement::movement_client::rest_client::Client as MovementRestClient;
 use mtma_types::movement_aptos::aptos_rest_client::Client as MovementAptosRestClient;
 
 /// The MovementAptos executor as would be presented in the criterion.
