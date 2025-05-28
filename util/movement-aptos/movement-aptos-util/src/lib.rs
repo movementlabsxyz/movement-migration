@@ -1,5 +1,10 @@
 pub use aptos_config;
 pub use aptos_crypto;
+pub use aptos_db;
+pub use aptos_executor;
 pub use aptos_node;
+pub use aptos_rest_client;
 pub use aptos_sdk;
+pub use aptos_storage_interface;
 pub use aptos_types;
+pub use aptos_vm;

@@ -14,6 +14,11 @@ aptos-types = { workspace = true }
 aptos-crypto = { workspace = true }
 aptos-config = { workspace = true }
 aptos-node = { workspace = true }
+aptos-executor = { workspace = true }
+aptos-storage-interface = { workspace = true }
+aptos-vm = { workspace = true }
+aptos-rest-client = { workspace = true }
+aptos-db = { workspace = true }
 
 [lints]
 workspace = true

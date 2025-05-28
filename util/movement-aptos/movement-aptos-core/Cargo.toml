@@ -29,6 +29,7 @@ chrono = { workspace = true }
 uuid = { workspace = true }
 serde_yaml = { workspace = true }
 tracing = { workspace = true }
+mtma-types = { workspace = true }
 
 [dev-dependencies]
 uuid = { workspace = true }

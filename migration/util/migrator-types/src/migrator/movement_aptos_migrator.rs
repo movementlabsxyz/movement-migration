@@ -1,9 +1,9 @@
 use anyhow::Context;
-use aptos_config::config::NodeConfig;
-use aptos_rest_client::Client as MovementAptosRestClient;
 use kestrel::WaitCondition;
 use movement_aptos_core::{runtime, MovementAptos};
 use mtma_node_types::executor::MovementAptosNode;
+use mtma_types::movement_aptos::aptos_config::config::NodeConfig;
+use mtma_types::movement_aptos::aptos_rest_client::Client as MovementAptosRestClient;
 
 /// An enum supporting different types of runners.
 ///

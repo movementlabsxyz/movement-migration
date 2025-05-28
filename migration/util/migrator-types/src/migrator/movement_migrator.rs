@@ -1,10 +1,10 @@
 use anyhow::Context;
 use kestrel::WaitCondition;
 pub use maptos_opt_executor;
-pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
-use mtma_node_types::executor::MovementNode;
 use movement_client::rest_client::Client as MovementRestClient;
 use movement_core::Movement;
+use mtma_node_types::executor::MovementNode;
+pub use mtma_types::movement::aptos_types::{chain_id::ChainId, state_store::TStateView};
 
 /// An enum supporting different types of runners.
 ///
