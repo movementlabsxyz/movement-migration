@@ -44,6 +44,12 @@ impl MovementMigrator {
 		Ok(Self::new(Runner::Movement(movement)))
 	}
 
+	/// Creates a new [MovementMigrator] with debug [Movement] runner.
+	pub fn try_debug() -> Result<Self, anyhow::Error> {
+		let movement = Movement::try_debug()?;
+		Ok(Self::new(Runner::Movement(movement)))
+	}
+
 	/// Rest Api url for the runner.
 	pub async fn wait_for_rest_api_url(
 		&self,

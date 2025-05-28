@@ -102,12 +102,12 @@ portpicker = "0.1.0"
 
 
 # movement
-maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
-movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
+movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
+syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
+maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
 
 
 # aptos-core
@@ -134,12 +134,12 @@ secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signin
 secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
 
 # kestrel 
-kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
-jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
-commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
-include-dir = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
-include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
-ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "9c56eb9f6dde1564493835c7e2c61b9fd2b00a6c" }
+kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "0a23ffdad33b9398ec906dfea05b4369b5a58d37" }
+jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "0a23ffdad33b9398ec906dfea05b4369b5a58d37" }
+commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "0a23ffdad33b9398ec906dfea05b4369b5a58d37" }
+include-dir = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "0a23ffdad33b9398ec906dfea05b4369b5a58d37" }
+include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "0a23ffdad33b9398ec906dfea05b4369b5a58d37" }
+ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "0a23ffdad33b9398ec906dfea05b4369b5a58d37" }
 
 # orfile
 orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "b49cb42495816fa00a1107be5bbf41aff3a8255d" }

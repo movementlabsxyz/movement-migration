@@ -7,12 +7,11 @@ pub mod test {
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use mtma_node_test_types::prelude::Prelude;
 
-	#[ignore] // this is just an example, so it's not expected to pass
 	#[tokio::test]
 	#[tracing_test::traced_test]
-	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {
+	async fn test_accounts_equal() -> Result<(), anyhow::Error> {
 		// Form the migrator.
-		let mut movement_migrator = MovementMigrator::try_temp()?;
+		let mut movement_migrator = MovementMigrator::try_debug()?;
 
 		// Start the migrator so that it's running in the background.
 		// In the future, some migrators may be for already running nodes.
@@ -21,6 +20,10 @@ pub mod test {
 			movement_migrator_for_task.run().await?;
 			Ok::<_, anyhow::Error>(())
 		});
+
+		tokio::time::sleep(tokio::time::Duration::from_secs(30)).await;
+
+		kestrel::end!(movement_migrator_task)?;
 
 		// Form the prelude.
 		// todo: this needs to be updated to use the prelude generator
@@ -34,9 +37,6 @@ pub mod test {
 		let accounts_equal = AccountsEqual::new();
 		checked_migration(&mut movement_migrator, &prelude, &migration, vec![accounts_equal])
 			.await?;
-
-		// end the running migrators
-		kestrel::end!(movement_migrator_task)?;
 
 		Ok(())
 	}
