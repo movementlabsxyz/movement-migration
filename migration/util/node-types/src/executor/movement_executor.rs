@@ -1,4 +1,6 @@
+use anyhow::Context;
 use either::Either;
+pub use maptos_opt_executor;
 use maptos_opt_executor::aptos_crypto::HashValue;
 use maptos_opt_executor::aptos_storage_interface::state_view::DbStateView;
 use maptos_opt_executor::aptos_storage_interface::DbReader;
@@ -10,17 +12,18 @@ use maptos_opt_executor::aptos_types::{
 	transaction::signature_verified_transaction::into_signature_verified_block,
 	transaction::Transaction,
 };
+pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
 pub use maptos_opt_executor::Executor as MovementOptExecutor;
 use movement_util::common_args::MovementArgs;
+use std::fs;
 use std::fs::Permissions;
 use std::os::unix::fs::PermissionsExt;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
-
-use anyhow::Context;
-pub use maptos_opt_executor;
-pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
-use std::path::PathBuf;
 use tracing::debug;
+use uuid::Uuid;
+use walkdir::WalkDir;
+
 /// The Movement executor as would be presented in the criterion.
 pub struct MovementNode {
 	/// The opt executor.
@@ -29,17 +32,84 @@ pub struct MovementNode {
 	opt_executor: MovementOptExecutor,
 }
 
+/// Copies a directory recursively.
+fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
+	for entry in WalkDir::new(src) {
+		let entry = entry?;
+		let rel_path = entry.path().strip_prefix(src).unwrap();
+		let dest_path = dst.join(rel_path);
+
+		if entry.file_type().is_dir() {
+			fs::create_dir_all(&dest_path)?;
+		} else {
+			fs::copy(entry.path(), &dest_path)?;
+		}
+	}
+	Ok(())
+}
+
+/// Sets all permission in a directory recursively.
+fn set_permissions_recursive(path: &Path, permissions: Permissions) -> std::io::Result<()> {
+	for entry in WalkDir::new(path) {
+		let entry = entry?;
+		let path = entry.path();
+		if path.is_dir() {
+			fs::set_permissions(&path, permissions.clone())?;
+		}
+	}
+	Ok(())
+}
+
 impl MovementNode {
 	pub fn new(opt_executor: MovementOptExecutor) -> Self {
 		Self { opt_executor }
 	}
 
 	pub async fn try_from_dir(dir: PathBuf) -> Result<Self, anyhow::Error> {
-		let movement_args =
-			MovementArgs { movement_path: Some(dir.join(".movement").display().to_string()) };
+		// copy the dir to a new .debug dir
+		let uuid = Uuid::new_v4().to_string();
+		let debug_dir = PathBuf::from(format!(".debug/{}", uuid));
+
+		// Copy the entire .movement directory recursively
+		let movement_dir = dir.join(".movement");
+		copy_dir_recursive(&movement_dir, &debug_dir)?;
+
+		// Set all permissions in the debug directory recursively
+		// Note: this would mess up celestia node permissions, but we don't care about that here.
+		// We really only care about maptos db permissions.
+		// TODO: tighten the copying accordingly.
+		set_permissions_recursive(&debug_dir, Permissions::from_mode(0o755))?;
+
+		let movement_args = MovementArgs { movement_path: Some(debug_dir.display().to_string()) };
 
 		let config = movement_args.config().await.context("failed to get movement config")?;
-		let maptos_config = config.execution_config.maptos_config;
+		let old_db_path = config
+			.execution_config
+			.maptos_config
+			.chain
+			.maptos_db_path
+			.clone()
+			.context("failed to get old db path")?;
+
+		// check, old db path should begin with /.movement since it is based on a docker volume
+		if !old_db_path.starts_with("/.movement") {
+			return Err(anyhow::anyhow!(
+				"old db path must begin with /.movement since it is based on a docker volume"
+			));
+		}
+
+		let mut maptos_config = config.execution_config.maptos_config;
+
+		// Get the relative path from the old directory to the db path
+		let rel_path = old_db_path
+			.strip_prefix("/.movement")
+			.context("db path must be within the movement directory")?;
+
+		// Create new db path by joining debug dir with the relative path
+		let new_db_path = debug_dir.join(".movement").join(rel_path);
+		maptos_config.chain.maptos_db_path =
+			Some(PathBuf::from(new_db_path.to_string_lossy().into_owned()));
+
 		println!("maptos config: {:?}", maptos_config);
 
 		let (sender, _receiver) = futures_channel::mpsc::channel(1024);

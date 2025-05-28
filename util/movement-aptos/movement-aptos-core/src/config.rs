@@ -52,7 +52,7 @@ impl FromStr for NodeConfigWrapper {
 /// Errors thrown when parsing an [Eth] network.
 #[derive(Debug, thiserror::Error)]
 pub enum ConfigError {
-	#[error("movment-core Config encountered an internal error: {0}")]
+	#[error("movment-aptos-core Config encountered an internal error: {0}")]
 	Internal(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
@@ -75,7 +75,7 @@ impl Config {
 		let rng = rand::thread_rng();
 
 		let node_config = create_single_node_test_config(
-			&Some(db_dir.join("config.json")),
+			&None,
 			&None,
 			db_dir.as_path(),
 			true,
