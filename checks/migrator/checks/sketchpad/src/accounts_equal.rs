@@ -3,7 +3,7 @@ pub mod test {
 
 	use mtma_migrator_test_accounts_equal_criterion::AccountsEqual;
 	use mtma_migrator_test_types::check::checked_migration;
-	use mtma_migrator_types::migrator::MovementMigrator;
+	use mtma_migrator_types::migrator::{movement_migrator::Overlays, MovementMigrator};
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use mtma_node_test_types::prelude::Prelude;
 
@@ -11,7 +11,8 @@ pub mod test {
 	#[tracing_test::traced_test]
 	async fn test_accounts_equal() -> Result<(), anyhow::Error> {
 		// Form the migrator.
-		let mut movement_migrator = MovementMigrator::try_debug()?;
+		let mut movement_migrator = MovementMigrator::try_debug_home()?;
+		movement_migrator.set_overlays(Overlays::default());
 
 		// Start the migrator so that it's running in the background.
 		// In the future, some migrators may be for already running nodes.

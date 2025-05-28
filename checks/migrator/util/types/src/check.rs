@@ -1,4 +1,5 @@
 use crate::criterion::{Criterionish, MovementMigrator};
+use anyhow::Context;
 use mtma_migrator_types::migration::Migrationish;
 use mtma_node_test_types::prelude::Prelude;
 
@@ -23,19 +24,24 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	criteria: Vec<T>,
 ) -> Result<(), CheckError> {
 	// Get the executor
-	let mut movement_executor =
-		movement_migrator.node().await.map_err(|e| CheckError::Internal(e.into()))?;
+	let mut movement_executor = movement_migrator
+		.node()
+		.await
+		.context("failed to get movement node")
+		.map_err(|e| CheckError::Internal(e.into()))?;
 
 	// Run the prelude
 	prelude
 		.run(&mut movement_executor)
 		.await
+		.context("failed to run prelude")
 		.map_err(|e| CheckError::Prelude(e.into()))?;
 
 	// Run the migration
 	let movement_aptos_migrator = migration
 		.migrate(movement_migrator)
 		.await
+		.context("failed to run migration")
 		.map_err(|e| CheckError::Migration(e.into()))?;
 
 	// Run the criteria
@@ -43,6 +49,7 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 		criterion
 			.satisfies(&movement_migrator, &movement_aptos_migrator)
 			.await
+			.context("failed to satisfy criterion")
 			.map_err(|e| CheckError::Criteria(e.into()))?;
 	}
 

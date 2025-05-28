@@ -193,6 +193,14 @@ impl Movement {
 		Ok(Self::new(workspace, BTreeSet::new().into()))
 	}
 
+	/// Creates a new [Movement] within a debug home directory.
+	pub fn try_debug_home() -> Result<Self, MovementError> {
+		let workspace =
+			MovementWorkspace::try_debug_home().map_err(|e| MovementError::Internal(e.into()))?;
+
+		Ok(Self::new(workspace, BTreeSet::new().into()))
+	}
+
 	/// Adds an overlay to [Movement].
 	pub fn add_overlay(&mut self, overlay: Overlay) {
 		self.overlays.add(overlay);
