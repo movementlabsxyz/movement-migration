@@ -15552,6 +15552,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "mtma-migrate-chain-core"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap 4.5.36",
+ "clap-markdown-ext",
+ "dotenv",
+ "mtma-core",
+ "orfile",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
 name = "mtma-migrate-chain-dev"
 version = "0.0.1"
 dependencies = [
