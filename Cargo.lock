@@ -15580,6 +15580,7 @@ dependencies = [
  "maptos-execution-util",
  "movement-syncing",
  "mtma-core",
+ "mtma-migrate-chain-core",
  "mtma-node-null-core",
  "mtma-node-preludes",
  "mtma-node-test-global-storage-includes-criterion",

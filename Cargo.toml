@@ -157,7 +157,7 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 
 ### core
 mtma-core = { path = "migration/core/mtma" }
-mtma-migrate-chain-core = "migration/core/mtma-migrate-chain-core"
+mtma-migrate-chain-core = { path = "migration/core/mtma-migrate-chain" }
 #### migrator
 mtma-migrator-null-core = { path = "migration/core/migrator/null" }
 mtma-migrator-pre-l1-merge-core = { path = "migration/core/migrator/pre-l1-merge" }
