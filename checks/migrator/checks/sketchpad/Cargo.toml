@@ -25,6 +25,7 @@ chrono = { workspace = true }
 rand = { workspace = true }
 kestrel = { workspace = true }
 mtma-node-test-types = { workspace = true }
+mtma-migrator-pre-l1-merge-core = { workspace = true }
 
 [dev-dependencies]
 tracing-test = { workspace = true }

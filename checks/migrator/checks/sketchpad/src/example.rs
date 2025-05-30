@@ -1,6 +1,7 @@
 #[cfg(test)]
 pub mod test {
 
+	use mtma_migrator_pre_l1_merge_core::config::Config as PreL1MergeConfig;
 	use mtma_migrator_test_types::check::checked_migration;
 	use mtma_migrator_types::migrator::MovementMigrator;
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
@@ -25,7 +26,7 @@ pub mod test {
 		let prelude = Prelude::new_empty();
 
 		// Form the migration.
-		let migration_config = MtmaNullConfig::default();
+		let migration_config = PreL1MergeConfig::default();
 		let migration = migration_config.build()?;
 
 		// Run the checked migration.

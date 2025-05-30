@@ -15744,6 +15744,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "kestrel",
+ "mtma-migrator-pre-l1-merge-core",
  "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
