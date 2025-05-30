@@ -1,6 +1,6 @@
 #[cfg(test)]
 pub mod test {
-	use mtma_migrator_test_empty_criterion::Empty;
+	use mtma_migrator_test_matching_feature_flags_criterion::GlobalFeatureCheck;
 	use mtma_migrator_test_types::check::checked_migration;
 	use mtma_migrator_types::migrator::{movement_migrator::Overlays, MovementMigrator};
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
@@ -36,8 +36,14 @@ pub mod test {
 		let migration = migration_config.build()?;
 
 		// Run the checked migration.
-		let empty = Empty::new();
-		checked_migration(&mut movement_migrator, &prelude, &migration, vec![empty]).await?;
+		let matching_feature_flags = GlobalFeatureCheck::new();
+		checked_migration(
+			&mut movement_migrator,
+			&prelude,
+			&migration,
+			vec![matching_feature_flags],
+		)
+		.await?;
 
 		Ok(())
 	}

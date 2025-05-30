@@ -15648,6 +15648,8 @@ dependencies = [
  "anyhow",
  "chrono",
  "kestrel",
+ "mtma-migrator-test-empty-criterion",
+ "mtma-migrator-test-matching-feature-flags-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
  "mtma-node-null-core",
@@ -15687,7 +15689,7 @@ dependencies = [
 name = "mtma-migrator-test-empty-criterion"
 version = "0.0.1"
 dependencies = [
- "mtma-node-test-types",
+ "mtma-migrator-test-types",
 ]
 
 [[package]]

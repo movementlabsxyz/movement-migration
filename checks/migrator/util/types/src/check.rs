@@ -25,7 +25,7 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 ) -> Result<(), CheckError> {
 	// Get the executor
 	let mut movement_executor = movement_migrator
-		.executor()
+		.node()
 		.await
 		.context("failed to get movement node")
 		.map_err(|e| CheckError::Internal(e.into()))?;
