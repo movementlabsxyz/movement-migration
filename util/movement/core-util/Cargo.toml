@@ -1,5 +1,5 @@
 [package]
-name = "mtma-node-test-global-storage-injective-criterion"
+name = "movement-core-util"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,10 +9,9 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-mtma-node-test-types = { workspace = true }
-mtma-types = { workspace = true }
-anyhow = { workspace = true }
-tracing = { workspace = true }
+movement-util = { workspace = true }
+movement-client = { workspace = true }
+maptos-opt-executor = { workspace = true }
 
 [lints]
 workspace = true

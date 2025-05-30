@@ -24,6 +24,7 @@ members = [
     "util/movement/*",
     "util/movement-aptos/*",
     "util/bcs-ext",
+    "util/types"
 
 ]
 
@@ -192,11 +193,13 @@ mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 mtma-migrator-test-accounts-equal-criterion = { path = "checks/migrator/citeria/accounts-equal" }
 ## util
 bcs-ext = { path = "util/bcs-ext" }
-movement-syncing = { path = "util/movement/movement-syncing" }
-movement-core = { path = "util/movement/movement-core" }
-movement-core-util = { path = "util/movement/movement-util" }
+movement-syncing = { path = "util/movement/syncing" }
+movement-core = { path = "util/movement/core" }
+movement-core-util = { path = "util/movement/core-util" }
 movement-aptos = { path = "util/movement-aptos/movement-aptos" }
-movement-aptos-core = { path = "util/movement-aptos/movement-aptos-core" }
+movement-aptos-core = { path = "util/movement-aptos/core" }
+movement-aptos-core-util = { path = "util/movement-aptos/core-util" }
+mtma-types = { path = "util/types" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
