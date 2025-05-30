@@ -319,6 +319,33 @@ impl Movement {
 	}
 }
 
+impl Drop for Movement {
+	fn drop(&mut self) {
+		// run docker compose down on workspace path
+		println!("Dropping movement");
+		let workspace_path = self.workspace_path();
+		println!("Workspace path: {:?}", workspace_path);
+		let result = std::process::Command::new("docker")
+			.arg("compose")
+			.arg("-f")
+			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.yml"))
+			.arg("-f")
+			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.local.yml"))
+			.arg("down")
+			.env("DOT_MOVEMENT_PATH", workspace_path.join(".movement"))
+			.current_dir(workspace_path)
+			.output()
+			.map_err(|e| MovementError::Internal(e.into()))
+			.unwrap();
+
+		println!("Docker compose down result: {:?}", result);
+
+		if !result.status.success() {
+			panic!("Docker compose down failed when dropping movement: {:?}", result);
+		}
+	}
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;

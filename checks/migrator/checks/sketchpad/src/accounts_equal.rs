@@ -1,14 +1,15 @@
 #[cfg(test)]
 pub mod test {
 
+	use anyhow::Context;
 	use mtma_migrator_test_accounts_equal_criterion::AccountsEqual;
 	use mtma_migrator_test_types::check::checked_migration;
 	use mtma_migrator_types::migrator::{movement_migrator::Overlays, MovementMigrator};
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use mtma_node_test_types::prelude::Prelude;
 
-	#[tokio::test]
-	#[tracing_test::traced_test]
+	#[tokio::test(flavor = "multi_thread")]
+	// #[tracing_test::traced_test]
 	async fn test_accounts_equal() -> Result<(), anyhow::Error> {
 		// Form the migrator.
 		let mut movement_migrator = MovementMigrator::try_debug_home()?;
@@ -22,7 +23,14 @@ pub mod test {
 			Ok::<_, anyhow::Error>(())
 		});
 
-		tokio::time::sleep(tokio::time::Duration::from_secs(30)).await;
+		// wait for the rest client to be ready
+		// once we have this, there should also be a config, so we can then kill off the migrator and proceed
+		movement_migrator
+			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(120))
+			.await
+			.context(
+				"failed to wait for movement migrator rest client while running accounts equal manual prelude",
+			)?;
 
 		kestrel::end!(movement_migrator_task)?;
 
@@ -36,8 +44,17 @@ pub mod test {
 
 		// Run the checked migration.
 		let accounts_equal = AccountsEqual::new();
-		checked_migration(&mut movement_migrator, &prelude, &migration, vec![accounts_equal])
-			.await?;
+		println!("Running migration");
+		match checked_migration(&mut movement_migrator, &prelude, &migration, vec![accounts_equal])
+			.await
+		{
+			Ok(()) => {}
+			Err(e) => {
+				println!("Migration failed: {:?}", e);
+				return Err(anyhow::anyhow!("Migration failed: {:?}", e));
+			}
+		}
+		println!("Migration succeeded");
 
 		Ok(())
 	}

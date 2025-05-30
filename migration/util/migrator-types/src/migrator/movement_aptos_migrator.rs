@@ -29,6 +29,13 @@ impl MovementAptosMigrator {
 		Self { runner }
 	}
 
+	/// Runs the migrator.
+	pub async fn run(&self) -> Result<(), anyhow::Error> {
+		match &self.runner {
+			Runner::MovementAptos(movement_aptos) => Ok(movement_aptos.run().await?),
+		}
+	}
+
 	/// Builds a [MovementAptosMigrator] from a [NodeConfig].
 	pub fn from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
 		let movement_aptos = MovementAptos::from_config(config)?;
@@ -55,7 +62,7 @@ impl MovementAptosMigrator {
 					.read()
 					.wait_for(condition)
 					.await
-					.context("failed to wait for Movement rest api")?;
+					.context("failed to wait for Movement Aptos rest api")?;
 				Ok(rest_api.listen_url().to_string())
 			}
 		}

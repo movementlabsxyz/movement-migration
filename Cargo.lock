@@ -15747,6 +15747,7 @@ dependencies = [
 name = "mtma-migrator-test-accounts-equal-criterion"
 version = "0.0.1"
 dependencies = [
+ "anyhow",
  "bcs 0.1.4",
  "bcs-ext",
  "mtma-migrator-test-types",
@@ -15769,6 +15770,7 @@ dependencies = [
  "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "bcs 0.1.4",
  "hex",
+ "kestrel",
  "movement-client",
  "mtma-migrator-types",
  "mtma-node-test-types",

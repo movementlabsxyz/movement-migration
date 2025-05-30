@@ -22,7 +22,7 @@ pub trait Migrationish {
 	/// Whether the criterion is satisfied by the given movement and movement_aptos executors.
 	fn migrate(
 		&self,
-		movement_executor: &MovementMigrator,
+		movement_migrator: &MovementMigrator,
 	) -> impl Future<Output = Result<MovementAptosMigrator, MigrationError>>;
 }
 

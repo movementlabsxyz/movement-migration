@@ -21,6 +21,7 @@ thiserror = { workspace = true }
 tokio = { workspace = true }
 bcs = { workspace = true }
 mtma-types = { workspace = true }
+kestrel = { workspace = true }
 
 [lints]
 workspace = true
