@@ -56,6 +56,10 @@ pub mod test {
 		}
 		println!("Migration succeeded");
 
+		drop(movement_migrator);
+
+		std::process::exit(0);
+
 		Ok(())
 	}
 }
