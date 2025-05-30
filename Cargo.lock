@@ -15646,10 +15646,12 @@ name = "mtma-migrator-checks-sketchpad"
 version = "0.0.1"
 dependencies = [
  "anyhow",
+ "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
  "chrono",
  "kestrel",
  "mtma-migrator-test-empty-criterion",
  "mtma-migrator-test-matching-feature-flags-criterion",
+ "mtma-migrator-test-transacting-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
  "mtma-node-null-core",
@@ -15711,7 +15713,6 @@ dependencies = [
  "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=2941ee2b5876ab93cfb8010154c9466d7d593ed9)",
  "bcs 0.1.4",
  "mtma-migrator-test-types",
- "rand 0.7.3",
  "tokio",
 ]
 

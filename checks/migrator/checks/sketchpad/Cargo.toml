@@ -13,6 +13,7 @@ mtma-migrator-types = { workspace = true }
 mtma-migrator-test-types = { workspace = true }
 anyhow = { workspace = true }
 mtma-migrator-test-matching-feature-flags-criterion = { workspace = true }
+mtma-migrator-test-transacting-criterion = { workspace = true }
 mtma-migrator-test-empty-criterion = { workspace = true }
 mtma-node-null-core = { workspace = true }
 tokio = { workspace = true }
@@ -21,6 +22,7 @@ rand = { workspace = true }
 kestrel = { workspace = true }
 mtma-node-preludes = { workspace = true }
 mtma-node-test-types = { workspace = true }
+aptos-sdk = { workspace = true }
 
 [dev-dependencies]
 tracing-test = { workspace = true }
