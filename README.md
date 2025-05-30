@@ -32,7 +32,7 @@ The migration is organized into passes, which are categorized as follows:
 
 ## Organization
 
-There are five subdirectories which progressively build on one another for node logic.
+There are three subdirectories which progressively build on one another for node logic.
 
 1. [`util`](./util): contains utility logic mainly reused in [`migration`](./migration).
 2. [`migration`](./migration): contains the implementation of the migration.
