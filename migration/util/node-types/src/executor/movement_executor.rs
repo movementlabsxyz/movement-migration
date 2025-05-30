@@ -1,14 +1,14 @@
 use either::Either;
-use maptos_opt_executor::aptos_storage_interface::state_view::DbStateView;
-use maptos_opt_executor::aptos_storage_interface::DbReader;
-use maptos_opt_executor::aptos_types::state_store::state_key::StateKey;
 pub use maptos_opt_executor::Executor as MovementOptExecutor;
 use movement_util::common_args::MovementArgs;
+use mtma_types::movement::aptos_storage_interface::state_view::DbStateView;
+use mtma_types::movement::aptos_storage_interface::DbReader;
+use mtma_types::movement::aptos_types::state_store::state_key::StateKey;
 use std::sync::Arc;
 
 use anyhow::Context;
 pub use maptos_opt_executor;
-pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
+pub use mtma_types::movement::aptos_types::{chain_id::ChainId, state_store::TStateView};
 use std::path::PathBuf;
 use tracing::debug;
 /// The Movement executor as would be presented in the criterion.

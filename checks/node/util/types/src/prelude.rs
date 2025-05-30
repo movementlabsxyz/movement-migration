@@ -1,6 +1,6 @@
 use crate::criterion::MovementNode;
-use maptos_opt_executor::aptos_crypto::HashValue;
-use maptos_opt_executor::aptos_types::{
+use mtma_types::movement::aptos_crypto::HashValue;
+use mtma_types::movement::aptos_types::{
 	block_executor::partitioner::{ExecutableBlock, ExecutableTransactions},
 	block_metadata::BlockMetadata,
 	transaction::signature_verified_transaction::into_signature_verified_block,

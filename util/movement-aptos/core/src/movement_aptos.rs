@@ -1,5 +1,5 @@
-use aptos_config::config::NodeConfig;
 use kestrel::State;
+use mtma_types::movement_aptos::aptos_config::config::NodeConfig;
 use std::path::PathBuf;
 pub mod rest_api;
 use kestrel::process::{command::Command, ProcessOperations};
@@ -187,7 +187,7 @@ where
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use aptos_node::create_single_node_test_config;
+	use mtma_types::movement_aptos::aptos_node::create_single_node_test_config;
 	use rand::thread_rng;
 	use std::path::Path;
 
