@@ -2,9 +2,9 @@ use anyhow::Context;
 use kestrel::WaitCondition;
 pub use maptos_opt_executor;
 pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
-use mtma_node_types::executor::MovementNode;
 use movement_client::rest_client::Client as MovementRestClient;
-use movement_core::Movement;
+pub use movement_core::{Movement, Overlay, Overlays};
+use mtma_node_types::executor::MovementNode;
 
 /// An enum supporting different types of runners.
 ///
@@ -77,11 +77,18 @@ impl MovementMigrator {
 	}
 
 	/// Produces the [MovementNode] from the runner.
-	pub async fn executor(&self) -> Result<MovementNode, anyhow::Error> {
+	pub async fn node(&self) -> Result<MovementNode, anyhow::Error> {
 		match &self.runner {
 			Runner::Movement(movement) => {
 				MovementNode::from_dir(movement.workspace_path().to_path_buf()).await
 			}
+		}
+	}
+
+	/// Sets the overlays for the runner.
+	pub fn set_overlays(&mut self, overlays: Overlays) {
+		match &mut self.runner {
+			Runner::Movement(movement) => movement.set_overlays(overlays),
 		}
 	}
 }

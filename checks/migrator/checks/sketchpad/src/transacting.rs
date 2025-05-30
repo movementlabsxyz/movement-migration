@@ -1,6 +1,7 @@
 #[cfg(test)]
 pub mod test {
-	use mtma_migrator_test_empty_criterion::Empty;
+	use aptos_sdk::types::LocalAccount;
+	use mtma_migrator_test_transacting_criterion::MaptosTransferLifecycle;
 	use mtma_migrator_test_types::check::checked_migration;
 	use mtma_migrator_types::migrator::{movement_migrator::Overlays, MovementMigrator};
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
@@ -8,7 +9,7 @@ pub mod test {
 
 	#[tokio::test]
 	#[tracing_test::traced_test]
-	async fn test_matching_feature_flags() -> Result<(), anyhow::Error> {
+	async fn test_transacting() -> Result<(), anyhow::Error> {
 		// Form the migrator.
 		let mut movement_migrator = MovementMigrator::try_temp()?;
 		// TODO: use `MovementMigrator::try_debug_home()`
@@ -36,8 +37,9 @@ pub mod test {
 		let migration = migration_config.build()?;
 
 		// Run the checked migration.
-		let empty = Empty::new();
-		checked_migration(&mut movement_migrator, &prelude, &migration, vec![empty]).await?;
+		let local_account = LocalAccount::generate(&mut rand::rngs::OsRng);
+		let transacting = MaptosTransferLifecycle::new(local_account);
+		checked_migration(&mut movement_migrator, &prelude, &migration, vec![transacting]).await?;
 
 		Ok(())
 	}

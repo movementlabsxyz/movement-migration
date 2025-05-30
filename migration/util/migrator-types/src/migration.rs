@@ -56,10 +56,8 @@ where
 		&self,
 		movement_executor: &MovementMigrator,
 	) -> Result<MovementAptosMigrator, MigrationError> {
-		let executor = movement_executor
-			.executor()
-			.await
-			.map_err(|e| MigrationError::Internal(e.into()))?;
+		let executor =
+			movement_executor.node().await.map_err(|e| MigrationError::Internal(e.into()))?;
 		let movement_aptos_executor = ExecutorMigrationish::migrate(self, &executor)
 			.await
 			.map_err(|e| MigrationError::Internal(e.into()))?;
