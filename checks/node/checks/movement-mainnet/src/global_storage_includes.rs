@@ -3,19 +3,19 @@ pub mod test {
 
 	use futures::channel::mpsc as futures_mpsc;
 	use maptos_execution_util::config::Config as MaptosConfig;
+	use movement_syncing::db::DbSync;
+	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use mtma_node_test_global_storage_includes_criterion::GlobalStorageIncludes;
 	use mtma_node_test_types::{
 		check::checked_migration,
 		criterion::movement_executor::{MovementNode, MovementOptExecutor},
 		prelude::Prelude,
 	};
-	use movement_syncing::db::DbSync;
-	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use sysinfo::Disks;
 
 	#[tokio::test]
 	#[tracing_test::traced_test]
-	async fn test_global_storage_includess_null() -> Result<(), anyhow::Error> {
+	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {
 		let disks = Disks::new_with_refreshed_list();
 
 		let total_disk_space: u64 = disks.iter().map(|disk| disk.total_space()).sum();

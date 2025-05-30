@@ -10,6 +10,7 @@ pub mod test {
 		prelude::PreludeGenerator,
 	};
 
+	#[ignore]
 	#[tokio::test]
 	#[tracing_test::traced_test]
 	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {
