@@ -1,25 +1,26 @@
 use anyhow::Context;
 use either::Either;
-pub use maptos_opt_executor;
-use maptos_opt_executor::aptos_crypto::HashValue;
-use maptos_opt_executor::aptos_storage_interface::state_view::DbStateView;
-use maptos_opt_executor::aptos_storage_interface::DbReader;
-use maptos_opt_executor::aptos_types::state_store::state_key::StateKey;
-use maptos_opt_executor::aptos_types::transaction::Version;
-use maptos_opt_executor::aptos_types::{
+pub use maptos_opt_executor::Executor as MovementOptExecutor;
+use movement_util::common_args::MovementArgs;
+use mtma_types::movement::aptos_crypto::HashValue;
+use mtma_types::movement::aptos_storage_interface::state_view::DbStateView;
+use mtma_types::movement::aptos_storage_interface::DbReader;
+use mtma_types::movement::aptos_types::state_store::state_key::StateKey;
+use mtma_types::movement::aptos_types::transaction::Version;
+use mtma_types::movement::aptos_types::{
 	account_address::AccountAddress,
 	block_executor::partitioner::{ExecutableBlock, ExecutableTransactions},
 	transaction::signature_verified_transaction::into_signature_verified_block,
 	transaction::Transaction,
 };
-pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
-pub use maptos_opt_executor::Executor as MovementOptExecutor;
-use movement_util::common_args::MovementArgs;
+pub use mtma_types::movement::aptos_types::{chain_id::ChainId, state_store::TStateView};
 use std::fs;
 use std::fs::Permissions;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
+
+pub use maptos_opt_executor;
 use tracing::debug;
 use uuid::Uuid;
 use walkdir::WalkDir;
@@ -361,9 +362,9 @@ impl<'a> AccountAddressIterator<'a> {
 						match tx_result {
 							Ok(tx) => {
 								// Extract account address from transaction
-								match <maptos_opt_executor::aptos_types::transaction::Transaction as TryInto<Transaction>>::try_into(tx) {
+								match <mtma_types::movement::aptos_types::transaction::Transaction as TryInto<Transaction>>::try_into(tx) {
 									Ok(t) => {
-										if let Ok(user_tx) = maptos_opt_executor::aptos_types::transaction::SignedTransaction::try_from(t) {
+										if let Ok(user_tx) = mtma_types::movement::aptos_types::transaction::SignedTransaction::try_from(t) {
 											vec![Ok(user_tx.sender())]
 										} else {
 											Vec::new() // Skip non-user transactions

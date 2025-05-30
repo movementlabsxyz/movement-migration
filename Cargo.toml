@@ -24,6 +24,7 @@ members = [
     "util/movement/*",
     "util/movement-aptos/*",
     "util/bcs-ext",
+    "util/types"
 
 ]
 
@@ -102,12 +103,13 @@ portpicker = "0.1.0"
 
 
 # movement
-maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
+maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+aptos-framework-pre-l1-merge-release = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
 
 
 # aptos-core
@@ -167,8 +169,11 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 mtma-core = { path = "migration/core/mtma" }
 mtma-null-core = { path = "migration/core/mtma-null" }
 mtma-node-replay-core = { path = "migration/core/node/mtma-replay" }
+
 #### migrator
 mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
+mtma-migrator-pre-l1-merge-core = { path = "migration/core/migrator/pre-l1-merge" }
+mtma-migrate-chain-core = { path = "migration/core/mtma-migrate-chain" }
 
 #### node
 mtma-node-null-core = { path = "migration/core/node/mtma-null" }
@@ -192,11 +197,13 @@ mtma-migrator-test-types = { path = "checks/migrator/util/types" }
 mtma-migrator-test-accounts-equal-criterion = { path = "checks/migrator/citeria/accounts-equal" }
 ## util
 bcs-ext = { path = "util/bcs-ext" }
-movement-syncing = { path = "util/movement/movement-syncing" }
-movement-core = { path = "util/movement/movement-core" }
-movement-core-util = { path = "util/movement/movement-util" }
+movement-syncing = { path = "util/movement/syncing" }
+movement-core = { path = "util/movement/core" }
+movement-core-util = { path = "util/movement/core-util" }
 movement-aptos = { path = "util/movement-aptos/movement-aptos" }
-movement-aptos-core = { path = "util/movement-aptos/movement-aptos-core" }
+movement-aptos-core = { path = "util/movement-aptos/core" }
+movement-aptos-core-util = { path = "util/movement-aptos/core-util" }
+mtma-types = { path = "util/types" }
 
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"

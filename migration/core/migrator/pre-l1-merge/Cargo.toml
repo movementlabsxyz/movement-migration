@@ -1,5 +1,5 @@
 [package]
-name = "mtma-node-null-core"
+name = "mtma-migrator-pre-l1-merge-core"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -18,6 +18,8 @@ clap-markdown-ext = { workspace = true }
 thiserror = { workspace = true }
 orfile = { workspace = true }
 mtma-node-types = { workspace = true }
+mtma-migrator-types = { workspace = true }
+mtma-node-null-core = { workspace = true }
 aptos-db = { workspace = true }
 aptos-storage-interface = { workspace = true }
 aptos-config = { workspace = true }
@@ -27,6 +29,7 @@ chrono = { workspace = true }
 walkdir = { workspace = true }
 uuid = { workspace = true }
 tracing = { workspace = true }
-mtma-types = { workspace = true }
+aptos-framework-pre-l1-merge-release = { workspace = true }
+
 [lints]
 workspace = true

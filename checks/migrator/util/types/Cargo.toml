@@ -20,6 +20,7 @@ aptos-sdk = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
 bcs = { workspace = true }
+mtma-types = { workspace = true }
 
 [lints]
 workspace = true

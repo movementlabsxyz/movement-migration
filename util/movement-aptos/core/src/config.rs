@@ -1,6 +1,6 @@
-pub use aptos_config::config::NodeConfig;
 use clap::Parser;
 use jsonlvar::Jsonl;
+pub use mtma_types::movement_aptos::aptos_config::config::NodeConfig;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
@@ -8,7 +8,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 use crate::movement_aptos::{runtime, MovementAptos};
-use aptos_node::create_single_node_test_config;
+use mtma_types::movement_aptos::aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NodeConfigWrapper(pub(crate) NodeConfig);
