@@ -1,16 +1,16 @@
-pub use aptos_executor::block_executor::BlockExecutor as MovementAptosBlockExecutor;
-use aptos_storage_interface::{
+use either::Either;
+pub use mtma_types::movement_aptos::aptos_executor::block_executor::BlockExecutor as MovementAptosBlockExecutor;
+use mtma_types::movement_aptos::aptos_storage_interface::{
 	state_store::state_view::db_state_view::{DbStateView, DbStateViewAtVersion},
 	DbReader,
 };
-use aptos_types::state_store::state_key::StateKey;
-pub use aptos_vm::aptos_vm::AptosVMBlockExecutor;
-use either::Either;
+use mtma_types::movement_aptos::aptos_types::state_store::state_key::StateKey;
+pub use mtma_types::movement_aptos::aptos_vm::aptos_vm::AptosVMBlockExecutor;
 use std::sync::Arc;
 
-pub use aptos_executor::block_executor;
-pub use aptos_types;
-pub use aptos_types::state_store::TStateView;
+pub use mtma_types::movement_aptos::aptos_executor::block_executor;
+pub use mtma_types::movement_aptos::aptos_types;
+pub use mtma_types::movement_aptos::aptos_types::state_store::TStateView;
 use std::path::PathBuf;
 
 use movement_aptos_core::{Config as MovementAptosConfig, NodeConfig};

@@ -3,7 +3,7 @@ use mtma_node_test_types::criterion::movement_executor::TStateView as _;
 use mtma_node_test_types::criterion::{
 	Criterion, CriterionError, Criterionish, MovementAptosNode, MovementNode,
 };
-use mtma_node_test_types::criterion::movement_aptos_executor::aptos_types::state_store::state_key::StateKey as MovementAptosStateKey;
+use mtma_types::movement_aptos::aptos_types::state_store::state_key::StateKey as MovementAptosStateKey;
 use tracing::debug;
 pub struct GlobalStorageIncludes;
 

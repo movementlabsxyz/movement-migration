@@ -1,9 +1,10 @@
 use anyhow::Context;
-use aptos_config::config::NodeConfig;
-use aptos_rest_client::Client as MovementAptosRestClient;
 use kestrel::WaitCondition;
 use movement_aptos_core::{runtime, MovementAptos};
 use mtma_node_types::executor::MovementAptosNode;
+use mtma_types::movement_aptos::aptos_config::config::NodeConfig;
+use mtma_types::movement_aptos::aptos_rest_client::Client as MovementAptosRestClient;
+use mtma_types::movement_aptos::aptos_types::account_address::AccountAddress;
 
 /// An enum supporting different types of runners.
 ///
@@ -26,6 +27,13 @@ pub struct MovementAptosMigrator {
 impl MovementAptosMigrator {
 	pub fn new(runner: Runner) -> Self {
 		Self { runner }
+	}
+
+	/// Runs the migrator.
+	pub async fn run(&self) -> Result<(), anyhow::Error> {
+		match &self.runner {
+			Runner::MovementAptos(movement_aptos) => Ok(movement_aptos.run().await?),
+		}
 	}
 
 	/// Builds a [MovementAptosMigrator] from a [NodeConfig].
@@ -54,7 +62,7 @@ impl MovementAptosMigrator {
 					.read()
 					.wait_for(condition)
 					.await
-					.context("failed to wait for Movement rest api")?;
+					.context("failed to wait for Movement Aptos rest api")?;
 				Ok(rest_api.listen_url().to_string())
 			}
 		}
@@ -71,6 +79,18 @@ impl MovementAptosMigrator {
 				anyhow::anyhow!("failed to parse Movement Aptos rest api url: {}", e)
 			})?);
 		Ok(rest_client)
+	}
+
+	/// Gets a [MovementAptosNode] from the runner.
+	pub async fn node(&self) -> Result<MovementAptosNode, anyhow::Error> {
+		todo!()
+	}
+
+	/// Iterates over all accounts in the movement aptos node.
+	pub async fn iter_accounts(
+		&self,
+	) -> Result<impl Iterator<Item = AccountAddress>, anyhow::Error> {
+		Ok(vec![].into_iter())
 	}
 }
 
