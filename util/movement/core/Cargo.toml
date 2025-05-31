@@ -27,6 +27,7 @@ strip-ansi-escapes = { workspace = true }
 regex = { workspace = true }
 reqwest = { workspace = true }
 movement-core-util = { workspace = true }
+tracing = { workspace = true }
 
 [build-dependencies]
 include-vendor = { workspace = true }

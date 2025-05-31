@@ -171,7 +171,7 @@ impl Migrationish for Migrate {
 				.context("failed to get latest ledger version")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 
-			println!(
+			info!(
 				"latest_ledger_version: {}, start_version: {}, end_version: {}",
 				latest_ledger_version, start_version, end_version
 			);

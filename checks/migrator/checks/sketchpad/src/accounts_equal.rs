@@ -7,9 +7,10 @@ pub mod test {
 	use mtma_migrator_types::migrator::{movement_migrator::Overlays, MovementMigrator};
 	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use mtma_node_test_types::prelude::Prelude;
+	use tracing::info;
 
 	#[tokio::test(flavor = "multi_thread")]
-	// #[tracing_test::traced_test]
+	#[tracing_test::traced_test]
 	async fn test_accounts_equal() -> Result<(), anyhow::Error> {
 		// use a scope to ensure everything is dropped
 		{
@@ -46,7 +47,7 @@ pub mod test {
 
 			// Run the checked migration.
 			let accounts_equal = AccountsEqual::new();
-			println!("Running migration");
+			info!("Running migration");
 			match checked_migration(
 				&mut movement_migrator,
 				&prelude,
@@ -57,11 +58,11 @@ pub mod test {
 			{
 				Ok(()) => {}
 				Err(e) => {
-					println!("Migration failed: {:?}", e);
+					info!("Migration failed: {:?}", e);
 					return Err(anyhow::anyhow!("Migration failed: {:?}", e));
 				}
 			}
-			println!("Migration succeeded");
+			info!("Migration succeeded");
 		}
 
 		// exit the test is fine when you only have one test per crate because when cargo test is run across a workspace, it actually multi-processes the tests by crate

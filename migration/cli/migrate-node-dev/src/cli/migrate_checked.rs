@@ -1,19 +1,20 @@
 use clap::Parser;
 use futures::channel::mpsc as futures_mpsc;
 use maptos_execution_util::config::Config as MaptosConfig;
+use movement_syncing::db::DbSync;
+use mtma_node_null_core::config::Config as MtmaNullConfig;
+use mtma_node_null_core::Config;
 use mtma_node_test_global_storage_includes_criterion::GlobalStorageIncludes;
 use mtma_node_test_types::{
 	check::checked_migration,
 	criterion::movement_executor::{MovementNode, MovementOptExecutor},
 	prelude::Prelude,
 };
-use movement_syncing::db::DbSync;
-use mtma_node_null_core::config::Config as MtmaNullConfig;
-use mtma_node_null_core::Config;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::str::FromStr;
+use tracing::info;
 
 #[derive(Parser, Serialize, Deserialize, Debug, Clone)]
 pub enum State {
@@ -66,19 +67,19 @@ impl MigrateChecked {
 						.ok_or(anyhow::anyhow!("state source is required for --state local"))?
 						.as_str(),
 				)?;
-				println!("Using local source: {}", path.display());
+				info!("Using local source: {}", path.display());
 				path
 			}
 			State::S3 => {
 				let db_sync = DbSync::mainnet_debug();
 				db_sync.pull().await?;
-				println!("Downloaded state from S3 to {}", db_sync.destination_db_path().display());
+				info!("Downloaded state from S3 to {}", db_sync.destination_db_path().display());
 				db_sync.destination_db_path().clone()
 			}
 			State::Mainnet => {
 				let db_sync = DbSync::mainnet_debug();
 				db_sync.pull().await?;
-				println!(
+				info!(
 					"Downloaded state from mainnet to {}",
 					db_sync.destination_db_path().display()
 				);
@@ -109,8 +110,8 @@ impl MigrateChecked {
 		)
 		.await?;
 
-		println!("Migration completed successfully");
-		println!("State path: {}", db_path.display());
+		info!("Migration completed successfully");
+		info!("State path: {}", db_path.display());
 
 		Ok(())
 	}
@@ -121,7 +122,7 @@ impl MigrateChecked {
 		let migration_task = tokio::spawn(async move { me.impl_execute().await });
 		tokio::spawn(async move {
 			loop {
-				println!("Migration in progress");
+				info!("Migration in progress");
 				tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 			}
 		});

@@ -19,6 +19,7 @@ use std::fs::Permissions;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
+use tracing::info;
 
 pub use maptos_opt_executor;
 use tracing::debug;
@@ -111,7 +112,7 @@ impl MovementNode {
 		maptos_config.chain.maptos_db_path =
 			Some(PathBuf::from(new_db_path.to_string_lossy().into_owned()));
 
-		println!("maptos config: {:?}", maptos_config);
+		info!("maptos config: {:?}", maptos_config);
 
 		let (sender, _receiver) = futures_channel::mpsc::channel(1024);
 		let opt_executor = MovementOptExecutor::try_from_config(maptos_config, sender)
@@ -299,10 +300,10 @@ impl<'a> Iterator for TransactionIterator<'a> {
 
 	fn next(&mut self) -> Option<Self::Item> {
 		// If we have a current block iterator, try to get the next transaction from it
-		println!("Getting next transaction from block iterator");
+		info!("Getting next transaction from block iterator");
 		if let Some(iter) = &mut self.current_block_iter {
 			if let Some(tx) = iter.next() {
-				println!("Got next transaction from block iterator {:?}", tx);
+				info!("Got next transaction from block iterator {:?}", tx);
 				return Some(Ok(tx));
 			}
 			// If we've exhausted the current block's transactions, clear the iterator
@@ -356,12 +357,12 @@ impl<'a> AccountAddressIterator<'a> {
 
 	fn get_next_address(&mut self) -> Option<Result<AccountAddress, anyhow::Error>> {
 		// If we don't have a transaction iterator, get one
-		println!("Getting next address from transaction iterator");
+		info!("Getting next address from transaction iterator");
 		if self.current_tx_iter.is_none() {
 			match self.executor.iter_transactions(self.version) {
 				Ok(iter) => {
 					// Create an iterator that extracts account addresses from transactions
-					println!("Creating iterator for transactions");
+					info!("Creating iterator for transactions");
 					let addresses_iter = iter.flat_map(|tx_result| {
 						match tx_result {
 							Ok(tx) => {
@@ -387,7 +388,7 @@ impl<'a> AccountAddressIterator<'a> {
 		}
 
 		// Try to get the next address from our iterator
-		println!("Trying to get next address from iterator");
+		info!("Trying to get next address from iterator");
 		if let Some(iter) = &mut self.current_tx_iter {
 			if let Some(addr_result) = iter.next() {
 				return Some(addr_result);
@@ -395,7 +396,7 @@ impl<'a> AccountAddressIterator<'a> {
 		}
 
 		// If we've exhausted the current iterator, move to next version
-		println!("Exhausted current iterator, moving to next version");
+		info!("Exhausted current iterator, moving to next version");
 		self.current_tx_iter = None;
 		self.version += 1;
 		if self.version <= self.latest_version {
@@ -410,7 +411,7 @@ impl<'a> Iterator for AccountAddressIterator<'a> {
 	type Item = Result<AccountAddress, anyhow::Error>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		println!("Getting next address from account address iterator");
+		info!("Getting next address from account address iterator");
 		self.get_next_address()
 	}
 }

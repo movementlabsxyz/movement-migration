@@ -25,16 +25,16 @@ pub mod test {
 		const REQUIRED_SPACE: u64 = 1_000_000_000_000; // 1 TB
 
 		if total_disk_space < REQUIRED_SPACE {
-			println!("Device has less than 1 TB of *total* disk space — skipping test (not a viable test platform).");
+			info!("Device has less than 1 TB of *total* disk space — skipping test (not a viable test platform).");
 			return Ok(()); // soft pass
 		}
 
 		if total_free_space < REQUIRED_SPACE {
-			println!("Device has enough total disk space, but less than 1 TB is free.");
+			info!("Device has enough total disk space, but less than 1 TB is free.");
 			return Err(anyhow::anyhow!("not enough free disk space"));
 		}
 
-		println!("Sufficient disk space available.");
+		info!("Sufficient disk space available.");
 
 		// sync the db
 		let db_sync = DbSync::mainnet_debug();

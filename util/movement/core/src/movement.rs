@@ -15,6 +15,7 @@ use faucet::{Faucet, ParseFaucet};
 use rest_api::{ParseRestApi, RestApi};
 use std::path::Path;
 use std::sync::Arc;
+use tracing::info;
 
 vendor_workspace!(MovementWorkspace, "movement");
 
@@ -322,9 +323,9 @@ impl Movement {
 impl Drop for Movement {
 	fn drop(&mut self) {
 		// run docker compose down on workspace path
-		println!("Dropping movement");
+		info!("Dropping movement");
 		let workspace_path = self.workspace_path();
-		println!("Workspace path: {:?}", workspace_path);
+		info!("Workspace path: {:?}", workspace_path);
 		let result = std::process::Command::new("docker")
 			.arg("compose")
 			.arg("-f")
@@ -338,7 +339,7 @@ impl Drop for Movement {
 			.map_err(|e| MovementError::Internal(e.into()))
 			.unwrap();
 
-		println!("Docker compose down result: {:?}", result);
+		info!("Docker compose down result: {:?}", result);
 
 		if !result.status.success() {
 			panic!("Docker compose down failed when dropping movement: {:?}", result);

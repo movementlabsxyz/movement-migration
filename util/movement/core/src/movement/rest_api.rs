@@ -1,5 +1,6 @@
 use kestrel::{fulfill::custom::CustomProcessor, fulfill::FulfillError};
 use tokio::sync::mpsc::Receiver;
+use tracing::info;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct RestApi {
@@ -86,7 +87,7 @@ impl CustomProcessor<RestApi> for ParseRestApi {
 										if response.status().is_success() {
 											break;
 										} else {
-											println!(
+											info!(
 												"rest api is not responding to pings: {response:?}"
 											);
 											tokio::time::sleep(tokio::time::Duration::from_secs(1))
@@ -94,7 +95,7 @@ impl CustomProcessor<RestApi> for ParseRestApi {
 										}
 									}
 									Err(e) => {
-										println!("failed to ping rest api: {e}");
+										info!("failed to ping rest api: {e}");
 										tokio::time::sleep(tokio::time::Duration::from_secs(1))
 											.await;
 									}

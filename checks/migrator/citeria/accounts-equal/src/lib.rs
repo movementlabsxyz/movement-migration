@@ -38,7 +38,7 @@ impl Criterionish for AccountsEqual {
 		let movement_node =
 			movement_migrator.node().await.map_err(|e| CriterionError::Internal(e.into()))?;
 
-		println!("Iterating over movement node accounts");
+		info!("Iterating over movement node accounts");
 		for account_address_res in movement_node
 			.iter_account_addresses(0)
 			.map_err(|e| CriterionError::Internal(e.into()))?
@@ -49,12 +49,12 @@ impl Criterionish for AccountsEqual {
 			{
 				Ok(account_address) => account_address,
 				Err(e) => {
-					println!("Transaction has no sender: {:?}", e);
+					info!("Transaction has no sender: {:?}", e);
 					continue;
 				}
 			};
 
-			println!("Getting movement resource");
+			info!("Getting movement resource");
 			let movement_resource = movement_rest_client
 				.get_account_bcs(account_address)
 				.await
@@ -63,11 +63,11 @@ impl Criterionish for AccountsEqual {
 				})?
 				.into_inner();
 
-			println!("Getting movement aptos address");
+			info!("Getting movement aptos address");
 			let movement_aptos_account_address =
 				account_address.bcs_into().map_err(|e| CriterionError::Internal(e.into()))?;
 
-			println!("Getting movement aptos account resource");
+			info!("Getting movement aptos account resource");
 			let aptos_resource = movement_aptos_rest_client
 				.get_account_bcs(movement_aptos_account_address)
 				.await
@@ -76,12 +76,12 @@ impl Criterionish for AccountsEqual {
 				})?
 				.into_inner();
 
-			println!("Comparing resources");
+			info!("Comparing resources");
 			movement_resource
 				.bcs_eq(&aptos_resource)
 				.map_err(|e| CriterionError::Unsatisfied(e.into()))?;
 
-			println!("Finished processing block");
+			info!("Finished processing block");
 		}
 
 		Ok(())
