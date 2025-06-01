@@ -12,6 +12,7 @@ pub mod test {
 		prelude::Prelude,
 	};
 	use sysinfo::Disks;
+	use tracing::info;
 
 	#[tokio::test]
 	#[tracing_test::traced_test]

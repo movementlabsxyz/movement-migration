@@ -3,6 +3,7 @@ use bcs_ext::{comparison::BcsEq, conversion::BcsInto};
 use mtma_migrator_test_types::criterion::{
 	Criterion, CriterionError, Criterionish, MovementAptosMigrator, MovementMigrator,
 };
+use tracing::info;
 
 pub struct AccountsEqual;
 

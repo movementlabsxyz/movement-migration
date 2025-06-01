@@ -29,6 +29,7 @@ use mtma_node_types::{
 	migration::{MigrationError, Migrationish},
 };
 use std::path::Path;
+use tracing::info;
 
 /// Converts a [MovementBlock] to a [MovementAptosBlock].
 pub fn movement_block_to_movement_aptos_block(

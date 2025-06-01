@@ -2,6 +2,7 @@ use crate::criterion::{Criterionish, MovementMigrator};
 use anyhow::Context;
 use mtma_migrator_types::migration::Migrationish;
 use mtma_node_test_types::prelude::Prelude;
+use tracing::info;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]

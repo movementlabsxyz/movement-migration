@@ -14,7 +14,7 @@ bcs = { workspace = true }
 bcs-ext = { workspace = true }
 tokio = { workspace = true }
 anyhow = { workspace = true }
-
+tracing = { workspace = true }
 
 [lints]
 workspace = true

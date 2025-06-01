@@ -15753,6 +15753,7 @@ dependencies = [
  "bcs-ext",
  "mtma-migrator-test-types",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -15779,6 +15780,7 @@ dependencies = [
  "serde",
  "thiserror 1.0.69",
  "tokio",
+ "tracing",
 ]
 
 [[package]]

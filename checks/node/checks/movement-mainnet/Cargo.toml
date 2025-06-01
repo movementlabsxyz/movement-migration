@@ -23,6 +23,7 @@ chrono = { workspace = true }
 rand = { workspace = true }
 futures = { workspace = true }
 sysinfo = { workspace = true }
+tracing = { workspace = true }
 
 [dev-dependencies]
 tracing-test = { workspace = true }
