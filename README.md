@@ -27,8 +27,10 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) file for additional contribution g
 The migration is organized into passes, which are categorized as follows:
 
 - [`node`](/migration/core/node) for migration passes that take place with access to node processes, memory, and disk.
-- `transaction` is suggested but not broken out for all over-the-wire/transaction-based migration passes. 
 - [`migrator`](migration/core/migrator) for migration passes that take place with direct or indirect access to all other levels of abstraction--everything that is needed to migrate. 
+
+> [!NOTE]
+> An additional class of strategies `chain` and  `transaction` have been suggested but not broken out for all over-the-wire/transaction-based migration passes. Simply use the `migrator` instead. 
 
 ## Organization
 
