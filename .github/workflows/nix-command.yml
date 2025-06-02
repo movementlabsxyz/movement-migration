@@ -19,7 +19,7 @@ on:
 
 jobs:
   run-command:
-    runs-on: buildjet-32vcpu-ubuntu-2204
+    runs-on: movement-runner
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
