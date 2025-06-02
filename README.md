@@ -68,7 +68,7 @@ Migrations are subdivided by **[Strategy](#strategies)**.
 > [!WARNING]
 > This section is a **WIP** in progress. Its contents are intended as aspirational. However, links below to CLIs and documentation should ultimately be valid and currently link to informative material.
 
-> [!INFO]
+> [!NOTE]
 > Multiple CLI paths are often shared for usability. Owing to the compositional approach this repository uses to CLI development, the logic should assumed be the same at each CLI path unless otherwise noted below or in the CLI documentation itself. 
 
 ### [`node`](./migration/core/node)
@@ -159,11 +159,11 @@ Checks are the criteria for migration correctness. Ultimately, they are intended
 > [!WARNING]
 > This section is a **WIP** in progress. Its contents are intended as aspirational. However, links below to CLIs and documentation should ultimately be valid and currently link to informative material. 
 
-> [!INFO]
+> [!NOTE]
 > Multiple CLI paths are often shared for usability. Owing to the compositional approach this repository uses to CLI development, the logic should assumed be the same at each CLI path unless otherwise noted below or in the CLI documentation itself. 
 
 
-> [!INFO]
+> [!NOTE]
 > Several checks from [`primata/e2e-criteria`](https://github.com/movementlabsxyz/movement-migration/pull/47) are omitted here as they are still in fairly early development. 
 
 ### `snapshot`
@@ -234,7 +234,7 @@ Checks that both `movement` and `movement-aptos` accounts are equivalent in `bcs
 Checks that both `movement` and `movement-aptos` balances for the native token are equal. 
 
 ### `tracking`
-> [!INFO]
+> [!NOTE]
 > This category is completely suggestive. We haven't implemented anything here yet. 
 
 
