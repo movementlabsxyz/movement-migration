@@ -34,24 +34,70 @@ pub struct MovementNode {
 	opt_executor: MovementOptExecutor,
 }
 
-/// Copies a directory recursively.
-fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), anyhow::Error> {
+/// Copies a directory recursively while ignoring specified paths
+fn copy_dir_recursive_with_ignore(src: &Path, ignore_paths: impl IntoIterator<Item = impl AsRef<Path>>, dst: &Path) -> Result<(), anyhow::Error> {
+    let ignore_paths: Vec<_> = ignore_paths.into_iter().collect();
+    let mut errors: Vec<Result<(), anyhow::Error>> = Vec::new();
 
-	// make sure the dst directory exists
-	fs::create_dir_all(dst).context(format!("failed to create debug directory: {}", dst.display()))?;
+    for entry in WalkDir::new(src) {
+        let entry = match entry {
+            Ok(e) => e,
+            Err(e) => {
+                errors.push(Err(e.into()));
+                continue;
+            }
+        };
 
-	for entry in WalkDir::new(src) {
-		let entry = entry?;
-		let rel_path = entry.path().strip_prefix(src).unwrap();
-		let dest_path = dst.join(rel_path);
+        debug!("Processing entry: {}", entry.path().display());
 
-		if entry.file_type().is_dir() {
-			fs::create_dir_all(&dest_path).context(format!("failed to create directory: {}", dest_path.display()))?;
-		} else {
-			fs::copy(entry.path(), &dest_path).context(format!("failed to copy file: {}", entry.path().display()))?;
-		}
-	}
-	Ok(())
+        let path = entry.path();
+
+        // Skip if path matches any ignore pattern
+        if ignore_paths.iter().any(|ignore| path.to_string_lossy().contains(ignore.as_ref().to_string_lossy().as_ref())) {
+            debug!("skipping ignored path: {}", path.display());
+            continue;
+        }
+
+        // Make the path relative to src
+        let rel_path = match path.strip_prefix(src) {
+            Ok(p) => p,
+            Err(e) => {
+                errors.push(Err(e.into()));
+                continue;
+            }
+        };
+
+        let dest_path = dst.join(rel_path);
+
+        if entry.file_type().is_dir() {
+            match fs::create_dir_all(&dest_path) {
+                Ok(_) => (),
+                Err(e) => errors.push(Err(e.into())),
+            }
+        } else {
+            if let Some(parent) = dest_path.parent() {
+                match fs::create_dir_all(parent) {
+                    Ok(_) => (),
+                    Err(e) => errors.push(Err(e.into())),
+                }
+            }
+            match fs::copy(path, &dest_path) {
+                Ok(_) => (),
+                Err(e) => errors.push(Err(e.into())),
+            }
+        }
+    }
+
+    // Combine all results into one
+    if !errors.is_empty() {
+        let mut total_error_message = String::from("failed to copy directory with the following errors: ");
+        for error in errors {
+            total_error_message = total_error_message + &format!("{:?}\n", error);
+        }
+        return Err(anyhow::anyhow!(total_error_message));
+    }
+
+    Ok(())
 }
 
 /// Sets all permission in a directory recursively.
@@ -78,13 +124,20 @@ impl MovementNode {
 
 		// Copy the entire .movement directory recursively
 		let movement_dir = dir.join(".movement");
-		copy_dir_recursive(&movement_dir, &debug_dir).context("failed to copy movement dir")?;
+
+		// set the permissions on the movement dir to 755
+		// Note: this would mess up celestia node permissions, but we don't care about that here.
+		// We really only care about maptos db permissions.
+		fs::set_permissions(&movement_dir, Permissions::from_mode(0o755)).context(format!("failed to set permissions on the movement directory {}", movement_dir.display()))?;
+
+		// don't copy anything from the celestia directory
+		copy_dir_recursive_with_ignore(&movement_dir, [PathBuf::from("celestia")], &debug_dir).context("failed to copy movement dir")?;
 
 		// Set all permissions in the debug directory recursively
 		// Note: this would mess up celestia node permissions, but we don't care about that here.
 		// We really only care about maptos db permissions.
 		// TODO: tighten the copying accordingly.
-		set_permissions_recursive(&debug_dir, Permissions::from_mode(0o755)).context("failed to set permissions")?;
+		set_permissions_recursive(&debug_dir, Permissions::from_mode(0o755)).context(format!("failed to set permissions on the debug directory {}", debug_dir.display()))?;
 
 		let movement_args = MovementArgs { movement_path: Some(debug_dir.display().to_string()) };
 
@@ -417,5 +470,42 @@ impl<'a> Iterator for AccountAddressIterator<'a> {
 	fn next(&mut self) -> Option<Self::Item> {
 		info!("Getting next address from account address iterator");
 		self.get_next_address()
+	}
+}
+
+#[cfg(test)]
+mod test {
+	use super::*;
+	use tempfile::TempDir;
+
+	#[test]
+	#[tracing_test::traced_test]
+	fn test_copy_dir_recursive_with_ignore() -> Result<(), anyhow::Error> {
+		// put some file in a temp dir
+		let temp_dir = TempDir::new()?;
+
+		// write a file that should be copied
+		let file_path = temp_dir.path().join("maptos").join("test_file.txt");
+		fs::create_dir_all(file_path.parent().context("failed to get parent directory for file that should be copied")?).context("failed to create directory")?;
+		fs::write(file_path, "test").context("failed to write file that should be copied")?;
+
+		// write a file that should not be copied
+		let file_path = temp_dir.path().join("celestia").join("test_file2.txt");
+		fs::create_dir_all(file_path.parent().context("failed to get parent directory for file that should not be copied")?).context("failed to create directory")?;
+		fs::write(file_path, "test").context("failed to write file that should not be copied")?;
+
+		// create the target temp dir
+		let dst = TempDir::new()?;
+
+		// copy the file to a new dir, ignoring celestia directory
+		copy_dir_recursive_with_ignore(&temp_dir.path(), [PathBuf::from("celestia")], &dst.path()).context("failed to copy directory")?;
+
+		// check that the file was copied
+		assert!(dst.path().join("maptos").join("test_file.txt").exists());
+
+		// check that the celestia directory was not copied
+		assert!(!dst.path().join("celestia").join("test_file2.txt").exists());
+
+		Ok(())
 	}
 }
