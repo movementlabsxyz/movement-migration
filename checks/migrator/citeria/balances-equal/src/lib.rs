@@ -5,9 +5,9 @@ use mtma_migrator_test_types::criterion::{
 };
 use tracing::info;
 
-pub struct AccountsEqual;
+pub struct BalancesEqual;
 
-impl AccountsEqual {
+impl BalancesEqual {
 	pub fn new() -> Self {
 		Self {}
 	}
@@ -17,7 +17,7 @@ impl AccountsEqual {
 	}
 }
 
-impl Criterionish for AccountsEqual {
+impl Criterionish for BalancesEqual {
 	async fn satisfies(
 		&self,
 		movement_migrator: &MovementMigrator,
@@ -70,7 +70,7 @@ impl Criterionish for AccountsEqual {
 
 			info!("Getting movement aptos account balance");
 			let movement_aptos_account_balance = movement_aptos_rest_client
-				.get_account_balance(movement_aptos_account_address)
+				.view_apt_account_balance(movement_aptos_account_address)
 				.await
 				.map_err(|e| {
 					CriterionError::Internal(format!("Failed to get account: {:?}", e).into())
@@ -78,7 +78,7 @@ impl Criterionish for AccountsEqual {
 				.into_inner();
 
 			info!("Comparing balances");
-			if movement_account_balance.coin.value != movement_aptos_account_balance.coin.value {
+			if u64::from(movement_account_balance.coin.value) != movement_aptos_account_balance {
 				return Err(CriterionError::Unsatisfied(
 					format!("movement and aptos account balances have different values: {:?} != {:?}", movement_account_balance, movement_aptos_account_balance).into(),
 				));
