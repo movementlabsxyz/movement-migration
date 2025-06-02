@@ -15757,6 +15757,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "mtma-migrator-test-balances-equal-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "bcs 0.1.4",
+ "bcs-ext",
+ "mtma-migrator-test-types",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "mtma-migrator-test-empty-criterion"
 version = "0.0.1"
 dependencies = [
