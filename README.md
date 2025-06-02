@@ -45,6 +45,8 @@ Migration passes that take place with direct or indirect access to all other lev
 
 ## Environments
 
+Environments are the different contexts in which **[Migrations](#migrations)** are expected to run. 
+
 > [!WARNING]
 > Currently, this and its subcategories are suggestive. All **[Strategies](#strategies)**, **[Migrations](#migrations)**, and **[Checks](#checks)** have been written ad hoc and are mostly concerned with a local testing environment. 
 >
@@ -82,7 +84,7 @@ At the time of writing, we have planned or developed the following `node` migrat
 
 `mtma-node-null` is a migration that does not attempt to make any changes to the the existing databases. It is a copying of node state files. 
 
-### [`mtma-node-replay`](./migration/core/node/mtma-replay)
+#### [`mtma-node-replay`](./migration/core/node/mtma-replay)
 - **CLI**
   - [`mtma-node-dev migrate replay`](./migration/cli/migrate-node-dev/docs/cli/README.md)
   - [`mtma-node migrate replay`](./migration/cli/migrate-node/docs/cli/README.md)
@@ -136,13 +138,105 @@ Runs the [`post-l1-merge`](https://github.com/movementlabsxyz/movement-migration
 
 ## Contexts
 
+Contexts are the contexts in which checks are expected to run. 
+
+> ![WARNING]
+> This category and its subcategories are currently suggestive. 
+
+> [!ERROR]
+> Not all **[Checks](#checks)** are intended to run in all Contexts. 
+
+### `snapshot`
+The context wherein the migration and its checks have access to a safe version of the node which they may modify. 
+
+### `tracking`
+The context wherein the migration is presumed to already have run and the checks will continue to track a certain set of criteria against live traffic. 
+
 ## Checks
+
+Checks are the criteria for migration correctness. Ultimately, they are intended to be used under `mtma checked-migration` to ensure a performed migration satisfies correctness as defined by the criteria described in the Checks. 
 
 > [!WARNING]
 > This section is a **WIP** in progress. Its contents are intended as aspirational. However, links below to CLIs and documentation should ultimately be valid and currently link to informative material. 
 
 > [!INFO]
 > Multiple CLI paths are often shared for usability. Owing to the compositional approach this repository uses to CLI development, the logic should assumed be the same at each CLI path unless otherwise noted below or in the CLI documentation itself. 
+
+
+> [!INFO]
+> Several checks from [`primata/e2e-criteria`](https://github.com/movementlabsxyz/movement-migration/pull/47) are omitted here as they are still in fairly early development. 
+
+### `snapshot`
+
+> [!WARNING]
+> We would like to pull each of these out into a separate unit-test written crate a la [`balances-equal`](./checks/migrator/checks/balances-equal/) and generally reorganize the [`checks`](./checks/) to better match the updated ontology described herein. 
+>
+> The need for separate crates is driven by some awkward Tokio behavior when dropping various runtimes associated with the `movement` and `movement-aptos` embedded runners. 
+
+#### [`global-storage-includes`](./checks/node/citeria/global-storage-includes/)
+- **CLI**
+  - [`mtma-check-dev snapshot check global-storage-includes`](./migration/cli//check/docs/cli/README.md)
+  - [`mtma-check snapshot check global-storage-includes`](./migration/cli/migrate-migrator/docs/cli/README.md)
+  - [`mtma checks snapshot check global-storage-includes`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checks snapshot check select --global-storage-includes`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checked-migration migrate select --check-global-storage-includes`](./migration/cli/mtma/docs/cli/README.md)
+- **Tests**
+  - [`global-storage-includes`](./checks/node/checks/sketchpad/src/global_storage_includes.rs)
+
+Checks whether the global storage from `movement` is present in `movement-aptos`.
+
+#### [`global-storage-injective`](./checks/node/citeria/global-storage-injective)
+- **CLI**
+  - [`mtma-check-dev snapshot check global-storage-injective`](./migration/cli//check/docs/cli/README.md)
+  - [`mtma-check snapshot check global-storage-injective`](./migration/cli/migrate-migrator/docs/cli/README.md)
+  - [`mtma checks snapshot check global-storage-injective`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checks snapshot check select --global-storage-injective`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checked-migration migrate select --check-global-storage-injective`](./migration/cli/mtma/docs/cli/README.md)
+- **Tests**
+  - [`global-storage-injective`](./checks/node/checks/sketchpad/src/global_storage_injective.rs)
+
+Checks whether the global storage from `movement` is injective into the codomain of `movement-aptos` state keys. 
+
+#### [`global-storage-not-empty`](./checks/node/citeria/global-storage-not-empty/)
+- **CLI**
+  - [`mtma-check-dev snapshot check global-storage-not-empty`](./migration/cli//check/docs/cli/README.md)
+  - [`mtma-check snapshot check global-storage-not-empty`](./migration/cli/migrate-migrator/docs/cli/README.md)
+  - [`mtma checks snapshot check global-storage-not-empty`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checks snapshot check select --global-storage-not-empty`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checked-migration migrate select --check-global-storage-not-empty`](./migration/cli/mtma/docs/cli/README.md)
+- **Tests**
+  - [`global-storage-not-empty`](./checks/node/checks/sketchpad/src/global_storage_not_empty.rs)
+
+Checks that both `movement` and `movement-aptos` global storage are not empty. 
+
+#### [`accounts-equal`](./checks/migrator/citeria/accounts-equal/)
+- **CLI**
+  - [`mtma-check-dev snapshot check accounts-equal`](./migration/cli//check/docs/cli/README.md)
+  - [`mtma-check snapshot check accounts-equal`](./migration/cli/migrate-migrator/docs/cli/README.md)
+  - [`mtma checks snapshot check accounts-equal`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checks snapshot check select --accounts-equal`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checked-migration migrate select --check-accounts-equal`](./migration/cli/mtma/docs/cli/README.md)
+- **Tests**
+  - [`accounts-equal`](./checks/migrator/checks/sketchpad/src/accounts_equal.rs)
+
+Checks that both `movement` and `movement-aptos` accounts are equivalent in `bcs` representation. Amongst other things, this should ensure that asymmetric cryptography for accounts is preserved. 
+
+#### [`balances-equal`](./checks/migrator/citeria/balances-equal/)
+- **CLI**
+  - [`mtma-check-dev snapshot check balances-equal`](./migration/cli//check/docs/cli/README.md)
+  - [`mtma-check snapshot check balances-equal`](./migration/cli/migrate-migrator/docs/cli/README.md)
+  - [`mtma checks snapshot check balances-equal`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checks snapshot check select --balances-equal`](./migration/cli/mtma/docs/cli/README.md)
+  - [`mtma checked-migration migrate select --check-balances-equal`](./migration/cli/mtma/docs/cli/README.md)
+- **Tests**
+  - [`balances-equal`](./checks/migrator/checks/balances-equal/src/balances_equal.rs)
+
+Checks that both `movement` and `movement-aptos` balances for the native token are equal. 
+
+### `tracking`
+> [!INFO]
+> This category is completely suggestive. We haven't implemented anything here yet. 
+
 
 ## Organization
 
