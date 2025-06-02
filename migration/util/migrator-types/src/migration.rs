@@ -7,7 +7,7 @@ pub use crate::migrator::movement_aptos_migrator::{
 pub use crate::migrator::movement_migrator::MovementMigrator;
 use std::future::Future;
 
-use mtma_node_types::migration::Migrationish as ExecutorMigrationish;
+use mtma_node_types::migration::Migrationish as NodeMigrationish;
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
@@ -50,7 +50,7 @@ where
 
 impl<T> Migrationish for T
 where
-	T: ExecutorMigrationish,
+	T: NodeMigrationish,
 {
 	async fn migrate(
 		&self,
@@ -58,7 +58,7 @@ where
 	) -> Result<MovementAptosMigrator, MigrationError> {
 		let executor =
 			movement_executor.node().await.map_err(|e| MigrationError::Internal(e.into()))?;
-		let movement_aptos_executor = ExecutorMigrationish::migrate(self, &executor)
+		let movement_aptos_executor = NodeMigrationish::migrate(self, &executor)
 			.await
 			.map_err(|e| MigrationError::Internal(e.into()))?;
 		let movement_aptos = movement_aptos_executor

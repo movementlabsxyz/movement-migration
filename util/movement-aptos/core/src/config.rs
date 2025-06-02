@@ -74,7 +74,7 @@ impl Config {
 	pub fn test_node_config(db_dir: &PathBuf) -> Result<Self, ConfigError> {
 		let rng = rand::thread_rng();
 
-		let node_config = create_single_node_test_config(
+		let mut node_config = create_single_node_test_config(
 			&None,
 			&None,
 			db_dir.as_path(),
@@ -85,6 +85,8 @@ impl Config {
 			rng,
 		)
 		.map_err(|e| ConfigError::Internal(e.into()))?;
+
+		node_config.base.working_dir = Some(db_dir.clone());
 
 		Ok(Config { node_config: NodeConfigWrapper(node_config), log_file: None })
 	}

@@ -29,7 +29,7 @@ pub mod test {
 			// wait for the rest client to be ready
 			// once we have this, there should also be a config, so we can then kill off the migrator and proceed
 			movement_migrator
-			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(120))
+			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(600)) // we wait for up to ten minutes because the nix flake in .vendors/movementcan be a bit slow the first time
 			.await
 			.context(
 				"failed to wait for movement migrator rest client while running accounts equal manual prelude",

@@ -1,5 +1,5 @@
 [package]
-name = "mtma-migrator-checks-sketchpad"
+name = "migrator-sketchpad"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
