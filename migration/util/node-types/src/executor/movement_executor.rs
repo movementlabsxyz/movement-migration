@@ -39,11 +39,31 @@ fn copy_dir_recursive_with_ignore(src: &Path, ignore_paths: impl IntoIterator<It
     let ignore_paths: Vec<_> = ignore_paths.into_iter().collect();
     let mut errors: Vec<Result<(), anyhow::Error>> = Vec::new();
 
-    for entry in WalkDir::new(src) {
+    // Configure WalkDir to be more resilient
+    let walker = WalkDir::new(src)
+        .follow_links(false)
+        .same_file_system(true)
+        .into_iter()
+        .filter_entry(|entry| {
+            // Early filter for ignored paths to avoid permission errors
+            let path = entry.path();
+            !ignore_paths.iter().any(|ignore| path.to_string_lossy().contains(ignore.as_ref().to_string_lossy().as_ref()))
+        });
+
+    for entry in walker {
         let entry = match entry {
             Ok(e) => e,
             Err(e) => {
-                errors.push(Err(e.into()));
+                // Check if this is a permission error on an ignored path
+                if let Some(path) = e.path() {
+                    if ignore_paths.iter().any(|ignore| path.to_string_lossy().contains(ignore.as_ref().to_string_lossy().as_ref())) {
+                        debug!("Ignoring permission error on ignored path: {}", path.display());
+                        continue;
+                    }
+                }
+                // For other errors, log with info for now and fail.
+                info!("Error accessing path: {:?}", e);
+				errors.push(Err(anyhow::anyhow!("failed to get entry: {:?}", e)));
                 continue;
             }
         };
@@ -51,23 +71,7 @@ fn copy_dir_recursive_with_ignore(src: &Path, ignore_paths: impl IntoIterator<It
         debug!("Processing entry: {}", entry.path().display());
 
         let path = entry.path();
-
-        // Skip if path matches any ignore pattern
-        if ignore_paths.iter().any(|ignore| path.to_string_lossy().contains(ignore.as_ref().to_string_lossy().as_ref())) {
-            debug!("skipping ignored path: {}", path.display());
-            continue;
-        }
-
-        // Make the path relative to src
-        let rel_path = match path.strip_prefix(src) {
-            Ok(p) => p,
-            Err(e) => {
-                errors.push(Err(e.into()));
-                continue;
-            }
-        };
-
-        let dest_path = dst.join(rel_path);
+        let dest_path = dst.join(path.strip_prefix(src).context("failed to strip prefix")?);
 
         if entry.file_type().is_dir() {
             match fs::create_dir_all(&dest_path) {
@@ -510,6 +514,7 @@ mod test {
 	}
 
 	// Somehow the following test is failing on CI: https://github.com/movementlabsxyz/movement-migration/actions/runs/15386989846/job/43287594343
+	// This indicates that failure is not due to the inability to ignore copy, but rather some issue performing an oepration that requires permissions.
 	#[test]
 	fn test_are_you_kidding_me() -> Result<(), anyhow::Error> {
 
@@ -519,7 +524,11 @@ mod test {
 		let path_that_must_be_ignored = source_dir.path().join(".movement/celestia/c1860ae680eb2d91927b/.celestia-app/keyring-test");
 
 		fs::create_dir_all(path_that_must_be_ignored.parent().context("failed to get parent directory for path that must be ignored")?).context("failed to create directory")?;
-		fs::write(path_that_must_be_ignored, "test").context("failed to write file that must not be ignored")?;
+		// write a file that must not be ignored
+		fs::write(path_that_must_be_ignored.clone(), "test").context("failed to write file that must not be ignored")?;
+		// set permissions to 000 on the file and then on the parent directory
+		fs::set_permissions(path_that_must_be_ignored.clone(), Permissions::from_mode(0o000)).context("failed to set permissions on file that must not be ignored")?;
+		fs::set_permissions(path_that_must_be_ignored.parent().context("failed to get parent directory for path that must be ignored")?, Permissions::from_mode(0o000)).context("failed to set permissions on parent directory that must not be ignored")?;
 
 		copy_dir_recursive_with_ignore(source_dir.path(), ["celestia"], target_dir.path()).context("failed to copy directory")?;
 
