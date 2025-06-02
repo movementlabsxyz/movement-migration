@@ -1,6 +1,8 @@
 use anyhow::Context;
 use aptos_config::config::NodeConfig;
-use aptos_rest_client::Client as MovementAptosRestClient;
+use aptos_rest_client::{
+	Client as MovementAptosRestClient, FaucetClient as MovementAptosFaucetClient,
+};
 use kestrel::WaitCondition;
 use movement_aptos_core::{runtime, MovementAptos};
 use mtma_node_types::executor::MovementAptosNode;
@@ -71,6 +73,19 @@ impl MovementAptosMigrator {
 				anyhow::anyhow!("failed to parse Movement Aptos rest api url: {}", e)
 			})?);
 		Ok(rest_client)
+	}
+	/// Waits for the rest faucet client to be ready.
+	pub async fn wait_for_faucet_client_ready(
+		&self,
+		condition: impl Into<WaitCondition>,
+	) -> Result<MovementAptosFaucetClient, anyhow::Error> {
+		// let rest_api_url = self.wait_for_rest_api_url(condition).await?;
+		// let faucet_client =
+		// 	MovementAptosFaucetClient::new(rest_api_url.parse().map_err(|e| {
+		// 		anyhow::anyhow!("failed to parse Movement Aptos rest api url: {}", e)
+		// 	})?);
+		// Ok(faucet_client)
+		todo!()
 	}
 }
 
