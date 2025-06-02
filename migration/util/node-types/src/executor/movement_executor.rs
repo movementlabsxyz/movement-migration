@@ -35,10 +35,10 @@ pub struct MovementNode {
 }
 
 /// Copies a directory recursively.
-fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
+fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), anyhow::Error> {
 
 	// make sure the dst directory exists
-	fs::create_dir_all(dst)?;
+	fs::create_dir_all(dst).context(format!("failed to create debug directory: {}", dst.display()))?;
 
 	for entry in WalkDir::new(src) {
 		let entry = entry?;
@@ -46,9 +46,9 @@ fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
 		let dest_path = dst.join(rel_path);
 
 		if entry.file_type().is_dir() {
-			fs::create_dir_all(&dest_path)?;
+			fs::create_dir_all(&dest_path).context(format!("failed to create directory: {}", dest_path.display()))?;
 		} else {
-			fs::copy(entry.path(), &dest_path)?;
+			fs::copy(entry.path(), &dest_path).context(format!("failed to copy file: {}", entry.path().display()))?;
 		}
 	}
 	Ok(())
