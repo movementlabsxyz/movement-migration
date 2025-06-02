@@ -508,4 +508,24 @@ mod test {
 
 		Ok(())
 	}
+
+	// Somehow the following test is failing on CI: https://github.com/movementlabsxyz/movement-migration/actions/runs/15386989846/job/43287594343
+	#[test]
+	fn test_are_you_kidding_me() -> Result<(), anyhow::Error> {
+
+		let source_dir = TempDir::new()?;
+		let target_dir = TempDir::new()?;
+
+		let path_that_must_be_ignored = source_dir.path().join(".movement/celestia/c1860ae680eb2d91927b/.celestia-app/keyring-test");
+
+		fs::create_dir_all(path_that_must_be_ignored.parent().context("failed to get parent directory for path that must be ignored")?).context("failed to create directory")?;
+		fs::write(path_that_must_be_ignored, "test").context("failed to write file that must not be ignored")?;
+
+		copy_dir_recursive_with_ignore(source_dir.path(), ["celestia"], target_dir.path()).context("failed to copy directory")?;
+
+		assert!(!target_dir.path().join("celestia").join("c1860ae680eb2d91927b").join(".celestia-app").join("keyring-test").exists());
+
+		Ok(())
+	}
+
 }
