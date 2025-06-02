@@ -14,6 +14,7 @@ pub mod test {
 	use sysinfo::Disks;
 	use tracing::info;
 
+	#[ignore] //  ignore this to save some time on CI, this should mainly be manually run for now.
 	#[tokio::test]
 	#[tracing_test::traced_test]
 	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {
