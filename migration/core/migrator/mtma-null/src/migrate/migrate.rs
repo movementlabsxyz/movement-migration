@@ -1,3 +1,4 @@
+//! We implement this with the same logic as `mtma-node-null-core` because that `mtma_node_types::Migrationish` has a blanket implementation for `Migrationish` that we can use.
 use mtma_node_types::executor::{
 	movement_aptos_executor::MovementAptosBlockExecutor, MovementAptosNode, MovementNode,
 };

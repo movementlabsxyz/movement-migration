@@ -13431,6 +13431,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "migrator-sketchpad"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "kestrel",
+ "mtma-migrator-test-accounts-equal-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-replay-core",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
+ "mtma-types",
+ "rand 0.7.3",
+ "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -15118,6 +15143,7 @@ dependencies = [
  "tempdir",
  "thiserror 1.0.69",
  "tokio",
+ "tracing",
  "uuid",
 ]
 
@@ -15738,31 +15764,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mtma-migrator-checks-sketchpad"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "chrono",
- "kestrel",
- "mtma-migrator-pre-l1-merge-core",
- "mtma-migrator-test-accounts-equal-criterion",
- "mtma-migrator-test-types",
- "mtma-migrator-types",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-replay-core",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
- "mtma-types",
- "rand 0.7.3",
- "tokio",
- "tracing",
- "tracing-test",
-]
-
-[[package]]
 name = "mtma-migrator-null-core"
 version = "0.0.1"
 dependencies = [
@@ -15818,10 +15819,12 @@ dependencies = [
 name = "mtma-migrator-test-accounts-equal-criterion"
 version = "0.0.1"
 dependencies = [
+ "anyhow",
  "bcs 0.1.4",
  "bcs-ext",
  "mtma-migrator-test-types",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -15840,6 +15843,7 @@ dependencies = [
  "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "bcs 0.1.4",
  "hex",
+ "kestrel",
  "movement-client",
  "mtma-migrator-types",
  "mtma-node-test-types",
@@ -15847,6 +15851,7 @@ dependencies = [
  "serde",
  "thiserror 1.0.69",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -16061,9 +16066,11 @@ dependencies = [
  "movement-util",
  "mtma-types",
  "serde",
+ "tempfile",
  "thiserror 1.0.69",
  "tokio",
  "tracing",
+ "tracing-test",
  "uuid",
  "walkdir",
 ]

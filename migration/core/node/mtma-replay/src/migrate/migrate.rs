@@ -29,6 +29,7 @@ use mtma_node_types::{
 	migration::{MigrationError, Migrationish},
 };
 use std::path::Path;
+use tracing::info;
 
 /// Converts a [MovementBlock] to a [MovementAptosBlock].
 pub fn movement_block_to_movement_aptos_block(
@@ -171,7 +172,7 @@ impl Migrationish for Migrate {
 				.context("failed to get latest ledger version")
 				.map_err(|e| MigrationError::Internal(e.into()))?;
 
-			println!(
+			info!(
 				"latest_ledger_version: {}, start_version: {}, end_version: {}",
 				latest_ledger_version, start_version, end_version
 			);

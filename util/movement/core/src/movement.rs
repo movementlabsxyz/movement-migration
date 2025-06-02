@@ -15,6 +15,7 @@ use faucet::{Faucet, ParseFaucet};
 use rest_api::{ParseRestApi, RestApi};
 use std::path::Path;
 use std::sync::Arc;
+use tracing::info;
 
 vendor_workspace!(MovementWorkspace, "movement");
 
@@ -316,6 +317,33 @@ impl Movement {
 			.join("maptos")
 			.join("27")
 			.join(".maptos")
+	}
+}
+
+impl Drop for Movement {
+	fn drop(&mut self) {
+		// run docker compose down on workspace path
+		info!("Dropping movement");
+		let workspace_path = self.workspace_path();
+		info!("Workspace path: {:?}", workspace_path);
+		let result = std::process::Command::new("docker")
+			.arg("compose")
+			.arg("-f")
+			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.yml"))
+			.arg("-f")
+			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.local.yml"))
+			.arg("down")
+			.env("DOT_MOVEMENT_PATH", workspace_path.join(".movement"))
+			.current_dir(workspace_path)
+			.output()
+			.map_err(|e| MovementError::Internal(e.into()))
+			.unwrap();
+
+		info!("Docker compose down result: {:?}", result);
+
+		if !result.status.success() {
+			panic!("Docker compose down failed when dropping movement: {:?}", result);
+		}
 	}
 }
 

@@ -1,5 +1,5 @@
 [package]
-name = "mtma-migrator-checks-sketchpad"
+name = "migrator-sketchpad"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -30,6 +30,7 @@ mtma-migrator-pre-l1-merge-core = { workspace = true }
 [dev-dependencies]
 tracing-test = { workspace = true }
 tracing = { workspace = true }
+tempfile = { workspace = true }
 
 [lints]
 workspace = true

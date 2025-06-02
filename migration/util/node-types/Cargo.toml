@@ -28,5 +28,9 @@ uuid = { workspace = true }
 walkdir = { workspace = true }
 mtma-types = { workspace = true }
 
+[dev-dependencies]
+tempfile = { workspace = true }
+tracing-test = { workspace = true }
+
 [lints]
 workspace = true
