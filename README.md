@@ -140,10 +140,10 @@ Runs the [`post-l1-merge`](https://github.com/movementlabsxyz/movement-migration
 
 Contexts are the contexts in which checks are expected to run. 
 
-> ![WARNING]
+> [!WARNING]
 > This category and its subcategories are currently suggestive. 
 
-> [!ERROR]
+> [!CAUTION]
 > Not all **[Checks](#checks)** are intended to run in all Contexts. 
 
 ### `snapshot`
