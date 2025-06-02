@@ -36,6 +36,10 @@ pub struct MovementNode {
 
 /// Copies a directory recursively.
 fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
+
+	// make sure the dst directory exists
+	fs::create_dir_all(dst)?;
+
 	for entry in WalkDir::new(src) {
 		let entry = entry?;
 		let rel_path = entry.path().strip_prefix(src).unwrap();
@@ -74,13 +78,13 @@ impl MovementNode {
 
 		// Copy the entire .movement directory recursively
 		let movement_dir = dir.join(".movement");
-		copy_dir_recursive(&movement_dir, &debug_dir)?;
+		copy_dir_recursive(&movement_dir, &debug_dir).context("failed to copy movement dir")?;
 
 		// Set all permissions in the debug directory recursively
 		// Note: this would mess up celestia node permissions, but we don't care about that here.
 		// We really only care about maptos db permissions.
 		// TODO: tighten the copying accordingly.
-		set_permissions_recursive(&debug_dir, Permissions::from_mode(0o755))?;
+		set_permissions_recursive(&debug_dir, Permissions::from_mode(0o755)).context("failed to set permissions")?;
 
 		let movement_args = MovementArgs { movement_path: Some(debug_dir.display().to_string()) };
 
