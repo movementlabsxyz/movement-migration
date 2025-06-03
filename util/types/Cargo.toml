@@ -1,5 +1,5 @@
 [package]
-name = "movement-util"
+name = "mtma-types"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,7 +9,8 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-
+movement-core-util = { workspace = true }
+movement-aptos-core-util = { workspace = true }
 
 [lints]
 workspace = true

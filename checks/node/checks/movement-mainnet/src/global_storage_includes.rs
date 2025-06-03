@@ -3,19 +3,21 @@ pub mod test {
 
 	use futures::channel::mpsc as futures_mpsc;
 	use maptos_execution_util::config::Config as MaptosConfig;
+	use movement_syncing::db::DbSync;
+	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use mtma_node_test_global_storage_includes_criterion::GlobalStorageIncludes;
 	use mtma_node_test_types::{
 		check::checked_migration,
 		criterion::movement_executor::{MovementNode, MovementOptExecutor},
 		prelude::Prelude,
 	};
-	use movement_syncing::db::DbSync;
-	use mtma_node_null_core::config::Config as MtmaNullConfig;
 	use sysinfo::Disks;
+	use tracing::info;
 
+	#[ignore] //  ignore this to save some time on CI, this should mainly be manually run for now.
 	#[tokio::test]
 	#[tracing_test::traced_test]
-	async fn test_global_storage_includess_null() -> Result<(), anyhow::Error> {
+	async fn test_global_storage_includes_null() -> Result<(), anyhow::Error> {
 		let disks = Disks::new_with_refreshed_list();
 
 		let total_disk_space: u64 = disks.iter().map(|disk| disk.total_space()).sum();
@@ -25,16 +27,16 @@ pub mod test {
 		const REQUIRED_SPACE: u64 = 1_000_000_000_000; // 1 TB
 
 		if total_disk_space < REQUIRED_SPACE {
-			println!("Device has less than 1 TB of *total* disk space — skipping test (not a viable test platform).");
+			info!("Device has less than 1 TB of *total* disk space — skipping test (not a viable test platform).");
 			return Ok(()); // soft pass
 		}
 
 		if total_free_space < REQUIRED_SPACE {
-			println!("Device has enough total disk space, but less than 1 TB is free.");
+			info!("Device has enough total disk space, but less than 1 TB is free.");
 			return Err(anyhow::anyhow!("not enough free disk space"));
 		}
 
-		println!("Sufficient disk space available.");
+		info!("Sufficient disk space available.");
 
 		// sync the db
 		let db_sync = DbSync::mainnet_debug();

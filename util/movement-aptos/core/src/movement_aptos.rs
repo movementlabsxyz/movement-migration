@@ -1,5 +1,5 @@
-use aptos_config::config::NodeConfig;
 use kestrel::State;
+use mtma_types::movement_aptos::aptos_config::config::NodeConfig;
 use std::path::PathBuf;
 pub mod rest_api;
 use kestrel::process::{command::Command, ProcessOperations};
@@ -56,9 +56,14 @@ where
 		Ok(Self::new(config_path, true, workspace))
 	}
 
-	/// Borrow the rest api state
+	/// Borrow sthe rest api state
 	pub fn rest_api(&self) -> &State<RestApi> {
 		&self.rest_api
+	}
+
+	/// Borrows the [NodeConfig]
+	pub fn node_config(&self) -> &NodeConfig {
+		&self.node_config
 	}
 
 	/// Runs the internal node logic
@@ -187,7 +192,7 @@ where
 #[cfg(test)]
 mod tests {
 	use super::*;
-	use aptos_node::create_single_node_test_config;
+	use mtma_types::movement_aptos::aptos_node::create_single_node_test_config;
 	use rand::thread_rng;
 	use std::path::Path;
 

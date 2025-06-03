@@ -1,6 +1,6 @@
-pub use aptos_config::config::NodeConfig;
 use clap::Parser;
 use jsonlvar::Jsonl;
+pub use mtma_types::movement_aptos::aptos_config::config::NodeConfig;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
@@ -8,7 +8,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 use crate::movement_aptos::{runtime, MovementAptos};
-use aptos_node::create_single_node_test_config;
+use mtma_types::movement_aptos::aptos_node::create_single_node_test_config;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct NodeConfigWrapper(pub(crate) NodeConfig);
@@ -52,7 +52,7 @@ impl FromStr for NodeConfigWrapper {
 /// Errors thrown when parsing an [Eth] network.
 #[derive(Debug, thiserror::Error)]
 pub enum ConfigError {
-	#[error("movment-core Config encountered an internal error: {0}")]
+	#[error("movment-aptos-core Config encountered an internal error: {0}")]
 	Internal(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
@@ -74,8 +74,8 @@ impl Config {
 	pub fn test_node_config(db_dir: &PathBuf) -> Result<Self, ConfigError> {
 		let rng = rand::thread_rng();
 
-		let node_config = create_single_node_test_config(
-			&Some(db_dir.join("config.json")),
+		let mut node_config = create_single_node_test_config(
+			&None,
 			&None,
 			db_dir.as_path(),
 			true,
@@ -85,6 +85,8 @@ impl Config {
 			rng,
 		)
 		.map_err(|e| ConfigError::Internal(e.into()))?;
+
+		node_config.base.working_dir = Some(db_dir.clone());
 
 		Ok(Config { node_config: NodeConfigWrapper(node_config), log_file: None })
 	}

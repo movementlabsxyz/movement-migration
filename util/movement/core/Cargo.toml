@@ -26,13 +26,14 @@ kestrel = { workspace = true }
 strip-ansi-escapes = { workspace = true }
 regex = { workspace = true }
 reqwest = { workspace = true }
-movement-util = { workspace = true }
+movement-core-util = { workspace = true }
+tracing = { workspace = true }
 
 [build-dependencies]
 include-vendor = { workspace = true }
 cargo_metadata = { workspace = true }
 ready-docker = { workspace = true }
-movement-util = { workspace = true }
+movement-core-util = { workspace = true }
 tokio = { workspace = true }
 
 [lints]

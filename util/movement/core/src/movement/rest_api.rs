@@ -1,5 +1,6 @@
 use kestrel::{fulfill::custom::CustomProcessor, fulfill::FulfillError};
 use tokio::sync::mpsc::Receiver;
+use tracing::info;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct RestApi {
@@ -68,17 +69,38 @@ impl CustomProcessor<RestApi> for ParseRestApi {
 					}
 					RestApiProgress::WaitingForOpt => {
 						if self.ping {
-							// check that the endpoint is responding to pings
-							let client = reqwest::Client::new();
-							client
-								.get(format!("http://{}:{}", &captures[1], &captures[2]))
-								.send()
-								.await
-								.map_err(|e| {
-									FulfillError::Internal(
-										format!("failed to ping rest api: {e}").into(),
-									)
-								})?;
+							loop {
+								// check that the endpoint is responding to pings
+								// todo: it's actually not true that opt always comes second
+								// todo: we should be able to know the port aprior, but this is a hack to test a few other things
+								let client = reqwest::Client::new();
+								match client
+									.get(format!("http://{}:{}", &captures[1], "30731"))
+									.send()
+									.await
+									.map_err(|e| {
+										FulfillError::Internal(
+											format!("failed to ping rest api: {e}").into(),
+										)
+									}) {
+									Ok(response) => {
+										if response.status().is_success() {
+											break;
+										} else {
+											info!(
+												"rest api is not responding to pings: {response:?}"
+											);
+											tokio::time::sleep(tokio::time::Duration::from_secs(1))
+												.await;
+										}
+									}
+									Err(e) => {
+										info!("failed to ping rest api: {e}");
+										tokio::time::sleep(tokio::time::Duration::from_secs(1))
+											.await;
+									}
+								}
+							}
 						}
 
 						return Ok(Some(RestApi {

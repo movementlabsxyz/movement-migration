@@ -1,5 +1,5 @@
 use include_vendor::{Buildtime, BuildtimeError, Noop};
-use movement_util::CONTAINERS;
+use movement_core_util::CONTAINERS;
 
 #[tokio::main]
 async fn main() -> Result<(), BuildtimeError> {

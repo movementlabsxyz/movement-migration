@@ -15,6 +15,7 @@ use faucet::{Faucet, ParseFaucet};
 use rest_api::{ParseRestApi, RestApi};
 use std::path::Path;
 use std::sync::Arc;
+use tracing::info;
 
 vendor_workspace!(MovementWorkspace, "movement");
 
@@ -185,6 +186,22 @@ impl Movement {
 		Ok(Self::new(workspace, BTreeSet::new().into()))
 	}
 
+	/// Creates a new [Movement] within a debug directory.
+	pub fn try_debug() -> Result<Self, MovementError> {
+		let workspace =
+			MovementWorkspace::try_debug().map_err(|e| MovementError::Internal(e.into()))?;
+
+		Ok(Self::new(workspace, BTreeSet::new().into()))
+	}
+
+	/// Creates a new [Movement] within a debug home directory.
+	pub fn try_debug_home() -> Result<Self, MovementError> {
+		let workspace =
+			MovementWorkspace::try_debug_home().map_err(|e| MovementError::Internal(e.into()))?;
+
+		Ok(Self::new(workspace, BTreeSet::new().into()))
+	}
+
 	/// Adds an overlay to [Movement].
 	pub fn add_overlay(&mut self, overlay: Overlay) {
 		self.overlays.add(overlay);
@@ -214,7 +231,7 @@ impl Movement {
 	/// Runs the movement with the given overlays.
 	pub async fn run(&self) -> Result<(), MovementError> {
 		// set the CONTAINER_REV environment variable
-		std::env::set_var("CONTAINER_REV", movement_util::CONTAINER_REV);
+		std::env::set_var("CONTAINER_REV", movement_core_util::CONTAINER_REV);
 
 		let overlays = self.overlays.to_overlay_args();
 
@@ -300,6 +317,33 @@ impl Movement {
 			.join("maptos")
 			.join("27")
 			.join(".maptos")
+	}
+}
+
+impl Drop for Movement {
+	fn drop(&mut self) {
+		// run docker compose down on workspace path
+		info!("Dropping movement");
+		let workspace_path = self.workspace_path();
+		info!("Workspace path: {:?}", workspace_path);
+		let result = std::process::Command::new("docker")
+			.arg("compose")
+			.arg("-f")
+			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.yml"))
+			.arg("-f")
+			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.local.yml"))
+			.arg("down")
+			.env("DOT_MOVEMENT_PATH", workspace_path.join(".movement"))
+			.current_dir(workspace_path)
+			.output()
+			.map_err(|e| MovementError::Internal(e.into()))
+			.unwrap();
+
+		info!("Docker compose down result: {:?}", result);
+
+		if !result.status.success() {
+			panic!("Docker compose down failed when dropping movement: {:?}", result);
+		}
 	}
 }
 
