@@ -1,0 +1,2 @@
+# Matching Feature Flags
+The Matching Feature Flags criterion reports feature flags differences between the new framework and the old framework. It asserts that the new framework has the same features as Aptos but for features 73 (Governed Gas Pool), which should be true.
