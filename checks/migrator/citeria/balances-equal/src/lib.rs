@@ -55,7 +55,7 @@ impl Criterionish for BalancesEqual {
 				}
 			};
 
-			info!("Getting account balance");
+			info!("Getting movement account balance");
 			let movement_account_balance = movement_rest_client
 				.get_account_balance(account_address)
 				.await
