@@ -108,6 +108,7 @@ Run run with all parameters passed explicitly as CLI flags. See Orfile documenta
 ###### **Options:**
 
 * `--node-config <NODE_CONFIG>` — The node config to use
+* `--faucet-port <FAUCET_PORT>` — The faucet port to use
 * `--log-file <LOG_FILE>` — The log file to use
 
 
