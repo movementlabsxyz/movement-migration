@@ -17,17 +17,13 @@ impl GlobalStorageInjective {
 	}
 }
 
-impl Criterionish for GlobalStorageInjective {
-	fn satisfies(
+impl GlobalStorageInjective {
+	fn satisfies_for_version(
 		&self,
 		movement_executor: &MovementExecutor,
 		maptos_executor: &MovementAptosExecutor,
+		movement_ledger_version: u64,
 	) -> Result<(), CriterionError> {
-		// get the latest ledger version from the movement executor
-		let movement_ledger_version = movement_executor
-			.latest_ledger_version()
-			.map_err(|e| CriterionError::Internal(e.into()))?;
-
 		// get the latest state view from the movement executor
 		let movement_state_view = movement_executor
 			.state_view_at_version(Some(movement_ledger_version))
@@ -90,6 +86,26 @@ impl Criterionish for GlobalStorageInjective {
 					}
 				}
 			}
+		}
+
+		Ok(())
+	}
+}
+
+impl Criterionish for GlobalStorageInjective {
+	fn satisfies(
+		&self,
+		movement_executor: &MovementExecutor,
+		maptos_executor: &MovementAptosExecutor,
+	) -> Result<(), CriterionError> {
+		// get the latest ledger version from the movement executor
+		let movement_ledger_version = movement_executor
+			.latest_ledger_version()
+			.map_err(|e| CriterionError::Internal(e.into()))?;
+
+		for version in 0..=movement_ledger_version {
+			self.satisfies_for_version(movement_executor, maptos_executor, version)
+				.map_err(|e| CriterionError::Internal(e.into()))?;
 		}
 
 		Ok(())
