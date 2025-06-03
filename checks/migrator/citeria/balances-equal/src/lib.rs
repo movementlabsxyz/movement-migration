@@ -80,7 +80,7 @@ impl Criterionish for BalancesEqual {
 			info!("Comparing balances");
 			if u64::from(movement_account_balance.coin.value) != movement_aptos_account_balance {
 				return Err(CriterionError::Unsatisfied(
-					format!("movement and aptos account balances have different values: {:?} != {:?}", movement_account_balance, movement_aptos_account_balance).into(),
+					format!("movement and movement aptos account balances have different values: {:?} != {:?}", movement_account_balance, movement_aptos_account_balance).into(),
 				));
 			}
 			
