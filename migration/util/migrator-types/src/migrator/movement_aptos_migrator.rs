@@ -37,8 +37,8 @@ impl MovementAptosMigrator {
 	}
 
 	/// Builds a [MovementAptosMigrator] from a [NodeConfig].
-	pub fn from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
-		let movement_aptos = MovementAptos::from_config(config)?;
+	pub fn try_from_config(config: NodeConfig) -> Result<Self, anyhow::Error> {
+		let movement_aptos = MovementAptos::try_from_config(config, None)?;
 		let runner = Runner::MovementAptos(movement_aptos);
 		Ok(Self::new(runner))
 	}
@@ -47,7 +47,7 @@ impl MovementAptosMigrator {
 	pub fn from_movement_aptos_node(node: MovementAptosNode) -> Result<Self, anyhow::Error> {
 		// get the config from the node
 		let config = node.node_config()?;
-		Ok(Self::from_config(config)?)
+		Ok(Self::try_from_config(config)?)
 	}
 
 	/// Rest Api url for the runner.
@@ -68,6 +68,24 @@ impl MovementAptosMigrator {
 		}
 	}
 
+	/// Faucet Api url for the runner.
+	pub async fn wait_for_faucet_api_url(
+		&self,
+		condition: impl Into<WaitCondition>,
+	) -> Result<String, anyhow::Error> {
+		match &self.runner {
+			Runner::MovementAptos(movement_aptos) => {
+				let faucet_api = movement_aptos
+					.faucet_api()
+					.read()
+					.wait_for(condition)
+					.await
+					.context("failed to wait for Movement Aptos faucet api")?;
+				Ok(faucet_api.listen_url().to_string())
+			}
+		}
+	}
+
 	/// Waits for the rest client to be ready.
 	pub async fn wait_for_rest_client_ready(
 		&self,
@@ -83,15 +101,17 @@ impl MovementAptosMigrator {
 	/// Waits for the rest faucet client to be ready.
 	pub async fn wait_for_faucet_client_ready(
 		&self,
-		condition: impl Into<WaitCondition>,
+		condition: impl Into<WaitCondition> + Clone,
 	) -> Result<MovementAptosFaucetClient, anyhow::Error> {
-		// let rest_api_url = self.wait_for_rest_api_url(condition).await?;
-		// let faucet_client =
-		// 	MovementAptosFaucetClient::new(rest_api_url.parse().map_err(|e| {
-		// 		anyhow::anyhow!("failed to parse Movement Aptos rest api url: {}", e)
-		// 	})?);
-		// Ok(faucet_client)
-		todo!()
+		let rest_api_url = self.wait_for_rest_api_url(condition.clone()).await?.parse().map_err(|e| {
+			anyhow::anyhow!("failed to parse Movement Aptos rest api url: {}", e)
+		})?;
+		let faucet_api_url = self.wait_for_faucet_api_url(condition).await?.parse().map_err(|e| {
+			anyhow::anyhow!("failed to parse Movement Aptos faucet api url: {}", e)
+		})?;
+		let faucet_client =
+			MovementAptosFaucetClient::new(rest_api_url, faucet_api_url);
+		Ok(faucet_client)
 	}
 
 	/// Gets a [MovementAptosNode] from the runner.
@@ -105,7 +125,7 @@ impl TryFrom<NodeConfig> for MovementAptosMigrator {
 	type Error = anyhow::Error;
 
 	fn try_from(config: NodeConfig) -> Result<Self, Self::Error> {
-		Ok(Self::from_config(config)?)
+		Ok(Self::try_from_config(config)?)
 	}
 }
 
