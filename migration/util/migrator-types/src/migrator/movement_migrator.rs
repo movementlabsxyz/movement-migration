@@ -1,10 +1,10 @@
 use anyhow::Context;
 use kestrel::WaitCondition;
-pub use maptos_opt_executor;
-pub use maptos_opt_executor::aptos_types::{chain_id::ChainId, state_store::TStateView};
-use movement_client::rest_client::Client as MovementRestClient;
-pub use movement_core::{Movement, Overlay, Overlays};
+use movement_core::Movement;
+pub use movement_core::{Overlay, Overlays};
 use mtma_node_types::executor::MovementNode;
+pub use mtma_types::movement::aptos_types::{chain_id::ChainId, state_store::TStateView};
+use mtma_types::movement::movement_client::rest_client::Client as MovementRestClient;
 
 /// An enum supporting different types of runners.
 ///
@@ -44,6 +44,18 @@ impl MovementMigrator {
 		Ok(Self::new(Runner::Movement(movement)))
 	}
 
+	/// Creates a new [MovementMigrator] with debug [Movement] runner.
+	pub fn try_debug() -> Result<Self, anyhow::Error> {
+		let movement = Movement::try_debug()?;
+		Ok(Self::new(Runner::Movement(movement)))
+	}
+
+	/// Create a new [MovementMigrator] with a debug_home [Movement] runner.
+	pub fn try_debug_home() -> Result<Self, anyhow::Error> {
+		let movement = Movement::try_debug_home()?;
+		Ok(Self::new(Runner::Movement(movement)))
+	}
+
 	/// Rest Api url for the runner.
 	pub async fn wait_for_rest_api_url(
 		&self,
@@ -80,7 +92,7 @@ impl MovementMigrator {
 	pub async fn node(&self) -> Result<MovementNode, anyhow::Error> {
 		match &self.runner {
 			Runner::Movement(movement) => {
-				MovementNode::from_dir(movement.workspace_path().to_path_buf()).await
+				MovementNode::try_from_dir(movement.workspace_path().to_path_buf()).await
 			}
 		}
 	}

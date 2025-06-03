@@ -1,10 +1,11 @@
-use aptos_config::config::StorageDirPaths;
-use aptos_db::AptosDB;
-use aptos_storage_interface::DbReaderWriter;
+//! We implement this with the same logic as `mtma-node-null-core` because that `mtma_node_types::Migrationish` has a blanket implementation for `Migrationish` that we can use.
 use mtma_node_types::executor::{
 	movement_aptos_executor::MovementAptosBlockExecutor, MovementAptosNode, MovementNode,
 };
 use mtma_node_types::migration::{MigrationError, Migrationish};
+use mtma_types::movement_aptos::aptos_config::config::StorageDirPaths;
+use mtma_types::movement_aptos::aptos_db::AptosDB;
+use mtma_types::movement_aptos::aptos_storage_interface::DbReaderWriter;
 
 use anyhow::Context;
 use std::fs;
@@ -33,7 +34,7 @@ fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
 /// Errors thrown during the migration.
 #[derive(Debug, thiserror::Error)]
 pub enum MigrateError {
-	#[error("failed to migrate: {0}")]
+	#[error("mtma-null migrator failed to migrate: {0}")]
 	Migrate(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 

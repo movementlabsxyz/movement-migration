@@ -3,17 +3,16 @@
     nixpkgs.url = "github:NixOS/nixpkgs/a7abebc31a8f60011277437e000eebcc01702b9f";
     rust-overlay.url = "github:oxalica/rust-overlay/47beae969336c05e892e1e4a9dbaac9593de34ab";
     flake-utils.url = "github:numtide/flake-utils";
-    foundry.url = "github:shazow/foundry.nix/36a5c5e448b4cdc85813e3b8205a8846a428d528"; 
     crane.url = "github:ipetkov/crane";
     movement.url = "github:movementlabsxyz/movement/aa1ffed1a113441a65662792d15682ad52406108";
   };
 
-  outputs = { nixpkgs, rust-overlay, flake-utils, foundry, crane, movement, ... }:
+  outputs = { nixpkgs, rust-overlay, flake-utils, crane, movement, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ (import rust-overlay) foundry.overlay ];
+          overlays = [ (import rust-overlay) ];
         };
 
         toolchain = p: (p.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml).override {
@@ -77,7 +76,6 @@
         testDependencies = with pkgs; [
           python311
           just
-          foundry-bin
           process-compose
           jq
           docker
@@ -137,7 +135,7 @@
               chmod +x $(pwd)/.git/hooks/pre-commit
 
               cat <<'EOF'
-               MOVEMENT => MAPTOS
+               MOVEMENT => MOVEMENT APTOS
               EOF
 
               echo "Migrates Movement to Movement Aptos."

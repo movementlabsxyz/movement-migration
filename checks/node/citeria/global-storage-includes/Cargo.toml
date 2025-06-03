@@ -10,6 +10,7 @@ rust-version = { workspace = true }
 
 [dependencies]
 mtma-node-test-types = { workspace = true }
+mtma-types = { workspace = true }
 anyhow = { workspace = true }
 tracing = { workspace = true }
 

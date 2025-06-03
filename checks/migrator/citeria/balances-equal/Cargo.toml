@@ -1,0 +1,20 @@
+[package]
+name = "mtma-migrator-test-balances-equal-criterion"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+mtma-migrator-test-types = { workspace = true }
+bcs = { workspace = true }
+bcs-ext = { workspace = true }
+tokio = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+
+[lints]
+workspace = true

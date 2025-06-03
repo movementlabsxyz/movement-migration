@@ -1,6 +1,3 @@
-pub use mtma_migrator_types::migrator::movement_aptos_migrator;
-pub use mtma_migrator_types::migrator::movement_migrator;
-
 pub use mtma_migrator_types::migrator::MovementAptosMigrator;
 pub use mtma_migrator_types::migrator::MovementMigrator;
 use std::future::Future;

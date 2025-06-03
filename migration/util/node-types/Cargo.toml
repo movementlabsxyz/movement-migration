@@ -23,8 +23,14 @@ tracing = { workspace = true }
 movement-aptos-core = { workspace = true }
 futures-channel = { workspace = true }
 tokio = { workspace = true }
-# todo: get rid of namespace conflict
-movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "aa1ffed1a113441a65662792d15682ad52406108" }
+movement-util = { workspace = true }
+uuid = { workspace = true }
+walkdir = { workspace = true }
+mtma-types = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+tracing-test = { workspace = true }
 
 [lints]
 workspace = true
