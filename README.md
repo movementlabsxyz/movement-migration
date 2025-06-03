@@ -9,9 +9,12 @@ MOVEMENT => MOVEMENT APTOS
 `movement-to-movement-aptos` herein abbreviated as `mtma` is the logic and validation of migration from [`movement`](https://github.com/movementlabsxyz/movement) to [`movement-aptos`](https://github.com/movementlabsxyz/movement-aptos-core).
 
 ## Getting started
+
+We have a video motivating, abstracting, and demonstrating this repository. Please review it [here](https://www.loom.com/share/b0b121ac3cec4823ab9938163cdefe83?sid=ff45bf58-46fe-429d-bb9d-9f68b3c5bbb5).
+
 To run or work with existing migration tools check the [CLI documentation](./docs/cli/README.md).
 
-To get an initial grounding, we recommend spending 10-15 minutes reading the [checks](./checks/README.md) and working down into various elements of the API from there. This should provide you with a sense of both the high-level requirements against which we are attempting to implement and validate as well as the approaches we are taking to perform the migration. 
+To further your initial grounding, we recommend spending 10-15 minutes reading the [checks](./checks/README.md) and working down into various elements of the API from there. This should provide you with a sense of both the high-level requirements against which we are attempting to implement and validate as well as the approaches we are taking to perform the migration. 
 
 Once you have completed the above, review the following:
 
