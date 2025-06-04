@@ -111,7 +111,8 @@ movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev 
 maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
 movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
 aptos-framework-pre-l1-merge-release = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
-
+movement-signer = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-signer-loader = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
 
 # aptos-core
 aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
@@ -130,11 +131,6 @@ aptos-crypto = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev 
 aptos-executor-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 aptos-vm-genesis = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 
-
-# secure-signing
-secure-signer = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
-secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
-secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
 
 # kestrel 
 kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }

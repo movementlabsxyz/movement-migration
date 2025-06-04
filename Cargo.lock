@@ -13437,6 +13437,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "kestrel",
+ "mtma-migrator-pre-l1-merge-core",
  "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
@@ -15788,6 +15789,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "mtma-migrator-checks-pre-l1-merge"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "kestrel",
+ "mtma-migrator-pre-l1-merge-core",
+ "mtma-migrator-test-accounts-equal-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-replay-core",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
+ "mtma-types",
+ "rand 0.7.3",
+ "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
 name = "mtma-migrator-null-core"
 version = "0.0.1"
 dependencies = [
@@ -15827,9 +15854,13 @@ dependencies = [
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
+ "hex",
+ "movement-signer",
+ "movement-signer-loader",
  "mtma-migrator-types",
  "mtma-node-null-core",
  "mtma-node-types",
+ "mtma-types",
  "orfile",
  "serde",
  "thiserror 1.0.69",
