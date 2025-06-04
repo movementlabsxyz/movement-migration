@@ -1,5 +1,5 @@
-use mtma_migrator_test_types::criterion::{
-	Criterion, CriterionError, Criterionish, MovementAptosMigrator, MovementMigrator,
+use mtma_node_test_types::criterion::{
+	Criterion, CriterionError, Criterionish, MovementAptosNode, MovementNode,
 };
 
 pub struct Empty;
@@ -15,10 +15,10 @@ impl Empty {
 }
 
 impl Criterionish for Empty {
-	async fn satisfies(
+	fn satisfies(
 		&self,
-		_movement_migrator: &MovementMigrator,
-		_movement_aptos_migrator: &MovementAptosMigrator,
+		_movement_executor: &MovementNode,
+		_movement_aptos_executor: &MovementAptosNode,
 	) -> Result<(), CriterionError> {
 		Ok(())
 	}

@@ -9,7 +9,8 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-mtma-migrator-test-types = { workspace = true }
+mtma-node-test-types = { workspace = true }
+
 
 [lints]
 workspace = true
