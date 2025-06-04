@@ -3,14 +3,12 @@ use mtma_types::movement_aptos::aptos_config::config::NodeConfig;
 use std::path::PathBuf;
 pub mod rest_api;
 use kestrel::process::{command::Command, ProcessOperations};
-pub mod faucet_api;
 pub mod runtime;
 use anyhow::Context;
 pub use rest_api::RestApi;
-pub use faucet_api::FaucetApi;
 use runtime::Runtime;
 use std::marker::PhantomData;
-use tracing::{info, debug, warn};
+use tracing::{info, warn};
 
 /// Errors thrown when running [MovementAptos].
 #[derive(Debug, thiserror::Error)]
@@ -26,8 +24,6 @@ where
 {
 	/// The [NodeConfig]
 	pub node_config: NodeConfig,
-	/// The faucet port
-	pub faucet_port: u16,
 	/// Whether or not to multiprocess
 	pub multiprocess: bool,
 	/// The workspace for the multiprocessing should it occur
@@ -36,8 +32,6 @@ where
 	pub workspace: PathBuf,
 	/// The rest api state
 	pub rest_api: State<RestApi>,
-	/// The faucet api state
-	pub faucet_api: State<FaucetApi>,
 	/// The marker for the runtime
 	pub runtime: PhantomData<R>,
 }
@@ -47,35 +41,24 @@ where
 	R: Runtime,
 {
 	/// If you have something that marks your ability to get a runtime, you can use this.
-	pub fn new(node_config: NodeConfig, faucet_port: u16, multiprocess: bool, workspace: PathBuf) -> Self {
-		Self { node_config, faucet_port, multiprocess, workspace, rest_api: State::new(), faucet_api: State::new(), runtime: PhantomData }
+	pub fn new(node_config: NodeConfig, multiprocess: bool, workspace: PathBuf) -> Self {
+		Self { node_config, multiprocess, workspace, rest_api: State::new(), runtime: PhantomData }
 	}
 
 	/// Constructs a new [MovementAptos] from a [NodeConfig].
-	pub fn try_from_config(config_path: NodeConfig, faucet_port: Option<u16>) -> Result<Self, MovementAptosError> {
-
-		let faucet_port = match faucet_port {
-			Some(port) => port,
-			None => portpicker::pick_unused_port().context("Failed to pick unused port").map_err(|e| MovementAptosError::Internal(e.into()))?
-		};
-
+	pub fn from_config(config_path: NodeConfig) -> Result<Self, MovementAptosError> {
 		let workspace = config_path
 			.base
 			.working_dir
 			.clone()
 			.context("Working directory not set")
 			.map_err(|e| MovementAptosError::Internal(e.into()))?;
-		Ok(Self::new(config_path, faucet_port, true, workspace))
+		Ok(Self::new(config_path, true, workspace))
 	}
 
 	/// Borrow sthe rest api state
 	pub fn rest_api(&self) -> &State<RestApi> {
 		&self.rest_api
-	}
-
-	/// Borrow the faucet api state
-	pub fn faucet_api(&self) -> &State<FaucetApi> {
-		&self.faucet_api
 	}
 
 	/// Borrows the [NodeConfig]
@@ -126,8 +109,6 @@ where
 			.await
 			.map_err(|e| MovementAptosError::Internal(e.into()))?;
 
-		// note: we could grab the entirety of the run-localnet [Args] struct and expose it, replacing the test dir and config path as is reasonable. 
-		// But, we will do that ad hoc.
 		let command = Command::line(
 			"aptos",
 			vec![
@@ -137,8 +118,6 @@ where
 				&self.workspace.to_string_lossy(),
 				"--config-path",
 				&config_path.to_string_lossy(),
-				"--faucet-port",
-				&self.faucet_port.to_string(),
 			],
 			Some(&self.workspace),
 			false,
@@ -164,7 +143,6 @@ where
 	/// Runs the node and fills state.
 	pub async fn run(&self) -> Result<(), MovementAptosError> {
 		let rest_api = RestApi { rest_api_url: format!("http://{}", self.node_config.api.address) };
-		let faucet_api = FaucetApi { faucet_api_url: format!("http://127.0.0.1:{}", self.faucet_port) };
 
 		let runner = self.clone();
 		let runner_task = kestrel::task(async move {
@@ -179,52 +157,23 @@ where
 			tokio::time::sleep(std::time::Duration::from_secs(5)).await;
 			loop {
 				tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-				debug!("Polling rest api: {:?}", rest_api);
+				info!("POLLING REST API: {:?}", rest_api);
 				// wait for the rest api to be ready
 				match reqwest::get(rest_api.rest_api_url.clone())
 					.await
 					.map_err(|e| MovementAptosError::Internal(e.into()))
 				{
 					Ok(response) => {
-						debug!("Received response from rest api: {:?}", response);
+						info!("REST API RESPONSE: {:?}", response);
 						if response.status().is_success() {
 							rest_api_state.write().set(rest_api).await;
 							break;
 						} else {
-							warn!("Failed to poll rest api: {:?}", response);
+							warn!("REST API RESPONSE: {:?}", response);
 						}
 					}
 					Err(e) => {
-						warn!("Encountered error while polling rest api: {:?}", e);
-					}
-				}
-			}
-
-			Ok::<_, MovementAptosError>(())
-		});
-
-		// faucet api state
-		let faucet_api_state = self.faucet_api.clone();
-		let faucet_api_polling = kestrel::task(async move {
-			loop {
-				tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-				debug!("Polling faucet api: {:?}", faucet_api);
-				// wait for the faucet api to be ready
-				match reqwest::get(faucet_api.faucet_api_url.clone())
-					.await
-					.map_err(|e| MovementAptosError::Internal(e.into()))
-				{
-					Ok(response) => {
-						debug!("Received response from faucet api: {:?}", response);
-						if response.status().is_success() {
-							faucet_api_state.write().set(faucet_api).await;
-							break;
-						} else {
-							warn!("Failed to poll faucet api: {:?}", response);
-						}
-					}
-					Err(e) => {
-						warn!("Encountered error while polling faucet api: {:?}", e);
+						warn!("REST API ERROR: {:?}", e);
 					}
 				}
 			}
@@ -235,7 +184,6 @@ where
 		// await the runner
 		runner_task.await.map_err(|e| MovementAptosError::Internal(e.into()))??;
 		rest_api_polling.await.map_err(|e| MovementAptosError::Internal(e.into()))??;
-		faucet_api_polling.await.map_err(|e| MovementAptosError::Internal(e.into()))??;
 
 		Ok(())
 	}
@@ -260,7 +208,6 @@ mod tests {
 			unique_id.to_string().split('-').next().unwrap()
 		));
 		let db_dir = working_dir.join("0");
-		let faucet_port = portpicker::pick_unused_port().context("Failed to pick unused port").map_err(|e| MovementAptosError::Internal(e.into()))?;
 
 		// create parent dirs
 		{
@@ -282,11 +229,8 @@ mod tests {
 		node_config.storage.dir = db_dir.clone();
 
 		let movement_aptos =
-			MovementAptos::<runtime::Delegated>::new(node_config, faucet_port, true, working_dir);
-
-		// extract the states for which we will wait
+			MovementAptos::<runtime::Delegated>::new(node_config, true, working_dir);
 		let rest_api_state = movement_aptos.rest_api().read().clone();
-		let faucet_api_state = movement_aptos.faucet_api().read().clone();
 
 		let movement_aptos_task = kestrel::task(async move {
 			movement_aptos.run().await?;
@@ -294,7 +238,6 @@ mod tests {
 		});
 
 		rest_api_state.wait_for(tokio::time::Duration::from_secs(120)).await?;
-		faucet_api_state.wait_for(tokio::time::Duration::from_secs(120)).await?;
 
 		kestrel::end!(movement_aptos_task)?;
 

@@ -13408,13 +13408,9 @@ name = "migrator-sketchpad"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "chrono",
  "kestrel",
  "mtma-migrator-test-accounts-equal-criterion",
- "mtma-migrator-test-empty-criterion",
- "mtma-migrator-test-matching-feature-flags-criterion",
- "mtma-migrator-test-transacting-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
  "mtma-node-null-core",
@@ -14989,7 +14985,6 @@ dependencies = [
  "kestrel",
  "mtma-types",
  "orfile",
- "portpicker",
  "rand 0.7.3",
  "reqwest 0.12.15",
  "serde",
@@ -15802,31 +15797,7 @@ dependencies = [
 name = "mtma-migrator-test-empty-criterion"
 version = "0.0.1"
 dependencies = [
- "mtma-migrator-test-types",
-]
-
-[[package]]
-name = "mtma-migrator-test-matching-feature-flags-criterion"
-version = "0.0.1"
-dependencies = [
- "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "movement-client",
- "mtma-migrator-test-types",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "mtma-migrator-test-transacting-criterion"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "bcs 0.1.4",
- "mtma-migrator-test-types",
- "rand 0.7.3",
- "tokio",
+ "mtma-node-test-types",
 ]
 
 [[package]]
@@ -17619,15 +17590,6 @@ name = "portable-atomic"
 version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "350e9b48cbc6b0e028b0473b114454c6316e57336ee184ceab6e53f72c178b3e"
-
-[[package]]
-name = "portpicker"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be97d76faf1bfab666e1375477b23fde79eccf0276e9b63b92a39d676a889ba9"
-dependencies = [
- "rand 0.8.5",
-]
 
 [[package]]
 name = "poseidon-ark"

@@ -63,10 +63,6 @@ pub struct Config {
 	#[clap(long)]
 	pub node_config: NodeConfigWrapper,
 
-	/// The faucet port to use.
-	#[clap(long)]
-	pub faucet_port: Option<u16>,
-
 	/// The log file to use.
 	#[orfile(config)]
 	#[clap(long)]
@@ -92,7 +88,7 @@ impl Config {
 
 		node_config.base.working_dir = Some(db_dir.clone());
 
-		Ok(Config { node_config: NodeConfigWrapper(node_config), log_file: None, faucet_port: None })
+		Ok(Config { node_config: NodeConfigWrapper(node_config), log_file: None })
 	}
 
 	/// Builds the config into a [MovementAptos] runner.
@@ -111,7 +107,6 @@ impl Config {
 
 		Ok(MovementAptos::<runtime::TokioTest>::new(
 			self.node_config.node_config().clone(),
-			self.faucet_port.unwrap_or_default(),
 			false,
 			workspace_dir,
 		))
