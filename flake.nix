@@ -54,6 +54,9 @@
           zlib
           pandoc
           postgresql
+          qemu_kvm
+          qemu-utils
+          libvirt
         ] ++ lib.optionals stdenv.isDarwin [
           fixDarwinDylibNames
         ];
