@@ -15133,18 +15133,22 @@ dependencies = [
  "jsonlvar",
  "kestrel",
  "movement-core-util",
+ "movement-signer-loader",
  "movement-types",
+ "mtma-types",
  "orfile",
  "ready-docker",
  "regex",
  "reqwest 0.12.15",
  "serde",
+ "serde_json",
  "strip-ansi-escapes",
  "syncador",
  "tempdir",
  "thiserror 1.0.69",
  "tokio",
  "tracing",
+ "tracing-test",
  "uuid",
 ]
 
@@ -15154,6 +15158,7 @@ version = "0.0.1"
 dependencies = [
  "maptos-opt-executor",
  "movement-client",
+ "movement-config",
  "movement-util",
 ]
 

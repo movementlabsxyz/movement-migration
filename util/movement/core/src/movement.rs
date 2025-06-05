@@ -12,7 +12,11 @@ pub mod rest_api;
 use std::path::PathBuf;
 
 use faucet::{Faucet, ParseFaucet};
+use movement_signer_loader::identifiers::SignerIdentifier;
+use mtma_types::movement::movement_config::Config as MovementConfig;
 use rest_api::{ParseRestApi, RestApi};
+use std::fs::Permissions;
+use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use std::sync::Arc;
 use tracing::info;
@@ -155,9 +159,19 @@ impl Default for Overlays {
 
 #[derive(Clone)]
 pub struct Movement {
+	/// The config for the movement runner.
+	movement_config: MovementConfig,
+	/// The workspace in which [Movement] shall be run.
 	workspace: Arc<MovementWorkspace>,
+	/// The overlays to apply to the movement runner.
 	overlays: Overlays,
+	/// Whether to ping the rest api to ensure it is responding to pings.
+	ping_rest_api: bool,
+	/// The rest api state.
 	rest_api: State<RestApi>,
+	/// Whether to ping the faucet to ensure it is responding to pings.
+	ping_faucet: bool,
+	/// The faucet state.
 	faucet: State<Faucet>,
 }
 
@@ -170,11 +184,20 @@ pub enum MovementError {
 
 impl Movement {
 	/// Creates a new [Movement] with the given workspace and overlays.
-	pub fn new(workspace: MovementWorkspace, overlays: Overlays) -> Self {
+	pub fn new(
+		movement_config: MovementConfig,
+		workspace: MovementWorkspace,
+		overlays: Overlays,
+		ping_rest_api: bool,
+		ping_faucet: bool,
+	) -> Self {
 		Self {
+			movement_config,
 			workspace: Arc::new(workspace),
 			overlays,
+			ping_rest_api,
 			rest_api: State::new(),
+			ping_faucet,
 			faucet: State::new(),
 		}
 	}
@@ -183,7 +206,7 @@ impl Movement {
 	pub fn try_temp() -> Result<Self, MovementError> {
 		let workspace =
 			MovementWorkspace::try_temp().map_err(|e| MovementError::Internal(e.into()))?;
-		Ok(Self::new(workspace, BTreeSet::new().into()))
+		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Creates a new [Movement] within a debug directory.
@@ -191,7 +214,7 @@ impl Movement {
 		let workspace =
 			MovementWorkspace::try_debug().map_err(|e| MovementError::Internal(e.into()))?;
 
-		Ok(Self::new(workspace, BTreeSet::new().into()))
+		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Creates a new [Movement] within a debug home directory.
@@ -199,7 +222,7 @@ impl Movement {
 		let workspace =
 			MovementWorkspace::try_debug_home().map_err(|e| MovementError::Internal(e.into()))?;
 
-		Ok(Self::new(workspace, BTreeSet::new().into()))
+		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Adds an overlay to [Movement].
@@ -216,6 +239,91 @@ impl Movement {
 	/// Sets the overlays for [Movement].
 	pub fn set_overlays(&mut self, overlays: Overlays) {
 		self.overlays = overlays;
+	}
+
+	/// Sets the movement config for [Movement].
+	pub fn set_movement_config(&mut self, movement_config: MovementConfig) {
+		self.movement_config = movement_config;
+	}
+
+	/// Constructs the [MovementConfig] for the container runtime.
+	///
+	/// NOTE: for the most part, you shouldn't use this method, this is internal to the runner.
+	pub fn container_movement_config(&self) -> Result<MovementConfig, MovementError> {
+		let mut movement_config: MovementConfig = self.movement_config.clone();
+
+		// client
+		// rename for the container runtime which uses a `movement-full-node` container
+		movement_config
+			.execution_config
+			.maptos_config
+			.client
+			.maptos_rest_connection_hostname = "movement-full-node".to_string();
+		// rename for the container runtime which uses a `movement-faucet-service` container
+		movement_config
+			.execution_config
+			.maptos_config
+			.client
+			.maptos_faucet_rest_connection_hostname = "movement-faucet-service".to_string();
+
+		// faucet
+		movement_config
+			.execution_config
+			.maptos_config
+			.faucet
+			.maptos_rest_connection_hostname = "movement-full-node".to_string();
+
+		// celestia bridge
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.bridge
+			.celestia_rpc_connection_hostname = "movement-celestia-appd".to_string();
+
+		// celestia da light node
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.da_light_node
+			.celestia_rpc_connection_hostname = "movement-celestia-appd".to_string();
+
+		// celestia da light node bridge
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.da_light_node
+			.celestia_websocket_connection_hostname = "movement-celestia-bridge".to_string();
+
+		// appd
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.appd
+			.celestia_websocket_connection_hostname = "movement-celestia-bridge".to_string();
+
+		// movement-celestia-da-light-node
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.da_light_node
+			.movement_da_light_node_connection_hostname = "movement-celestia-da-light-node".to_string();
+
+		// eth
+		movement_config.mcr.eth_connection.eth_rpc_connection_protocol = "http".to_string();
+		movement_config.mcr.eth_connection.eth_rpc_connection_hostname = "setup".to_string();
+		movement_config.mcr.eth_connection.eth_rpc_connection_port = 8090;
+		movement_config.mcr.eth_connection.eth_ws_connection_protocol = "ws".to_string();
+		movement_config.mcr.eth_connection.eth_ws_connection_hostname = "setup".to_string();
+		movement_config.mcr.eth_connection.eth_ws_connection_port = 8090;
+		movement_config.mcr.eth_connection.eth_chain_id = 3073;
+
+		// maybe run local
+		movement_config.mcr.maybe_run_local = true;
+
+		// root dir is mounted on container root
+		movement_config.syncing.root_dir = "/.movement".to_string().into();
+
+		Ok(movement_config)
 	}
 
 	/// Borrows the [RestApi] state.
@@ -236,10 +344,33 @@ impl Movement {
 		let overlays = self.overlays.to_overlay_args();
 
 		// construct the Rest API fulfiller
-		let rest_api_fulfiller = Custom::new(self.rest_api().write(), ParseRestApi::new());
+		let known_rest_api_listen_url = format!(
+			"http://127.0.0.1:{}",
+			self.movement_config
+				.execution_config
+				.maptos_config
+				.client
+				.maptos_rest_connection_port
+				.clone(),
+		);
+		let rest_api_fulfiller = Custom::new(
+			self.rest_api().write(),
+			ParseRestApi::new(known_rest_api_listen_url, self.ping_rest_api),
+		);
 
 		// construct the Faucet fulfiller
-		let faucet_fulfiller = Custom::new(self.faucet().write(), ParseFaucet::new());
+		let known_faucet_listen_url = format!(
+			"http://127.0.0.1:{}",
+			self.movement_config
+				.execution_config
+				.maptos_config
+				.client
+				.maptos_faucet_rest_connection_port
+		);
+		let faucet_fulfiller = Custom::new(
+			self.faucet().write(),
+			ParseFaucet::new(known_faucet_listen_url, self.ping_faucet),
+		);
 
 		// get the prepared command for the movement task
 		let mut command = Command::new(
@@ -258,6 +389,39 @@ impl Movement {
 				)
 				.map_err(|e| MovementError::Internal(e.into()))?,
 		);
+
+		info!(
+			"Writing movement config to {:?}",
+			self.workspace_path().join(".movement/config.json")
+		);
+		let container_config = self
+			.container_movement_config()
+			.map_err(|e| MovementError::Internal(e.into()))?;
+		// Write the [MovementConfig] to the workspace path at {workspace_path}/.movement/config.json
+		// Use tokio::fs::write to write the config to the file.
+
+		// First create the parent directory if it doesn't exist
+		info!("Creating config dir");
+		let config_dir = self.workspace_path().join(".movement");
+		if !config_dir.exists() {
+			std::fs::create_dir_all(&config_dir).map_err(|e| MovementError::Internal(e.into()))?;
+		}
+
+		// Then write the config file
+		info!("Writing config file");
+		let config_path = self.workspace_path().join(".movement/config.json");
+		tokio::fs::write(
+			&config_path,
+			serde_json::to_string(&container_config)
+				.map_err(|e| MovementError::Internal(e.into()))?,
+		)
+		.await
+		.map_err(|e| MovementError::Internal(e.into()))?;
+		// Set the permissions of the config file to 777
+		tokio::fs::set_permissions(&config_path, Permissions::from_mode(0o777))
+			.await
+			.map_err(|e| MovementError::Internal(e.into()))?;
+		info!("Wrote movement config");
 
 		// pipe command output to the rest api fulfiller
 		command
@@ -318,6 +482,16 @@ impl Movement {
 			.join("27")
 			.join(".maptos")
 	}
+
+	/// Gets the movement signer identifier
+	pub fn movement_signer_identifier(&self) -> &SignerIdentifier {
+		&self
+			.movement_config
+			.execution_config
+			.maptos_config
+			.chain
+			.maptos_private_key_signer_identifier
+	}
 }
 
 impl Drop for Movement {
@@ -352,9 +526,10 @@ mod tests {
 	use super::*;
 	use tokio::time::Duration;
 
+	#[tracing_test::traced_test]
 	#[tokio::test]
 	async fn test_movement_starts() -> Result<(), anyhow::Error> {
-		let mut movement = Movement::try_temp()?;
+		let mut movement = Movement::try_debug_home()?;
 		let rest_api = movement.rest_api().read();
 		let faucet = movement.faucet().read();
 		movement.set_overlays(Overlays::default());
