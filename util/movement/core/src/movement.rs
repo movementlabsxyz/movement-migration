@@ -264,13 +264,7 @@ impl Movement {
 
 		// construct the Rest API fulfiller
 		let known_rest_api_listen_url = format!(
-			"http://{}:{}",
-			self.movement_config
-				.execution_config
-				.maptos_config
-				.client
-				.maptos_rest_connection_hostname
-				.clone(),
+			"http://127.0.0.1:{}",
 			self.movement_config
 				.execution_config
 				.maptos_config
@@ -285,13 +279,7 @@ impl Movement {
 
 		// construct the Faucet fulfiller
 		let known_faucet_listen_url = format!(
-			"http://{}:{}",
-			self.movement_config
-				.execution_config
-				.maptos_config
-				.client
-				.maptos_faucet_rest_connection_hostname
-				.clone(),
+			"http://127.0.0.1:{}",
 			self.movement_config
 				.execution_config
 				.maptos_config
@@ -338,13 +326,13 @@ impl Movement {
 		// Then write the config file
 		println!("Writing config file");
 		let config_path = self.workspace_path().join(".movement/config.json");
-		tokio::fs::write(&config_path, serde_json::to_string(&self.movement_config).unwrap())
+		/*tokio::fs::write(&config_path, serde_json::to_string(&self.movement_config).unwrap())
 			.await
 			.map_err(|e| MovementError::Internal(e.into()))?;
 		// Set the permissions of the config file to 777
 		tokio::fs::set_permissions(&config_path, Permissions::from_mode(0o777))
 			.await
-			.map_err(|e| MovementError::Internal(e.into()))?;
+			.map_err(|e| MovementError::Internal(e.into()))?;*/
 		println!("Wrote movement config");
 
 		// pipe command output to the rest api fulfiller
@@ -440,6 +428,7 @@ mod tests {
 	use super::*;
 	use tokio::time::Duration;
 
+	#[tracing_test::traced_test]
 	#[tokio::test]
 	async fn test_movement_starts() -> Result<(), anyhow::Error> {
 		let mut movement = Movement::try_debug_home()?;

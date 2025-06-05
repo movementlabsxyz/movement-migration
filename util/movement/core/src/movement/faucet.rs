@@ -1,5 +1,7 @@
 use kestrel::{fulfill::custom::CustomProcessor, fulfill::FulfillError};
 use tokio::sync::mpsc::Receiver;
+use tokio::time::Duration;
+use tracing::{info, warn};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Faucet {
@@ -51,11 +53,27 @@ impl CustomProcessor<Faucet> for ParseFaucet {
 					.captures(&trimmed)
 			{
 				if self.ping {
-					// check that the endpoint is responding to pings
-					let client = reqwest::Client::new();
-					client.get(&self.known_listen_url).send().await.map_err(|e| {
-						FulfillError::Internal(format!("failed to ping faucet: {e}").into())
-					})?;
+					loop {
+						info!("pinging faucet at {}", &self.known_listen_url);
+						// check that the endpoint is responding to pings
+						let client = reqwest::Client::new();
+						match client.get(&self.known_listen_url).send().await.map_err(|e| {
+							FulfillError::Internal(format!("failed to ping faucet: {e}").into())
+						}) {
+							Ok(response) => {
+								if response.status().is_success() {
+									info!("faucet is responding to pings");
+									break;
+								} else {
+									info!("faucet is not responding to pings");
+								}
+							}
+							Err(e) => {
+								warn!("failed to ping faucet: {e}");
+							}
+						}
+						tokio::time::sleep(Duration::from_secs(1)).await;
+					}
 				}
 
 				return Ok(Some(Faucet {

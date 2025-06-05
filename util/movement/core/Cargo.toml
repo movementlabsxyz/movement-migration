@@ -38,5 +38,8 @@ ready-docker = { workspace = true }
 movement-core-util = { workspace = true }
 tokio = { workspace = true }
 
+[dev-dependencies]
+tracing-test = { workspace = true }
+
 [lints]
 workspace = true

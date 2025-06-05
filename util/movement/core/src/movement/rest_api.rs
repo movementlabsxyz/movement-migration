@@ -75,6 +75,7 @@ impl CustomProcessor<RestApi> for ParseRestApi {
 					RestApiProgress::WaitingForOpt => {
 						if self.ping {
 							loop {
+								info!("pinging rest api at {}", &self.known_listen_url);
 								// check that the endpoint is responding to pings
 								// todo: it's actually not true that opt always comes second
 								// todo: we should be able to know the port aprior, but this is a hack to test a few other things
