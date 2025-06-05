@@ -60,67 +60,6 @@ impl Config {
 		}
 	}
 
-	/// Reififes the [MovementConfig] for the container runtme as is needed in the build
-	///
-	/// NOTE: for the most part, you shouldn't use this method, this is internal to the runner.
-	pub fn build_movement_config(&self) -> Result<MovementConfig, ConfigError> {
-		let mut movement_config: MovementConfig = self.movement_config()?;
-
-		// client
-		// rename for the container runtime which uses a `movement-full-node` container
-		movement_config
-			.execution_config
-			.maptos_config
-			.client
-			.maptos_rest_connection_hostname = "movement-full-node".to_string();
-		// rename for the container runtime which uses a `movement-faucet-service` container
-		movement_config
-			.execution_config
-			.maptos_config
-			.client
-			.maptos_faucet_rest_connection_hostname = "movement-faucet-service".to_string();
-
-		// faucet
-		movement_config
-			.execution_config
-			.maptos_config
-			.faucet
-			.maptos_rest_connection_hostname = "movement-full-node".to_string();
-
-		// celestia bridge
-		movement_config
-			.celestia_da_light_node
-			.celestia_da_light_node_config
-			.bridge
-			.celestia_rpc_connection_hostname = "movement-celestia-appd".to_string();
-
-		// celestia da light node
-		movement_config
-			.celestia_da_light_node
-			.celestia_da_light_node_config
-			.da_light_node
-			.celestia_rpc_connection_hostname = "movement-celestia-appd".to_string();
-
-		// celestia da light node bridge
-		movement_config
-			.celestia_da_light_node
-			.celestia_da_light_node_config
-			.da_light_node
-			.celestia_websocket_connection_hostname = "movement-celestia-bridge".to_string();
-
-		// movement-celestia-da-light-node
-		movement_config
-			.celestia_da_light_node
-			.celestia_da_light_node_config
-			.da_light_node
-			.movement_da_light_node_connection_hostname = "movement-celestia-da-light-node".to_string();
-
-		// root dir is mounted on container root
-		movement_config.syncing.root_dir = "/.movement".to_string().into();
-
-		Ok(movement_config)
-	}
-
 	/// Computes the overlays for the movement runner.
 	pub fn overlays(&self) -> Overlays {
 		let mut overlays = Overlays::empty();
@@ -138,7 +77,7 @@ impl Config {
 	/// Builds the config into a [Movement] runner.
 	pub fn build(&self) -> Result<Movement, ConfigError> {
 		Ok(Movement::new(
-			self.build_movement_config().map_err(|e| ConfigError::Internal(e.into()))?,
+			self.movement_config().map_err(|e| ConfigError::Internal(e.into()))?,
 			MovementWorkspace::try_temp().map_err(|e| ConfigError::Internal(e.into()))?,
 			self.overlays(),
 			self.ping_rest_api,

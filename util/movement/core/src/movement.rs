@@ -245,6 +245,86 @@ impl Movement {
 		self.movement_config = movement_config;
 	}
 
+	/// Constructs the [MovementConfig] for the container runtime.
+	///
+	/// NOTE: for the most part, you shouldn't use this method, this is internal to the runner.
+	pub fn container_movement_config(&self) -> Result<MovementConfig, MovementError> {
+		let mut movement_config: MovementConfig = self.movement_config.clone();
+
+		// client
+		// rename for the container runtime which uses a `movement-full-node` container
+		movement_config
+			.execution_config
+			.maptos_config
+			.client
+			.maptos_rest_connection_hostname = "movement-full-node".to_string();
+		// rename for the container runtime which uses a `movement-faucet-service` container
+		movement_config
+			.execution_config
+			.maptos_config
+			.client
+			.maptos_faucet_rest_connection_hostname = "movement-faucet-service".to_string();
+
+		// faucet
+		movement_config
+			.execution_config
+			.maptos_config
+			.faucet
+			.maptos_rest_connection_hostname = "movement-full-node".to_string();
+
+		// celestia bridge
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.bridge
+			.celestia_rpc_connection_hostname = "movement-celestia-appd".to_string();
+
+		// celestia da light node
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.da_light_node
+			.celestia_rpc_connection_hostname = "movement-celestia-appd".to_string();
+
+		// celestia da light node bridge
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.da_light_node
+			.celestia_websocket_connection_hostname = "movement-celestia-bridge".to_string();
+
+		// appd
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.appd
+			.celestia_websocket_connection_hostname = "movement-celestia-bridge".to_string();
+
+		// movement-celestia-da-light-node
+		movement_config
+			.celestia_da_light_node
+			.celestia_da_light_node_config
+			.da_light_node
+			.movement_da_light_node_connection_hostname = "movement-celestia-da-light-node".to_string();
+
+		// eth
+		movement_config.mcr.eth_connection.eth_rpc_connection_protocol = "http".to_string();
+		movement_config.mcr.eth_connection.eth_rpc_connection_hostname = "setup".to_string();
+		movement_config.mcr.eth_connection.eth_rpc_connection_port = 8090;
+		movement_config.mcr.eth_connection.eth_ws_connection_protocol = "ws".to_string();
+		movement_config.mcr.eth_connection.eth_ws_connection_hostname = "setup".to_string();
+		movement_config.mcr.eth_connection.eth_ws_connection_port = 8090;
+		movement_config.mcr.eth_connection.eth_chain_id = 3073;
+
+		// maybe run local
+		movement_config.mcr.maybe_run_local = true;
+
+		// root dir is mounted on container root
+		movement_config.syncing.root_dir = "/.movement".to_string().into();
+
+		Ok(movement_config)
+	}
+
 	/// Borrows the [RestApi] state.
 	pub fn rest_api(&self) -> &State<RestApi> {
 		&self.rest_api
@@ -309,31 +389,38 @@ impl Movement {
 				.map_err(|e| MovementError::Internal(e.into()))?,
 		);
 
-		println!(
+		info!(
 			"Writing movement config to {:?}",
 			self.workspace_path().join(".movement/config.json")
 		);
+		let container_config = self
+			.container_movement_config()
+			.map_err(|e| MovementError::Internal(e.into()))?;
 		// Write the [MovementConfig] to the workspace path at {workspace_path}/.movement/config.json
 		// Use tokio::fs::write to write the config to the file.
 
 		// First create the parent directory if it doesn't exist
-		println!("Creating config dir");
+		info!("Creating config dir");
 		let config_dir = self.workspace_path().join(".movement");
 		if !config_dir.exists() {
 			std::fs::create_dir_all(&config_dir).map_err(|e| MovementError::Internal(e.into()))?;
 		}
 
 		// Then write the config file
-		println!("Writing config file");
+		info!("Writing config file");
 		let config_path = self.workspace_path().join(".movement/config.json");
-		/*tokio::fs::write(&config_path, serde_json::to_string(&self.movement_config).unwrap())
-			.await
-			.map_err(|e| MovementError::Internal(e.into()))?;
+		tokio::fs::write(
+			&config_path,
+			serde_json::to_string(&container_config)
+				.map_err(|e| MovementError::Internal(e.into()))?,
+		)
+		.await
+		.map_err(|e| MovementError::Internal(e.into()))?;
 		// Set the permissions of the config file to 777
 		tokio::fs::set_permissions(&config_path, Permissions::from_mode(0o777))
 			.await
-			.map_err(|e| MovementError::Internal(e.into()))?;*/
-		println!("Wrote movement config");
+			.map_err(|e| MovementError::Internal(e.into()))?;
+		info!("Wrote movement config");
 
 		// pipe command output to the rest api fulfiller
 		command
