@@ -51,6 +51,19 @@ pub mod test {
 
 			// wait for the rest client to be ready
 			info!("Waiting for REST client to be ready (timeout: 600s)");
+			let rest_api_url = movement_migrator
+				.wait_for_rest_api_url(tokio::time::Duration::from_secs(600))
+				.await?;
+			info!("REST API URL: {}", rest_api_url);
+			// Wait for the REST API URL to be on port 30731
+			while !rest_api_url.contains(":30731") {
+				info!("Waiting for REST API to be on port 30731, current URL: {}", rest_api_url);
+				tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+				let rest_api_url = movement_migrator
+					.wait_for_rest_api_url(tokio::time::Duration::from_secs(600))
+					.await?;
+				info!("REST API URL: {}", rest_api_url);
+			}
 			movement_migrator
 				.wait_for_rest_client_ready(tokio::time::Duration::from_secs(600))
 				.await
