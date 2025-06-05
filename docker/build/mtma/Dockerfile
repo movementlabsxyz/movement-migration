@@ -15,46 +15,31 @@ RUN rust_binary="./target/release/mtma"; dest_dir="/tmp/runtime"; \
     grep '^/' | xargs -I {} dirname {} | sort | uniq | xargs -I {} \
     bash -c 'mkdir -p "$0/$1" && rsync -a --copy-links "$1/" "$0/$1/"' "$dest_dir" {}
 
-FROM nixos/nix:2.29.0
+FROM alpine:3.22.0
 
-# Create a non-root user
-RUN adduser -D movement
+# Create non-root user
+RUN useradd -u 1000 -m -s /bin/bash mtma
 
-# Copy the build artifact and runtime dependencies
+# Copy binary and runtime deps
 COPY --from=builder /tmp/build/target/release/mtma /app/mtma
 COPY --from=builder /tmp/runtime/nix/store /nix/store
 
-# Set up podman environment
+# Environment setup
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
 ENV XDG_RUNTIME_DIR="/run/user/1000"
 ENV TMPDIR="/tmp"
+ENV DOCKER_HOST="unix:///run/user/1000/podman/podman-machine-default-api.sock"
 
-# Create necessary directories with proper permissions
+# Create required runtime dirs with proper ownership
 RUN mkdir -p /run/user/1000/podman && \
-    chown -R movement:movement /run/user/1000 && \
-    chown -R movement:movement /app
+    chown -R mtma:mtma /run/user/1000 /app /nix
 
-# Initialize podman machine during build
-RUN if ! podman machine inspect podman-machine-default &>/dev/null; then \
-        echo "Initializing podman machine..." && \
-        podman machine init; \
-    fi
+# Copy runtime bootstrap script
+COPY docker/build/mtma/entry.sh /app/entry.sh
+RUN chmod +x /app/entry.sh
 
 # Switch to non-root user
-USER movement
+USER mtma
 
-# Start podman machine and run the application
-# You can't just RUN podman machine start because the socket will disappear once references are dropped, i.e., after the build completes.
-ENTRYPOINT ["/bin/sh", "-c", "\
-    if ! podman machine inspect podman-machine-default --format '{{.State}}' | grep -q 'running'; then \
-        echo 'Starting podman machine...' && \
-        podman machine start; \
-    fi && \
-    while [ ! -S /run/user/1000/podman/podman-machine-default-api.sock ]; do \
-        echo 'Waiting for podman socket...' && \
-        sleep 1; \
-    done && \
-    export DOCKER_HOST='unix:///run/user/1000/podman/podman-machine-default-api.sock' && \
-    echo 'Set DOCKER_HOST to Podman socket: $DOCKER_HOST' && \
-    exec /app/mtma \"$@\" \
-"]
+# Entrypoint to bootstrap podman and launch mtma
+ENTRYPOINT ["/app/entry.sh"]
