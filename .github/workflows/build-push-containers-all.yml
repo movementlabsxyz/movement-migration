@@ -22,7 +22,7 @@ jobs:
         echo "INFO: github context object content below"
         echo "${GITHUB_CONTEXT}"
 
-build-push-checked-containers:
+  build-push-checked-containers:
     uses: ./.github/workflows/build-push-container.yml
     name: Build Push Checked Containers
     secrets: inherit
@@ -36,7 +36,7 @@ build-push-checked-containers:
     with:
       container_name: ${{ matrix.container_name }}
 
-build-push-checked-manifest:
+  build-push-checked-manifest:
     uses: ./.github/workflows/build-push-manifest.yml
     name: Build Push Checked Manifest
     needs: 
