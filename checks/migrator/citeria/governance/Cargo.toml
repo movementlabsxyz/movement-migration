@@ -1,0 +1,21 @@
+[package]
+name = "mtma-migrator-test-governance-criterion"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+anyhow = { workspace = true }
+aptos-rest-client = { workspace = true }
+movement-client = { workspace = true }
+mtma-migrator-test-types = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+
+[lints]
+workspace = true

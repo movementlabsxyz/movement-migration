@@ -15801,6 +15801,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "mtma-migrator-test-governance-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "movement-client",
+ "mtma-migrator-test-types",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "mtma-migrator-test-types"
 version = "0.0.1"
 dependencies = [
