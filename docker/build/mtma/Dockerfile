@@ -18,7 +18,7 @@ RUN rust_binary="./target/release/mtma"; dest_dir="/tmp/runtime"; \
 FROM alpine:3.22.0
 
 # Create non-root user
-RUN adduser -u 1000 -m -s /bin/bash mtma
+RUN adduser -u 1000 -D -s /bin/bash mtma
 
 # Copy binary and runtime deps
 COPY --from=builder /tmp/build/target/release/mtma /app/mtma
