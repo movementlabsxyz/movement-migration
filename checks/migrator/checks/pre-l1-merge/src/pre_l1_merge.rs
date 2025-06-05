@@ -43,7 +43,7 @@ pub mod test {
 
 			// Form the migration.
 			let migration_config = PreL1MergeConfig::default();
-			let migration = migration_config.build().await?;
+			let migration = migration_config.build()?;
 
 			// Run the checked migration.
 			let accounts_equal = AccountsEqual::new();

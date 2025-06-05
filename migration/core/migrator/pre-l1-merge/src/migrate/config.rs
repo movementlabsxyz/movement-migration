@@ -50,9 +50,7 @@ impl Default for Config {
 
 impl Config {
 	/// Builds the release signer from the config.
-	pub async fn build_release_signer(
-		&self,
-	) -> Result<LocalAccountReleaseSigner, MigrateConfigError> {
+	pub fn build_release_signer(&self) -> Result<LocalAccountReleaseSigner, MigrateConfigError> {
 		// load the signer
 		let raw_private_key = self
 			.signer_identifier
@@ -70,10 +68,10 @@ impl Config {
 	}
 
 	/// Builds the [Migrate] struct from the config.
-	pub async fn build(&self) -> Result<Migrate<LocalAccountReleaseSigner>, MigrateConfigError> {
+	pub fn build(&self) -> Result<Migrate<LocalAccountReleaseSigner>, MigrateConfigError> {
 		let mtma_node_null =
 			self.mtma_node_null.build().map_err(|e| MigrateConfigError::Build(e.into()))?;
 
-		Ok(Migrate { release_signer: self.build_release_signer().await?, mtma_node_null })
+		Ok(Migrate { release_signer: self.build_release_signer()?, mtma_node_null })
 	}
 }
