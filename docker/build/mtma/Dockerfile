@@ -1,6 +1,10 @@
 FROM nixos/nix:2.29.0 AS builder
 
+# Create and switch to non-root user
 RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk
+RUN nix-env -iA nixpkgs.shadow
+RUN useradd -m -s /bin/bash builder
+USER builder
 
 # Copy the source code into the container
 COPY . /tmp/build
