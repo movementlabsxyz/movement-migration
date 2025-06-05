@@ -15860,6 +15860,7 @@ dependencies = [
  "clap-markdown-ext",
  "dotenv",
  "hex",
+ "movement-core",
  "movement-signer",
  "movement-signer-loader",
  "mtma-migrator-types",

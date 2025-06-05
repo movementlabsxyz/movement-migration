@@ -2,10 +2,13 @@ use crate::Migrate;
 use anyhow::Context;
 use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::LocalAccountReleaseSigner;
 use clap::Parser;
+use movement_core::movement::{Celestia, Eth};
+use movement_core::Config as MovementCoreConfig;
 use movement_signer::key::TryFromCanonicalString;
 use movement_signer_loader::identifiers::{local::Local, SignerIdentifier};
 use mtma_node_null_core::Config as MtmaNodeNullConfig;
 use mtma_types::movement::aptos_sdk::types::{account_address::AccountAddress, LocalAccount};
+use mtma_types::movement::movement_config::Config as MovementConfig;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
@@ -26,10 +29,9 @@ pub struct Config {
 	/// The config for the mtma-node-null.
 	#[clap(flatten)]
 	mtma_node_null: MtmaNodeNullConfig,
-	/// The signer identifier for the release signer.
-	#[clap(long)]
-	#[arg(value_parser = SignerIdentifier::try_from_canonical_string)]
-	signer_identifier: SignerIdentifier,
+	/// The movement config.
+	#[clap(flatten)]
+	movement_core: MovementCoreConfig,
 	/// The account address override for the release signer.
 	#[clap(long)]
 	account_address: Option<AccountAddress>,
@@ -37,14 +39,18 @@ pub struct Config {
 
 impl Default for Config {
 	fn default() -> Self {
-		Self {
-			mtma_node_null: MtmaNodeNullConfig::default(),
-			signer_identifier: SignerIdentifier::Local(Local {
-				private_key_hex_bytes:
-					"0x0000000000000000000000000000000000000000000000000000000000000000".to_string(),
-			}),
-			account_address: None,
-		}
+		let mut movement_core = MovementCoreConfig {
+			movement_config_string: None,
+			setup: false,
+			celestia: Celestia::Local,
+			eth: Eth::Local,
+			biarritz_rc1_to_pre_l1_merge: false,
+			ping_rest_api: false,
+			ping_faucet: false,
+		};
+		movement_core.set_movement_config(MovementConfig::default());
+
+		Self { mtma_node_null: MtmaNodeNullConfig::default(), movement_core, account_address: None }
 	}
 }
 
@@ -53,7 +59,9 @@ impl Config {
 	pub fn build_release_signer(&self) -> Result<LocalAccountReleaseSigner, MigrateConfigError> {
 		// load the signer
 		let raw_private_key = self
-			.signer_identifier
+			.movement_core
+			.try_movement_signer_identifier()
+			.map_err(|e| MigrateConfigError::Build(e.into()))?
 			.try_raw_private_key()
 			.context("failed to load raw private key")
 			.map_err(|e| MigrateConfigError::Build(e.into()))?;
