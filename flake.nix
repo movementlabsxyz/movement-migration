@@ -59,6 +59,8 @@
           libvirt
         ] ++ lib.optionals stdenv.isDarwin [
           fixDarwinDylibNames
+        ] ++ lib.optionals stdenv.isLinux [
+          virtiofsd
         ];
         
         sysDependencies = with pkgs; [] 
