@@ -15134,11 +15134,13 @@ dependencies = [
  "kestrel",
  "movement-core-util",
  "movement-types",
+ "mtma-types",
  "orfile",
  "ready-docker",
  "regex",
  "reqwest 0.12.15",
  "serde",
+ "serde_json",
  "strip-ansi-escapes",
  "syncador",
  "tempdir",
@@ -15154,6 +15156,7 @@ version = "0.0.1"
 dependencies = [
  "maptos-opt-executor",
  "movement-client",
+ "movement-config",
  "movement-util",
 ]
 

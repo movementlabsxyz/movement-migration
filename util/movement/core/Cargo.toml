@@ -28,6 +28,8 @@ regex = { workspace = true }
 reqwest = { workspace = true }
 movement-core-util = { workspace = true }
 tracing = { workspace = true }
+mtma-types = { workspace = true }
+serde_json = { workspace = true }
 
 [build-dependencies]
 include-vendor = { workspace = true }

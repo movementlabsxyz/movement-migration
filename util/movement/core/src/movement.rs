@@ -12,7 +12,10 @@ pub mod rest_api;
 use std::path::PathBuf;
 
 use faucet::{Faucet, ParseFaucet};
+use mtma_types::movement::movement_config::Config as MovementConfig;
 use rest_api::{ParseRestApi, RestApi};
+use std::fs::Permissions;
+use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
 use std::sync::Arc;
 use tracing::info;
@@ -155,9 +158,19 @@ impl Default for Overlays {
 
 #[derive(Clone)]
 pub struct Movement {
+	/// The config for the movement runner.
+	movement_config: MovementConfig,
+	/// The workspace in which [Movement] shall be run.
 	workspace: Arc<MovementWorkspace>,
+	/// The overlays to apply to the movement runner.
 	overlays: Overlays,
+	/// Whether to ping the rest api to ensure it is responding to pings.
+	ping_rest_api: bool,
+	/// The rest api state.
 	rest_api: State<RestApi>,
+	/// Whether to ping the faucet to ensure it is responding to pings.
+	ping_faucet: bool,
+	/// The faucet state.
 	faucet: State<Faucet>,
 }
 
@@ -170,11 +183,20 @@ pub enum MovementError {
 
 impl Movement {
 	/// Creates a new [Movement] with the given workspace and overlays.
-	pub fn new(workspace: MovementWorkspace, overlays: Overlays) -> Self {
+	pub fn new(
+		movement_config: MovementConfig,
+		workspace: MovementWorkspace,
+		overlays: Overlays,
+		ping_rest_api: bool,
+		ping_faucet: bool,
+	) -> Self {
 		Self {
+			movement_config,
 			workspace: Arc::new(workspace),
 			overlays,
+			ping_rest_api,
 			rest_api: State::new(),
+			ping_faucet,
 			faucet: State::new(),
 		}
 	}
@@ -183,7 +205,7 @@ impl Movement {
 	pub fn try_temp() -> Result<Self, MovementError> {
 		let workspace =
 			MovementWorkspace::try_temp().map_err(|e| MovementError::Internal(e.into()))?;
-		Ok(Self::new(workspace, BTreeSet::new().into()))
+		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Creates a new [Movement] within a debug directory.
@@ -191,7 +213,7 @@ impl Movement {
 		let workspace =
 			MovementWorkspace::try_debug().map_err(|e| MovementError::Internal(e.into()))?;
 
-		Ok(Self::new(workspace, BTreeSet::new().into()))
+		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Creates a new [Movement] within a debug home directory.
@@ -199,7 +221,7 @@ impl Movement {
 		let workspace =
 			MovementWorkspace::try_debug_home().map_err(|e| MovementError::Internal(e.into()))?;
 
-		Ok(Self::new(workspace, BTreeSet::new().into()))
+		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Adds an overlay to [Movement].
@@ -216,6 +238,11 @@ impl Movement {
 	/// Sets the overlays for [Movement].
 	pub fn set_overlays(&mut self, overlays: Overlays) {
 		self.overlays = overlays;
+	}
+
+	/// Sets the movement config for [Movement].
+	pub fn set_movement_config(&mut self, movement_config: MovementConfig) {
+		self.movement_config = movement_config;
 	}
 
 	/// Borrows the [RestApi] state.
@@ -236,10 +263,45 @@ impl Movement {
 		let overlays = self.overlays.to_overlay_args();
 
 		// construct the Rest API fulfiller
-		let rest_api_fulfiller = Custom::new(self.rest_api().write(), ParseRestApi::new());
+		let known_rest_api_listen_url = format!(
+			"http://{}:{}",
+			self.movement_config
+				.execution_config
+				.maptos_config
+				.client
+				.maptos_rest_connection_hostname
+				.clone(),
+			self.movement_config
+				.execution_config
+				.maptos_config
+				.client
+				.maptos_rest_connection_port
+				.clone(),
+		);
+		let rest_api_fulfiller = Custom::new(
+			self.rest_api().write(),
+			ParseRestApi::new(known_rest_api_listen_url, self.ping_rest_api),
+		);
 
 		// construct the Faucet fulfiller
-		let faucet_fulfiller = Custom::new(self.faucet().write(), ParseFaucet::new());
+		let known_faucet_listen_url = format!(
+			"http://{}:{}",
+			self.movement_config
+				.execution_config
+				.maptos_config
+				.client
+				.maptos_faucet_rest_connection_hostname
+				.clone(),
+			self.movement_config
+				.execution_config
+				.maptos_config
+				.client
+				.maptos_faucet_rest_connection_port
+		);
+		let faucet_fulfiller = Custom::new(
+			self.faucet().write(),
+			ParseFaucet::new(known_faucet_listen_url, self.ping_faucet),
+		);
 
 		// get the prepared command for the movement task
 		let mut command = Command::new(
@@ -258,6 +320,32 @@ impl Movement {
 				)
 				.map_err(|e| MovementError::Internal(e.into()))?,
 		);
+
+		println!(
+			"Writing movement config to {:?}",
+			self.workspace_path().join(".movement/config.json")
+		);
+		// Write the [MovementConfig] to the workspace path at {workspace_path}/.movement/config.json
+		// Use tokio::fs::write to write the config to the file.
+
+		// First create the parent directory if it doesn't exist
+		println!("Creating config dir");
+		let config_dir = self.workspace_path().join(".movement");
+		if !config_dir.exists() {
+			std::fs::create_dir_all(&config_dir).map_err(|e| MovementError::Internal(e.into()))?;
+		}
+
+		// Then write the config file
+		println!("Writing config file");
+		let config_path = self.workspace_path().join(".movement/config.json");
+		tokio::fs::write(&config_path, serde_json::to_string(&self.movement_config).unwrap())
+			.await
+			.map_err(|e| MovementError::Internal(e.into()))?;
+		// Set the permissions of the config file to 777
+		tokio::fs::set_permissions(&config_path, Permissions::from_mode(0o777))
+			.await
+			.map_err(|e| MovementError::Internal(e.into()))?;
+		println!("Wrote movement config");
 
 		// pipe command output to the rest api fulfiller
 		command
@@ -354,7 +442,7 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_movement_starts() -> Result<(), anyhow::Error> {
-		let mut movement = Movement::try_temp()?;
+		let mut movement = Movement::try_debug_home()?;
 		let rest_api = movement.rest_api().read();
 		let faucet = movement.faucet().read();
 		movement.set_overlays(Overlays::default());

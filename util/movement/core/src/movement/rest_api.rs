@@ -29,18 +29,23 @@ impl RestApiProgress {
 }
 
 /// A struct used to parse the output of Movement for RestApi data.
+///
+/// Note: we use parsing to limit the number of network requests that we make, but the expected values are known a priori.
 pub struct ParseRestApi {
+	/// The listen url of the rest api known a priori
+	known_listen_url: String,
+	/// Whether to ping the rest api to ensure it is responding to pings
 	ping: bool,
 }
 
 impl ParseRestApi {
-	pub fn new() -> Self {
-		Self { ping: true }
+	pub fn new(listen_url: String, ping: bool) -> Self {
+		Self { known_listen_url: listen_url, ping }
 	}
 
 	#[cfg(test)]
 	pub fn test() -> Self {
-		Self { ping: false }
+		Self { known_listen_url: "http://0.0.0.0:30731".to_string(), ping: false }
 	}
 }
 
@@ -74,15 +79,11 @@ impl CustomProcessor<RestApi> for ParseRestApi {
 								// todo: it's actually not true that opt always comes second
 								// todo: we should be able to know the port aprior, but this is a hack to test a few other things
 								let client = reqwest::Client::new();
-								match client
-									.get(format!("http://{}:{}", &captures[1], "30731"))
-									.send()
-									.await
-									.map_err(|e| {
-										FulfillError::Internal(
-											format!("failed to ping rest api: {e}").into(),
-										)
-									}) {
+								match client.get(&self.known_listen_url).send().await.map_err(|e| {
+									FulfillError::Internal(
+										format!("failed to ping rest api: {e}").into(),
+									)
+								}) {
 									Ok(response) => {
 										if response.status().is_success() {
 											break;

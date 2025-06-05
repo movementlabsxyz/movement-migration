@@ -1,0 +1,253 @@
+{
+    "maptos_config": {
+      "chain": {
+        "maptos_chain_id": 27,
+        "maptos_rest_listen_hostname": "0.0.0.0",
+        "maptos_rest_listen_port": 30731,
+        "maptos_private_key_signer_identifier": {
+          "Local": {
+            "private_key_hex_bytes": "0000000000000000000000000000000000000000000000000000000000000001"
+          }
+        },
+        "maptos_read_only": false,
+        "enabled_pruning": false,
+        "maptos_ledger_prune_window": 50000000,
+        "maptos_epoch_snapshot_prune_window": 50000000,
+        "maptos_state_merkle_prune_window": 100000,
+        "maptos_db_path": "/.movement/maptos/27/.maptos",
+        "genesis_timestamp_microseconds": 1600000000000,
+        "genesis_block_hash_hex": "25112f5405bbc65b2542a67d94094f12f4d2e287025480efcdb6200c5fed8671",
+        "known_framework_release_str": "elsa",
+        "dont_increase_epoch_until_version": 0
+      },
+      "indexer": {
+        "maptos_indexer_grpc_listen_hostname": "0.0.0.0",
+        "maptos_indexer_grpc_listen_port": 30734,
+        "maptos_indexer_grpc_inactivity_timeout": 60,
+        "maptos_indexer_grpc_inactivity_ping_interval": 10,
+        "maptos_indexer_grpc_healthcheck_hostname": "0.0.0.0",
+        "maptos_indexer_grpc_healthcheck_port": 8084
+      },
+      "indexer_processor": {
+        "postgres_connection_string": "postgres://postgres:password@postgres:5432/postgres",
+        "indexer_processor_auth_token": "auth_token"
+      },
+      "client": {
+        "maptos_rest_connection_hostname": "movement-full-node",
+        "maptos_rest_connection_port": 30731,
+        "maptos_faucet_rest_connection_hostname": "movement-faucet-service",
+        "maptos_faucet_rest_connection_port": 30732,
+        "maptos_indexer_grpc_connection_hostname": "0.0.0.0",
+        "maptos_indexer_grpc_connection_port": 30734
+      },
+      "faucet": {
+        "maptos_rest_connection_hostname": "movement-full-node",
+        "maptos_rest_connection_port": 30731,
+        "maptos_faucet_rest_listen_hostname": "0.0.0.0",
+        "maptos_faucet_rest_listen_port": 30732
+      },
+      "fin": {
+        "fin_rest_listen_hostname": "0.0.0.0",
+        "fin_rest_listen_port": 30733
+      },
+      "load_shedding": {
+        "max_transactions_in_flight": null,
+        "batch_production_time": 2000
+      },
+      "mempool": {
+        "sequence_number_ttl_ms": 180000,
+        "gc_slot_duration_ms": 2000
+      },
+      "access_control": {
+        "ingress_account_whitelist": null
+      }
+    },
+    "celestia_da_light_node_config": {
+      "network": "Local",
+      "appd": {
+        "celestia_rpc_listen_hostname": "0.0.0.0",
+        "celestia_rpc_listen_port": 26657,
+        "celestia_websocket_connection_protocol": "ws",
+        "celestia_websocket_connection_hostname": "movement-celestia-bridge",
+        "celestia_websocket_connection_port": 26658,
+        "celestia_websocket_connection_path": "",
+        "celestia_auth_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBbGxvdyI6WyJwdWJsaWMiLCJyZWFkIiwid3JpdGUiLCJhZG1pbiJdLCJOb25jZSI6IlBnR0t3TVM5aUZKV0xWNEN2ZnVqNDBxVHp4dlZkbWtpSis2Vm01VVVyUFE9IiwiRXhwaXJlc0F0IjoiMDAwMS0wMS0wMVQwMDowMDowMFoifQ.Q6y80gpCiecy4NL04X-igHBop4G44qOAECzQUprymw8",
+        "celestia_chain_id": "6b92677df6f243a2afe4",
+        "celestia_namespace": "AAAAAAAAAAAAAAAAAAAAAAAAAJklMiDAji+QFQI=",
+        "celestia_path": "/.movement/celestia/6b92677df6f243a2afe4/.celestia-app",
+        "celestia_validator_address": "celestia1zrm4uenqx0f4zncv3mejpkgxlkgfwx3lmxr0as",
+        "celestia_appd_use_replace_args": false,
+        "celestia_appd_replace_args": []
+      },
+      "bridge": {
+        "celestia_rpc_connection_protocol": "http",
+        "celestia_rpc_connection_hostname": "movement-celestia-appd",
+        "celestia_rpc_connection_port": 26657,
+        "celestia_websocket_listen_hostname": "0.0.0.0",
+        "celestia_websocket_listen_port": 26658,
+        "celestia_bridge_path": "/.movement/celestia/6b92677df6f243a2afe4/.celestia-node",
+        "celestia_bridge_use_replace_args": false,
+        "celestia_bridge_replace_args": []
+      },
+      "light": {
+        "key_name": "movement_celestia_light",
+        "node_store": "/.movement/celestia/6b92677df6f243a2afe4/.celestia-light"
+      },
+      "da_light_node": {
+        "celestia_rpc_connection_protocol": "http",
+        "celestia_rpc_connection_hostname": "movement-celestia-appd",
+        "celestia_rpc_connection_port": 26657,
+        "celestia_websocket_connection_hostname": "movement-celestia-bridge",
+        "celestia_websocket_connection_port": 26658,
+        "celestia_websocket_connection_path": "",
+        "movement_da_light_node_listen_hostname": "0.0.0.0",
+        "movement_da_light_node_listen_port": 30730,
+        "movement_da_light_node_connection_protocol": "http",
+        "movement_da_light_node_connection_hostname": "movement-celestia-da-light-node",
+        "movement_da_light_node_connection_port": 30730,
+        "movement_da_light_node_http1": false,
+        "da_signers": {
+          "signer_identifier": {
+            "Local": {
+              "private_key_hex_bytes": "15f730b41493f6a154a71b5d133d58124ca516268147ef53e0079478af04a75c"
+            }
+          },
+          "public_keys_hex": [
+            "0440f4fe95a306afbc87a1f8f03d22541ccf2d672c64ebcbc6ff96ea41b9dd0ca6f8c51c64678847617df06e676bc398c3e776091ed0858fb03a9bf63183ed2c4f"
+          ]
+        }
+      },
+      "celestia_force_new_chain": true,
+      "memseq": {
+        "sequencer_chain_id": "6b92677df6f243a2afe4",
+        "sequencer_database_path": "/.movement/memseq/6b92677df6f243a2afe4/.memseq",
+        "memseq_build_time": 500,
+        "memseq_max_block_size": 2048
+      },
+      "da_light_node_is_initial": false,
+      "initial_height": 0,
+      "access_control": {
+        "ingress_account_whitelist": null
+      },
+      "digest_store": {
+        "digest_store_db_path": "/tmp/digest_store_db"
+      }
+    },
+    "mcr": {
+      "eth_connection": {
+        "eth_rpc_connection_protocol": "http",
+        "eth_rpc_connection_hostname": "setup",
+        "eth_rpc_connection_port": 8090,
+        "eth_ws_connection_protocol": "ws",
+        "eth_ws_connection_hostname": "setup",
+        "eth_ws_connection_port": 8090,
+        "eth_chain_id": 3073
+      },
+      "settle": {
+        "should_settle": false,
+        "signer_identifier": {
+          "Local": {
+            "private_key_hex_bytes": "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+          }
+        },
+        "mcr_contract_address": "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707",
+        "settlement_super_block_size": 1,
+        "settlement_admin_mode": false
+      },
+      "transactions": {
+        "gas_limit": 10000000000000000,
+        "batch_timeout": 2000,
+        "transaction_send_retries": 10
+      },
+      "maybe_run_local": true,
+      "deploy": {
+        "mcr_deployment_working_directory": "protocol-units/settlement/mcr/contracts",
+        "signer_identifier": {
+          "Local": {
+            "private_key_hex_bytes": "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+          }
+        }
+      },
+      "testing": null
+    },
+    "da_db": {
+      "da_db_path": "/.movement/movement-da-db",
+      "start_sync_height": 0
+    },
+    "execution_extension": {
+      "block_retry_count": 10,
+      "block_retry_increment_microseconds": 5000
+    },
+    "syncing": {
+      "movement_sync": null,
+      "application_id": [
+        26,
+        43,
+        60,
+        77,
+        94,
+        111,
+        122,
+        139,
+        156,
+        173,
+        190,
+        207,
+        208,
+        225,
+        242,
+        3,
+        20,
+        37,
+        54,
+        71,
+        88,
+        105,
+        122,
+        139,
+        156,
+        173,
+        190,
+        207,
+        208,
+        225,
+        242,
+        3
+      ],
+      "syncer_id": [
+        77,
+        78,
+        114,
+        70,
+        17,
+        8,
+        134,
+        147,
+        80,
+        171,
+        24,
+        223,
+        54,
+        213,
+        116,
+        174,
+        76,
+        118,
+        225,
+        8,
+        99,
+        250,
+        167,
+        227,
+        178,
+        151,
+        46,
+        120,
+        225,
+        87,
+        109,
+        227
+      ],
+      "root_dir": "/.movement"
+    }
+  }
