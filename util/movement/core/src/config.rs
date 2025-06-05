@@ -1,6 +1,7 @@
 use crate::movement::{Celestia, Eth, Movement, MovementWorkspace, Overlay, Overlays};
 use clap::Parser;
 use jsonlvar::Jsonl;
+use movement_signer_loader::identifiers::SignerIdentifier;
 use mtma_types::movement::movement_config::Config as MovementConfig;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
@@ -83,5 +84,16 @@ impl Config {
 			self.ping_rest_api,
 			self.ping_faucet,
 		))
+	}
+
+	/// Gets the movement signer identifier
+	pub fn try_movement_signer_identifier(&self) -> Result<SignerIdentifier, ConfigError> {
+		Ok(self
+			.movement_config()
+			.map_err(|e| ConfigError::Internal(e.into()))?
+			.execution_config
+			.maptos_config
+			.chain
+			.maptos_private_key_signer_identifier)
 	}
 }

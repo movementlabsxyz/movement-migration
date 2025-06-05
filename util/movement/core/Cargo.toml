@@ -30,6 +30,7 @@ movement-core-util = { workspace = true }
 tracing = { workspace = true }
 mtma-types = { workspace = true }
 serde_json = { workspace = true }
+movement-signer-loader = { workspace = true }
 
 [build-dependencies]
 include-vendor = { workspace = true }

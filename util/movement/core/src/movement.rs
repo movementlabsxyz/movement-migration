@@ -12,6 +12,7 @@ pub mod rest_api;
 use std::path::PathBuf;
 
 use faucet::{Faucet, ParseFaucet};
+use movement_signer_loader::identifiers::SignerIdentifier;
 use mtma_types::movement::movement_config::Config as MovementConfig;
 use rest_api::{ParseRestApi, RestApi};
 use std::fs::Permissions;
@@ -480,6 +481,16 @@ impl Movement {
 			.join("maptos")
 			.join("27")
 			.join(".maptos")
+	}
+
+	/// Gets the movement signer identifier
+	pub fn movement_signer_identifier(&self) -> &SignerIdentifier {
+		&self
+			.movement_config
+			.execution_config
+			.maptos_config
+			.chain
+			.maptos_private_key_signer_identifier
 	}
 }
 

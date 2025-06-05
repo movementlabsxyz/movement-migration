@@ -15133,6 +15133,7 @@ dependencies = [
  "jsonlvar",
  "kestrel",
  "movement-core-util",
+ "movement-signer-loader",
  "movement-types",
  "mtma-types",
  "orfile",
