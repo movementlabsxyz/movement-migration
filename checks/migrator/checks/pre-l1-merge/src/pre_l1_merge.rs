@@ -6,19 +6,37 @@ pub mod test {
 	use mtma_migrator_pre_l1_merge_core::config::Config as PreL1MergeConfig;
 	use mtma_migrator_test_accounts_equal_criterion::AccountsEqual;
 	use mtma_migrator_test_types::check::checked_migration;
-	use mtma_migrator_types::migrator::{movement_migrator::Overlays, MovementMigrator};
+	use mtma_migrator_types::migrator::{movement_migrator::{Overlays, MovementMigrator, Runner}};
 	use mtma_node_test_types::prelude::Prelude;
 	use std::str::FromStr;
 	use tracing::info;
+	use movement_core::Movement;
+	use mtma_types::movement::movement_config::Config as MovementConfig;
 
 	#[tokio::test(flavor = "multi_thread")]
 	#[tracing_test::traced_test]
 	async fn test_accounts_equal() -> Result<(), anyhow::Error> {
 		// use a scope to ensure everything is dropped
 		{
-			// Form the migrator.
-			let mut movement_migrator = MovementMigrator::try_temp()?;
-			movement_migrator.set_overlays(Overlays::default());
+			// Create a MovementConfig with the correct port
+			let mut movement_config = MovementConfig::default();
+			movement_config
+				.execution_config
+				.maptos_config
+				.client
+				.maptos_rest_connection_port = 30731;
+
+			// Create a Movement instance with the config
+			let movement = Movement::new(
+				movement_config,
+				movement_core::MovementWorkspace::try_temp()?,
+				Overlays::default(),
+				true,
+				true,
+			);
+
+			// Form the migrator with the configured Movement instance
+			let mut movement_migrator = MovementMigrator::new(Runner::Movement(movement));
 
 			// Start the migrator so that it's running in the background.
 			// In the future, some migrators may be for already running nodes.
@@ -32,37 +50,43 @@ pub mod test {
 			tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 
 			// wait for the rest client to be ready
-			// once we have this, there should also be a config, so we can then kill off the migrator and proceed
+			info!("Waiting for REST client to be ready (timeout: 600s)");
 			movement_migrator
-				.wait_for_rest_client_ready(tokio::time::Duration::from_secs(600)) // we wait for up to ten minutes because the nix flake in .vendors/movementcan be a bit slow the first time
+				.wait_for_rest_client_ready(tokio::time::Duration::from_secs(600))
 				.await
 				.context(
 					"failed to wait for movement migrator rest client while running accounts equal manual prelude",
 				)?;
+			info!("REST client is ready");
 
 			// Wait for the account to be created
+			info!("Getting REST client for account check (timeout: 30s)");
 			let rest_client = movement_migrator
 				.wait_for_rest_client_ready(tokio::time::Duration::from_secs(30))
 				.await
 				.context("failed to get rest client")?;
+			info!("Checking for account existence");
 			let mut retries = 0;
 			while retries < 10 {
-				match rest_client
-					.get_account(AccountAddress::from_str(
-						"0xf90391c81027f03cdea491ed8b36ffaced26b6df208a9b569e5baf2590eb9b16",
-					)?)
-					.await
-				{
-					Ok(_) => break,
-					Err(_) => {
+				info!("Attempt {} to get account", retries + 1);
+				match rest_client.get_account(AccountAddress::from_str("0xa550c18")?).await {
+					Ok(_) => {
+						info!("Account found");
+						break;
+					}
+					Err(e) => {
+						info!("Account not found, retrying in 1s: {:?}", e);
 						tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
 						retries += 1;
 					}
 				}
 			}
+			if retries >= 10 {
+				info!("Failed to find account after 10 retries");
+			}
 
 			// Form the prelude.
-			// todo: this needs to be updated to use the prelude generator
+			info!("Creating empty prelude");
 			let prelude = Prelude::new_empty();
 
 			// Form the migration.

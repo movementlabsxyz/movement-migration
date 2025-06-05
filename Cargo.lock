@@ -15800,6 +15800,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "kestrel",
+ "movement-core",
  "mtma-migrator-pre-l1-merge-core",
  "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
