@@ -29,6 +29,9 @@ build-push-checked-containers:
     strategy:
       matrix:
         container_name:
+          - movement
+          - movement-aptos
+          - mtma
    
     with:
       container_name: ${{ matrix.container_name }}
