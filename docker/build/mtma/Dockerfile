@@ -27,6 +27,10 @@ RUN adduser -u 1000 -D -s /bin/bash mtma
 COPY --from=builder /tmp/build/target/release/mtma /app/mtma
 COPY --from=builder /tmp/runtime/nix/store /nix/store
 
+# Build up runtime PATH from all bin directories in /nix/store
+RUN echo "export PATH=$(find /nix/store -type d -path '*/bin' | paste -sd: -):\$PATH" >> /etc/profile.d/nix-path.sh
+ENV PATH="/nix/store:$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH"
+
 # Environment setup
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
 ENV XDG_RUNTIME_DIR="/run/user/1000"
