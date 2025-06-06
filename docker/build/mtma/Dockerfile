@@ -1,31 +1,13 @@
-FROM ubuntu:24.10 AS builder
+FROM nixos/nix:2.29.0 AS builder
 
-# Create non-root user early
-RUN useradd -ms /bin/bash builder
-
-# Install curl and other deps as root BEFORE switching users
-RUN apt-get update && apt-get install -y curl systemd ca-certificates && rm -rf /var/lib/apt/lists/*
-
-USER builder
-ENV USER=builder
-WORKDIR /home/builder
-
-# Install Determinate Nix as builder (non-root setup)
-RUN curl --proto '=https' --tlsv1.2 -sSf https://install.determinate.systems/nix | \
-    bash -s -- install linux \
-    --extra-conf "sandbox = false" \
-    --no-start-daemon \
-    --no-confirm
-
-# Set up proper Nix PATH for non-root user
-ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
-
-# Prove it works
-RUN nix run nixpkgs#hello
+RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk
 
 # Copy the source code into the container
 COPY . /tmp/build
 WORKDIR /tmp/build
+
+# Set build to docker to skip the podman initilization while opening the flake
+ENV BUILD=docker
 
 # Build the Rust application
 RUN nix --extra-experimental-features "nix-command flakes" \
@@ -61,6 +43,23 @@ RUN chmod +x /app/entry.sh
 
 # Switch to non-root user
 USER mtma
+
+# Manually pull the needed images
+# TODO: this should be refactored s.t. we can get the list from the movement command. But, probably not in this PR.
+#   "movement-full-node"
+RUN podman pull ghcr.io/movementlabsxyz/movement-full-node:c2372ff
+# "movement-celestia-da-light-node"
+RUN podman pull ghcr.io/movementlabsxyz/movement-celestia-da-light-node:c2372ff
+# "movement-full-node-setup"
+RUN podman pull ghcr.io/movementlabsxyz/movement-full-node-setup:c2372ff
+# "movement-faucet-service"
+RUN podman pull ghcr.io/movementlabsxyz/movement-faucet-service:c2372ff
+# "movement-celestia-bridge"
+RUN podman pull ghcr.io/movementlabsxyz/movement-celestia-bridge:c2372ff
+# "movement-celestia-appd"
+RUN podman pull ghcr.io/movementlabsxyz/movement-celestia-appd:c2372ff
+# "wait-for-celestia-light-node"
+RUN podman pull ghcr.io/movementlabsxyz/wait-for-celestia-light-node:c2372ff
 
 # Entrypoint to bootstrap podman and launch mtma
 ENTRYPOINT ["/app/entry.sh"]
