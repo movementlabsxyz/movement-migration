@@ -1,18 +1,13 @@
 FROM nixos/nix:2.29.0 AS builder
 
-# Install necessary packages and set up system files
+# Install necessary packages
 RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk nixpkgs.bash nixpkgs.shadow
-RUN mkdir -p /etc && \
-    touch /etc/passwd /etc/group /etc/shadow /etc/gshadow && \
-    chmod 644 /etc/passwd /etc/group && \
-    chmod 600 /etc/shadow /etc/gshadow && \
-    chown root:root /etc/passwd /etc/group /etc/shadow /etc/gshadow && \
-    ls -la /etc/passwd /etc/group /etc/shadow /etc/gshadow
 
-# Find bash location and create user
-RUN BASH_PATH=$(which bash) && \
-    echo "Using bash at: $BASH_PATH" && \
-    useradd -s "$BASH_PATH" builder
+# Set up /etc/passwd manually since useradd won't work
+RUN mkdir -p /home/builder && \
+    echo 'builder:x:1000:1000:Builder:/home/builder:/root/.nix-profile/bin/bash' >> /etc/passwd && \
+    echo 'builder:x:1000:' >> /etc/group && \
+    chown -R 1000:1000 /home/builder
 
 USER builder
 
