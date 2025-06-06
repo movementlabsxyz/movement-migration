@@ -1,16 +1,37 @@
 FROM ubuntu:24.10 AS builder
 
+# Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
-RUN useradd -ms /bin/bash builder && echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-USER builder
 
-RUN apt update -y
-RUN apt install curl systemd -y
-RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
-  --extra-conf "sandbox = false" \
-  --no-start-daemon \
-  --no-confirm
-ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
+# Install dependencies as root
+RUN apt-get update && \
+    apt-get install -y curl sudo systemd ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd -ms /bin/bash builder && \
+    echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Install Nix (multi-user mode, non-daemon)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://install.determinate.systems/nix | \
+    bash -s -- install linux \
+    --extra-conf "sandbox = false" \
+    --no-start-daemon \
+    --no-confirm
+
+# Export Nix to path
+ENV PATH="/nix/var/nix/profiles/default/bin:/root/.nix-profile/bin:$PATH"
+
+# Optionally set experimental features
+RUN mkdir -p /etc/nix && \
+    echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf
+
+# Switch to builder
+USER builder
+WORKDIR /home/builder
+ENV USER=builder
+ENV PATH="/home/builder/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+SHELL ["/bin/bash", "-c"]
 
 # Copy the source code into the container
 COPY . /tmp/build
