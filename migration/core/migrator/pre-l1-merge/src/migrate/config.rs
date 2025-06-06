@@ -1,13 +1,16 @@
 use crate::Migrate;
 use anyhow::Context;
 use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::LocalAccountReleaseSigner;
+use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::OverrideAccountAddressReleaseSigner;
 use clap::Parser;
 use movement_core::movement::{Celestia, Eth};
 use movement_core::Config as MovementCoreConfig;
 use movement_signer::key::TryFromCanonicalString;
 use movement_signer_loader::identifiers::{local::Local, SignerIdentifier};
 use mtma_node_null_core::Config as MtmaNodeNullConfig;
-use mtma_types::movement::aptos_sdk::types::{account_address::AccountAddress, LocalAccount};
+use mtma_types::movement::aptos_sdk::types::{
+	account_address::AccountAddress, account_config::aptos_test_root_address, LocalAccount,
+};
 use mtma_types::movement::movement_config::Config as MovementConfig;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
@@ -52,33 +55,8 @@ impl Default for Config {
 		// Create a default MovementConfig
 		let movement_config = MovementConfig::default();
 
-		// Extract the account address from the movement config
-		let account_address = {
-			// Get the signer identifier from the movement config
-			let signer_identifier = &movement_config
-				.execution_config
-				.maptos_config
-				.chain
-				.maptos_private_key_signer_identifier;
-
-			// Try to get the raw private key
-			if let Ok(raw_private_key) = signer_identifier.try_raw_private_key() {
-				// Convert to hex string
-				let private_key_hex = hex::encode(raw_private_key);
-
-				// Create a LocalAccount from the private key
-				if let Ok(root_account) =
-					LocalAccount::from_private_key(private_key_hex.as_str(), 0)
-				{
-					// Return the account address
-					Some(root_account.address())
-				} else {
-					None
-				}
-			} else {
-				None
-			}
-		};
+		// Hard-code the core resources address
+		let account_address = Some(aptos_test_root_address());
 
 		// Set the movement config
 		movement_core.set_movement_config(movement_config);
@@ -109,10 +87,16 @@ impl Config {
 	}
 
 	/// Builds the [Migrate] struct from the config.
-	pub fn build(&self) -> Result<Migrate<LocalAccountReleaseSigner>, MigrateConfigError> {
+	pub fn build(
+		&self,
+	) -> Result<
+		Migrate<OverrideAccountAddressReleaseSigner<LocalAccountReleaseSigner>>,
+		MigrateConfigError,
+	> {
 		let mtma_node_null =
 			self.mtma_node_null.build().map_err(|e| MigrateConfigError::Build(e.into()))?;
-
-		Ok(Migrate { release_signer: self.build_release_signer()?, mtma_node_null })
+		let local_signer = self.build_release_signer()?;
+		let signer = OverrideAccountAddressReleaseSigner::core_resource_account(local_signer);
+		Ok(Migrate { release_signer: signer, mtma_node_null })
 	}
 }
