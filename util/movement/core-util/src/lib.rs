@@ -1,5 +1,6 @@
-pub use maptos_opt_executor::*;
+pub use maptos_opt_executor::{self, *};
 pub use movement_client::{self, *};
+pub use movement_config;
 pub use movement_util::{self, *};
 
 pub const CONTAINER_REPO: &str = "ghcr.io/movementlabsxyz";

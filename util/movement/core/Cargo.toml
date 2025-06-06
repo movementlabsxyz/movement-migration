@@ -28,6 +28,9 @@ regex = { workspace = true }
 reqwest = { workspace = true }
 movement-core-util = { workspace = true }
 tracing = { workspace = true }
+mtma-types = { workspace = true }
+serde_json = { workspace = true }
+movement-signer-loader = { workspace = true }
 
 [build-dependencies]
 include-vendor = { workspace = true }
@@ -35,6 +38,9 @@ cargo_metadata = { workspace = true }
 ready-docker = { workspace = true }
 movement-core-util = { workspace = true }
 tokio = { workspace = true }
+
+[dev-dependencies]
+tracing-test = { workspace = true }
 
 [lints]
 workspace = true

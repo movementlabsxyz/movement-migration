@@ -135,7 +135,7 @@
               chmod +x $(pwd)/.git/hooks/pre-commit
 
               cat <<'EOF'
-               MOVEMENT => MAPTOS
+               MOVEMENT => MOVEMENT APTOS
               EOF
 
               echo "Migrates Movement to Movement Aptos."

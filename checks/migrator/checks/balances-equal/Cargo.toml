@@ -1,0 +1,34 @@
+[package]
+name = "mtma-migrator-balances-equal"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+mtma-types = { workspace = true }
+mtma-migrator-types = { workspace = true }
+mtma-migrator-test-types = { workspace = true }
+anyhow = { workspace = true }
+mtma-node-replay-core = { workspace = true }
+mtma-node-test-global-storage-injective-criterion = { workspace = true }
+mtma-node-test-global-storage-includes-criterion = { workspace = true }
+mtma-node-test-global-storage-not-empty-criterion = { workspace = true }
+mtma-migrator-test-balances-equal-criterion = { workspace = true }
+mtma-node-preludes = { workspace = true }
+mtma-node-null-core = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+rand = { workspace = true }
+kestrel = { workspace = true }
+mtma-node-test-types = { workspace = true }
+
+[dev-dependencies]
+tracing-test = { workspace = true }
+tracing = { workspace = true }
+
+[lints]
+workspace = true

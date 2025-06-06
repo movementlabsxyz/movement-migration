@@ -107,10 +107,13 @@ Run run with all parameters passed explicitly as CLI flags. See Orfile documenta
 
 ###### **Options:**
 
+* `--movement-config-string <MOVEMENT_CONFIG_STRING>` — The movement config
 * `--setup` — Whether to use the setup overlay
 * `--celestia <CELESTIA>` — Which celestia network to use
 * `--eth <ETH>` — Which ethereum network to use
 * `--biarritz-rc1-to-pre-l1-merge` — Whether to use the BiarritizRc1ToPreL1Merge overlay
+* `--ping-rest-api` — Whether to ping the rest api to ensure it is responding to pings
+* `--ping-faucet` — Whether to ping the faucet to ensure it is responding to pings
 
 
 
