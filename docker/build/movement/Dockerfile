@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim as builder
+FROM debian:bullseye-slim AS builder
 
 # System setup
 ENV DEBIAN_FRONTEND=noninteractive
@@ -23,10 +23,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://install.determinate.systems/nix
 # Make nix available in non-login shell
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
 ENV NIX_PATH=/nix/var/nix/profiles/per-user/root/channels
-
-# Setup nix daemon environment
-COPY nix.conf /etc/nix/nix.conf
-ENV USER=builder
 
 # Set up nix for non-root user
 USER builder
