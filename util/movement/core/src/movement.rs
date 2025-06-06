@@ -539,12 +539,12 @@ mod tests {
 
 		// wait for the rest api to be ready
 		let rest_api = rest_api.wait_for(Duration::from_secs(600)).await?;
-		assert_eq!(rest_api.listen_url(), "http://12.0.0.1:30731");
+		assert_eq!(rest_api.listen_url(), "http://127.0.0.1:30731");
 
 		// wait for the faucet to be ready
 
 		let faucet = faucet.wait_for(Duration::from_secs(600)).await?;
-		assert_eq!(faucet.listen_url(), "http://12.0.0.1:30732");
+		assert_eq!(faucet.listen_url(), "http://127.0.0.1:30732");
 
 		// stop movement
 		kestrel::end!(movement_task)?;
