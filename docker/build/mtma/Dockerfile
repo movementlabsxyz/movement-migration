@@ -28,10 +28,8 @@ RUN mkdir -p /etc/nix && \
 
 # Switch to builder
 USER builder
-WORKDIR /home/builder
 ENV USER=builder
 ENV PATH="/home/builder/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
-SHELL ["/bin/bash", "-c"]
 
 # Copy the source code into the container
 COPY . /tmp/build
