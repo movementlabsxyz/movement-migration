@@ -144,6 +144,8 @@
                 else
                   echo "Warning: Could not find Podman socket"
                 fi
+              else 
+                echo "Build is docker podman will not be started."
               fi
 
               # Add ./target/debug/* to PATH

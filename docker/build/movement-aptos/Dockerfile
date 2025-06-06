@@ -6,6 +6,9 @@ RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk
 COPY . /tmp/build
 WORKDIR /tmp/build
 
+# Set build to docker to skip the podman initilization while opening the flake
+ENV BUILD=docker
+
 # Build the Rust application
 RUN nix --extra-experimental-features "nix-command flakes" \
         develop .#docker-build --command bash -c "cargo build --release -p movement-atpos"
