@@ -1,35 +1,27 @@
 FROM ubuntu:24.10 AS builder
 
-# Avoid interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
+# Create non-root user early
+RUN useradd -ms /bin/bash builder
 
-# Install dependencies as root
-RUN apt-get update && \
-    apt-get install -y curl sudo systemd ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+# Install curl and other deps as root BEFORE switching users
+RUN apt-get update && apt-get install -y curl systemd ca-certificates && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user
-RUN useradd -ms /bin/bash builder && \
-    echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+USER builder
+ENV USER=builder
+WORKDIR /home/builder
 
-# Install Nix (multi-user mode, non-daemon)
+# Install Determinate Nix as builder (non-root setup)
 RUN curl --proto '=https' --tlsv1.2 -sSf https://install.determinate.systems/nix | \
     bash -s -- install linux \
     --extra-conf "sandbox = false" \
     --no-start-daemon \
     --no-confirm
 
-# Export Nix to path
-ENV PATH="/nix/var/nix/profiles/default/bin:/root/.nix-profile/bin:$PATH"
-
-# Optionally set experimental features
-RUN mkdir -p /etc/nix && \
-    echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf
-
-# Switch to builder
-USER builder
-ENV USER=builder
+# Set up proper Nix PATH for non-root user
 ENV PATH="/home/builder/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+
+# Prove it works
+RUN nix run nixpkgs#hello
 
 # Copy the source code into the container
 COPY . /tmp/build
