@@ -54,8 +54,13 @@
           zlib
           pandoc
           postgresql
+          qemu_kvm
+          qemu-utils
+          libvirt
         ] ++ lib.optionals stdenv.isDarwin [
           fixDarwinDylibNames
+        ] ++ lib.optionals stdenv.isLinux [
+          virtiofsd
         ];
         
         sysDependencies = with pkgs; [] 
@@ -79,6 +84,7 @@
           process-compose
           jq
           docker
+          podman
           solc
           grpcurl
           grpcui
@@ -118,6 +124,29 @@
                 export MACOSX_DEPLOYMENT_TARGET=$(sw_vers -productVersion)
                 export LDFLAGS="-L/opt/homebrew/opt/zlib/lib"
                 export CPPFLAGS="-I/opt/homebrew/opt/zlib/include"
+              fi
+
+              # Check if podman machine exists and is running
+              if [ "$BUILD" != "docker" ]; then
+                if ! podman machine inspect podman-machine-default &>/dev/null; then
+                  echo "Initializing podman machine..."
+                  podman machine init
+                  podman machine start
+                elif ! podman machine inspect podman-machine-default --format '{{.State}}' | grep -q 'running'; then
+                  echo "Starting podman machine..."
+                  podman machine start
+                fi
+
+                # Find the actual podman socket location
+                PODMAN_SOCKET=$(find /tmp/nix-shell.*/podman -name "podman-machine-default-api.sock" -type s 2>/dev/null | head -n 1)
+                if [ -n "$PODMAN_SOCKET" ]; then
+                  export DOCKER_HOST="unix://$PODMAN_SOCKET"
+                  echo "Set DOCKER_HOST to Podman socket: $DOCKER_HOST"
+                else
+                  echo "Warning: Could not find Podman socket"
+                fi
+              else 
+                echo "Build is docker podman will not be started."
               fi
 
               # Add ./target/debug/* to PATH
