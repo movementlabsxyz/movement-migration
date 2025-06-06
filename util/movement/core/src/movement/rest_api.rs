@@ -63,7 +63,7 @@ impl CustomProcessor<RestApi> for ParseRestApi {
 				.trim();
 
 			// match line of the following form to extract the rest api listen url: movement-full-node | 2025-05-06T08:49:06.205999Z  INFO poem::server: listening addr=socket://0.0.0.0:30731
-			if let Some(captures) =
+			if let Some(_captures) =
 				regex::Regex::new(r#"movement-full-node.*socket://([^:]+):(\d+)"#)
 					.map_err(|e| FulfillError::Internal(format!("invalid regex: {e}").into()))?
 					.captures(&trimmed)
@@ -105,9 +105,7 @@ impl CustomProcessor<RestApi> for ParseRestApi {
 							}
 						}
 
-						return Ok(Some(RestApi {
-							listen_url: format!("http://{}:{}", &captures[1], &captures[2]),
-						}));
+						return Ok(Some(RestApi { listen_url: self.known_listen_url.clone() }));
 					}
 				}
 			}
