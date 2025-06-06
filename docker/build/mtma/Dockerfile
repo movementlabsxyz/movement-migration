@@ -1,7 +1,38 @@
-FROM nixos/nix:2.29.0 AS builder
+FROM debian:bullseye-slim
 
-# Install necessary packages
-RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk nixpkgs.bash nixpkgs.shadow
+# System setup
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+    curl \
+    sudo \
+    git \
+    bash \
+    ca-certificates \
+    build-essential \
+    libssl-dev \
+    lsb-release \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add builder user
+RUN useradd -ms /bin/bash builder && echo "builder ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Install Nix (multi-user, Determinate installer)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://install.determinate.systems/nix | bash -s -- install --no-confirm
+
+# Make nix available in non-login shell
+ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
+ENV NIX_PATH=/nix/var/nix/profiles/per-user/root/channels
+
+# Setup nix daemon environment
+COPY nix.conf /etc/nix/nix.conf
+ENV USER=builder
+
+# Set up nix for non-root user
+USER builder
+WORKDIR /home/builder
+ENV PATH="/home/builder/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+SHELL ["/bin/bash", "-c"]
 
 # Copy the source code into the container
 COPY . /tmp/build

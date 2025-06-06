@@ -126,16 +126,11 @@
                 export CPPFLAGS="-I/opt/homebrew/opt/zlib/include"
               fi
 
-              # Check if podman machine exists
+              # Check if podman machine exists and is running
               if ! podman machine inspect podman-machine-default &>/dev/null; then
                 echo "Initializing podman machine..."
                 podman machine init
-                echo "Setting podman machine to rootful mode..."
-                podman machine set --rootful
               elif ! podman machine inspect podman-machine-default --format '{{.State}}' | grep -q 'running'; then
-                echo "Ensuring podman machine is in rootful mode..."
-                podman machine stop
-                podman machine set --rootful
                 echo "Starting podman machine..."
                 podman machine start
               fi
