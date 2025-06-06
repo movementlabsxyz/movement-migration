@@ -11,7 +11,7 @@ ENV BUILD=docker
 
 # Build the Rust application
 RUN nix --extra-experimental-features "nix-command flakes" \
-        develop .#docker-build --command bash -c "cargo build --release -p movement-atpos"
+        develop .#docker-build --command bash -c "cargo build --release -p movement-aptos"
 
 RUN rust_binary="./target/release/movement-aptos"; dest_dir="/tmp/runtime"; \
     mkdir -p "$dest_dir"; ldd "$rust_binary" | awk '{print $3}' | \
