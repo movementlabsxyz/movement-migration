@@ -15,10 +15,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://install.determinate.systems/nix
     bash -s -- install linux \
     --extra-conf "sandbox = false" \
     --no-start-daemon \
-    --no-confirm
+    --no-confirm && exit 1
+# DEBUG: existing above to show output for nix path
 
 # Set up proper Nix PATH for non-root user
-ENV PATH="/home/builder/.nix-profile/bin:/nix/var/nix/profiles/default/bin:$PATH"
+ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
 
 # Prove it works
 RUN nix run nixpkgs#hello
