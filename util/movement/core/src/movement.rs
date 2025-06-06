@@ -544,7 +544,7 @@ mod tests {
 		// wait for the faucet to be ready
 
 		let faucet = faucet.wait_for(Duration::from_secs(600)).await?;
-		assert_eq!(faucet.listen_url(), "http://127.0.0.1:30732");
+		assert_eq!(faucet.listen_url(), "http://0.0.0.0:30732");
 
 		// stop movement
 		kestrel::end!(movement_task)?;
