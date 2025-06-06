@@ -34,7 +34,7 @@ pub struct Config {
 	movement_core: MovementCoreConfig,
 	/// The account address override for the release signer.
 	#[clap(long)]
-	account_address: Option<AccountAddress>,
+	pub account_address: Option<AccountAddress>,
 }
 
 impl Default for Config {
@@ -48,9 +48,42 @@ impl Default for Config {
 			ping_rest_api: false,
 			ping_faucet: false,
 		};
-		movement_core.set_movement_config(MovementConfig::default());
 
-		Self { mtma_node_null: MtmaNodeNullConfig::default(), movement_core, account_address: None }
+		// Create a default MovementConfig
+		let movement_config = MovementConfig::default();
+
+		// Extract the account address from the movement config
+		let account_address = {
+			// Get the signer identifier from the movement config
+			let signer_identifier = &movement_config
+				.execution_config
+				.maptos_config
+				.chain
+				.maptos_private_key_signer_identifier;
+
+			// Try to get the raw private key
+			if let Ok(raw_private_key) = signer_identifier.try_raw_private_key() {
+				// Convert to hex string
+				let private_key_hex = hex::encode(raw_private_key);
+
+				// Create a LocalAccount from the private key
+				if let Ok(root_account) =
+					LocalAccount::from_private_key(private_key_hex.as_str(), 0)
+				{
+					// Return the account address
+					Some(root_account.address())
+				} else {
+					None
+				}
+			} else {
+				None
+			}
+		};
+
+		// Set the movement config
+		movement_core.set_movement_config(movement_config);
+
+		Self { mtma_node_null: MtmaNodeNullConfig::default(), movement_core, account_address }
 	}
 }
 

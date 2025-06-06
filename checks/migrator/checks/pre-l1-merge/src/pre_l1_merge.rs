@@ -12,6 +12,7 @@ pub mod test {
 	use tracing::info;
 	use movement_core::Movement;
 	use mtma_types::movement::movement_config::Config as MovementConfig;
+	use hex;
 
 	#[tokio::test(flavor = "multi_thread")]
 	#[tracing_test::traced_test]
@@ -26,9 +27,23 @@ pub mod test {
 				.client
 				.maptos_rest_connection_port = 30731;
 
+			// Get the account address from the same MovementConfig
+			let signer_identifier = &movement_config
+				.execution_config
+				.maptos_config
+				.chain
+				.maptos_private_key_signer_identifier;
+			let raw_private_key = signer_identifier
+				.try_raw_private_key()
+				.context("Failed to get raw private key")?;
+			let private_key_hex = hex::encode(raw_private_key);
+			let root_account = mtma_node_test_types::criterion::movement_executor::maptos_opt_executor::aptos_sdk::types::LocalAccount::from_private_key(private_key_hex.as_str(), 0)
+				.context("Failed to create LocalAccount")?;
+			let account_address = root_account.address();
+
 			// Create a Movement instance with the config
 			let movement = Movement::new(
-				movement_config,
+				movement_config.clone(),
 				movement_core::MovementWorkspace::try_temp()?,
 				Overlays::default(),
 				true,
@@ -70,11 +85,11 @@ pub mod test {
 				.wait_for_rest_client_ready(tokio::time::Duration::from_secs(30))
 				.await
 				.context("failed to get rest client")?;
-			info!("Checking for account existence");
+			info!("Checking for account existence, address: {}", account_address);
 			let mut retries = 0;
 			while retries < 10 {
 				info!("Attempt {} to get account", retries + 1);
-				match rest_client.get_account(AccountAddress::from_str("0xa550c18")?).await {
+				match rest_client.get_account(account_address).await {
 					Ok(_) => {
 						info!("Account found");
 						break;
@@ -95,7 +110,8 @@ pub mod test {
 			let prelude = Prelude::new_empty();
 
 			// Form the migration.
-			let migration_config = PreL1MergeConfig::default();
+			let mut migration_config = PreL1MergeConfig::default();
+			migration_config.account_address = Some(account_address);
 			let migration = migration_config.build()?;
 
 			// Run the checked migration.

@@ -15799,6 +15799,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "chrono",
+ "hex",
  "kestrel",
  "movement-core",
  "mtma-migrator-pre-l1-merge-core",
