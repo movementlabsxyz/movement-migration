@@ -3,14 +3,6 @@ FROM nixos/nix:2.29.0 AS builder
 # Install necessary packages
 RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk nixpkgs.bash nixpkgs.shadow
 
-# Set up /etc/passwd manually since useradd won't work
-RUN mkdir -p /home/builder && \
-    echo 'builder:x:1000:1000:Builder:/home/builder:/root/.nix-profile/bin/bash' >> /etc/passwd && \
-    echo 'builder:x:1000:' >> /etc/group && \
-    chown -R 1000:1000 /home/builder
-
-USER builder
-
 # Copy the source code into the container
 COPY . /tmp/build
 WORKDIR /tmp/build
