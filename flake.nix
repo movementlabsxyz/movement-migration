@@ -131,6 +131,7 @@
                 if ! podman machine inspect podman-machine-default &>/dev/null; then
                   echo "Initializing podman machine..."
                   podman machine init
+                  podman machine start
                 elif ! podman machine inspect podman-machine-default --format '{{.State}}' | grep -q 'running'; then
                   echo "Starting podman machine..."
                   podman machine start
