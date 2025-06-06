@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:bullseye-slim as builder
 
 # System setup
 ENV DEBIAN_FRONTEND=noninteractive
