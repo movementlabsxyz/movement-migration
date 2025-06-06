@@ -1,8 +1,11 @@
 FROM nixos/nix:2.29.0 AS builder
 
+# Install necessary packages and set up system files
+RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk nixpkgs.bash nixpkgs.shadow
+RUN mkdir -p /etc && touch /etc/passwd /etc/group /etc/shadow /etc/gshadow
+RUN chmod 644 /etc/passwd /etc/group && chmod 600 /etc/shadow /etc/gshadow
+
 # Create and switch to non-root user
-RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk
-RUN nix-env -iA nixpkgs.shadow
 RUN useradd -m -s /bin/bash builder
 USER builder
 
