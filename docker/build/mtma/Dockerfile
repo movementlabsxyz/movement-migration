@@ -2,15 +2,18 @@ FROM nixos/nix:2.29.0 AS builder
 
 # Install necessary packages and set up system files
 RUN nix-env -iA nixpkgs.rsync nixpkgs.glibc nixpkgs.gawk nixpkgs.bash nixpkgs.shadow
-RUN mkdir -p /etc && touch /etc/passwd /etc/group /etc/shadow /etc/gshadow
-RUN chmod 644 /etc/passwd /etc/group && chmod 600 /etc/shadow /etc/gshadow
+RUN mkdir -p /etc && \
+    touch /etc/passwd /etc/group /etc/shadow /etc/gshadow && \
+    chmod 644 /etc/passwd /etc/group && \
+    chmod 600 /etc/shadow /etc/gshadow && \
+    chown root:root /etc/passwd /etc/group /etc/shadow /etc/gshadow && \
+    ls -la /etc/passwd /etc/group /etc/shadow /etc/gshadow
 
 # Find bash location and create user
 RUN BASH_PATH=$(which bash) && \
     echo "Using bash at: $BASH_PATH" && \
     useradd -s "$BASH_PATH" builder
 
-# Switch to non-root user
 USER builder
 
 # Copy the source code into the container
