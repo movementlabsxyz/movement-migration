@@ -1,0 +1,16 @@
+image:
+  repository: ghcr.io/movementlabsxyz/mtma
+  tag: latest
+  pullPolicy: IfNotPresent
+
+job:
+  name: mtma-migrate
+  args:
+    - checked-migration
+    - migrate
+    - select
+    - --all-required
+
+volume:
+  mountPath: /movement
+  persistentVolumeClaim: movement  # <-- this must already exist in the namespace

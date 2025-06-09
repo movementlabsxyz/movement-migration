@@ -167,6 +167,23 @@
               cp $(pwd)/.githooks/pre-commit $(pwd)/.git/hooks/pre-commit
               chmod +x $(pwd)/.git/hooks/pre-commit
 
+              export KUBECONFIG=$PWD/k8s/minikube/kubeconfig
+              PROFILE="movement-migration"
+
+              # Start cluster if needed
+              if ! minikube status -p $PROFILE | grep -q "Running"; then
+                echo "🚀 Starting Minikube..."
+                minikube start -p $PROFILE --driver=docker --container-runtime=containerd
+              fi
+
+              # Export kubeconfig for project-local use
+              echo "📄 Writing kubeconfig to $KUBECONFIG"
+              minikube update-context -p $PROFILE
+              kubectl config view --raw --flatten --context=$PROFILE > ./k8s/minikube/kubeconfig
+              minikube update-context -p $PROFILE
+
+              echo "✅ Minikube is running and configured for Helm + kubectl"
+
               cat <<'EOF'
                MOVEMENT => MOVEMENT APTOS
               EOF
