@@ -44,25 +44,15 @@ RUN chmod +x /app/entry.sh
 # Switch to non-root user
 USER mtma
 
-# Build up runtime PATH from all bin directories in /nix/store
-ENV PATH="/nix/store:$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH"
-
-# Manually pull the needed images
-# TODO: this should be refactored s.t. we can get the list from the movement command. But, probably not in this PR.
-#   "movement-full-node"
-RUN podman pull ghcr.io/movementlabsxyz/movement-full-node:c2372ff
-# "movement-celestia-da-light-node"
-RUN podman pull ghcr.io/movementlabsxyz/movement-celestia-da-light-node:c2372ff
-# "movement-full-node-setup"
-RUN podman pull ghcr.io/movementlabsxyz/movement-full-node-setup:c2372ff
-# "movement-faucet-service"
-RUN podman pull ghcr.io/movementlabsxyz/movement-faucet-service:c2372ff
-# "movement-celestia-bridge"
-RUN podman pull ghcr.io/movementlabsxyz/movement-celestia-bridge:c2372ff
-# "movement-celestia-appd"
-RUN podman pull ghcr.io/movementlabsxyz/movement-celestia-appd:c2372ff
-# "wait-for-celestia-light-node"
-RUN podman pull ghcr.io/movementlabsxyz/wait-for-celestia-light-node:c2372ff
+# Dynamically build the PATH from all /nix/store/*/bin directories and use it in this layer
+RUN export PATH="$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH" && \
+    podman pull ghcr.io/movementlabsxyz/movement-full-node:c2372ff && \
+    podman pull ghcr.io/movementlabsxyz/movement-celestia-da-light-node:c2372ff && \
+    podman pull ghcr.io/movementlabsxyz/movement-full-node-setup:c2372ff && \
+    podman pull ghcr.io/movementlabsxyz/movement-faucet-service:c2372ff && \
+    podman pull ghcr.io/movementlabsxyz/movement-celestia-bridge:c2372ff && \
+    podman pull ghcr.io/movementlabsxyz/movement-celestia-appd:c2372ff && \
+    podman pull ghcr.io/movementlabsxyz/wait-for-celestia-light-node:c2372ff
 
 # Entrypoint to bootstrap podman and launch mtma
 ENTRYPOINT ["/app/entry.sh"]
