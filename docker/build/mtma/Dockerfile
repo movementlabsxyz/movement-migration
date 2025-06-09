@@ -27,9 +27,6 @@ RUN adduser -u 1000 -D -s /bin/bash mtma
 COPY --from=builder /tmp/build/target/release/mtma /app/mtma
 COPY --from=builder /tmp/runtime/nix/store /nix/store
 
-# Set up PATH to include all /nix/store/*/bin dirs
-ENV PATH="/nix/store:$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH"
-
 # Environment setup
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
 ENV XDG_RUNTIME_DIR="/run/user/1000"
@@ -46,6 +43,9 @@ RUN chmod +x /app/entry.sh
 
 # Switch to non-root user
 USER mtma
+
+# Build up runtime PATH from all bin directories in /nix/store
+ENV PATH="/nix/store:$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH"
 
 # Manually pull the needed images
 # TODO: this should be refactored s.t. we can get the list from the movement command. But, probably not in this PR.
