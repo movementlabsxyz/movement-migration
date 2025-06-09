@@ -7,3 +7,4 @@ debug
 .direnv
 .DS_Store
 .vendors
+.vendor

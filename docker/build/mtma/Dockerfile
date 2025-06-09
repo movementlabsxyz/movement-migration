@@ -45,14 +45,14 @@ RUN chmod +x /app/entry.sh
 USER mtma
 
 # Dynamically build the PATH from all /nix/store/*/bin directories and use it in this layer
-RUN export PATH="$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH" && \
-    podman pull ghcr.io/movementlabsxyz/movement-full-node:c2372ff && \
-    podman pull ghcr.io/movementlabsxyz/movement-celestia-da-light-node:c2372ff && \
-    podman pull ghcr.io/movementlabsxyz/movement-full-node-setup:c2372ff && \
-    podman pull ghcr.io/movementlabsxyz/movement-faucet-service:c2372ff && \
-    podman pull ghcr.io/movementlabsxyz/movement-celestia-bridge:c2372ff && \
-    podman pull ghcr.io/movementlabsxyz/movement-celestia-appd:c2372ff && \
-    podman pull ghcr.io/movementlabsxyz/wait-for-celestia-light-node:c2372ff
+RUN PODMAN=$(find /nix/store -type f -name podman | head -n 1) && \
+    "$PODMAN" pull ghcr.io/movementlabsxyz/movement-full-node:c2372ff && \
+    "$PODMAN" pull ghcr.io/movementlabsxyz/movement-celestia-da-light-node:c2372ff && \
+    "$PODMAN" pull ghcr.io/movementlabsxyz/movement-full-node-setup:c2372ff && \
+    "$PODMAN" pull ghcr.io/movementlabsxyz/movement-faucet-service:c2372ff && \
+    "$PODMAN" pull ghcr.io/movementlabsxyz/movement-celestia-bridge:c2372ff && \
+    "$PODMAN" pull ghcr.io/movementlabsxyz/movement-celestia-appd:c2372ff && \
+    "$PODMAN" pull ghcr.io/movementlabsxyz/wait-for-celestia-light-node:c2372ff
 
 # Entrypoint to bootstrap podman and launch mtma
 ENTRYPOINT ["/app/entry.sh"]
