@@ -30,11 +30,14 @@ movement-core-util = { workspace = true }
 tracing = { workspace = true }
 
 [build-dependencies]
+movement-client = { workspace = true }
+vendor-util = { workspace = true }
 include-vendor = { workspace = true }
 cargo_metadata = { workspace = true }
 ready-docker = { workspace = true }
 movement-core-util = { workspace = true }
 tokio = { workspace = true }
+anyhow = { workspace = true }
 
 [lints]
 workspace = true

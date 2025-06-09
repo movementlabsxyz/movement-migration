@@ -136,12 +136,13 @@ secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signin
 secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
 
 # kestrel 
-kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-include-dir = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
+kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "bf366db0a2b9b1a15512be778c7425e11e09907b" }
+jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "bf366db0a2b9b1a15512be778c7425e11e09907b" }
+commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "bf366db0a2b9b1a15512be778c7425e11e09907b" }
+include-dir = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "bf366db0a2b9b1a15512be778c7425e11e09907b" }
+include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "bf366db0a2b9b1a15512be778c7425e11e09907b" }
+vendor-util = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "bf366db0a2b9b1a15512be778c7425e11e09907b" }
+ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "bf366db0a2b9b1a15512be778c7425e11e09907b" }
 
 # orfile
 orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "b49cb42495816fa00a1107be5bbf41aff3a8255d" }
