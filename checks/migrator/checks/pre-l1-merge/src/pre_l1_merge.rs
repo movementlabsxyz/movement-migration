@@ -14,7 +14,7 @@ pub mod test {
 
 	#[tokio::test(flavor = "multi_thread")]
 	#[tracing_test::traced_test]
-	async fn test_accounts_equal() -> Result<(), anyhow::Error> {
+	async fn test_pre_l1_merge() -> Result<(), anyhow::Error> {
 		// use a scope to ensure everything is dropped
 		{
 			// Create a MovementConfig with the correct port
