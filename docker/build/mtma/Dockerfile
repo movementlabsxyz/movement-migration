@@ -45,7 +45,6 @@ RUN chmod +x /app/entry.sh
 USER mtma
 
 # Build up runtime PATH from all bin directories in /nix/store
-RUN echo "export PATH=$(find /nix/store -type d -path '*/bin' | paste -sd: -):\$PATH" >> /etc/profile.d/nix-path.sh
 ENV PATH="/nix/store:$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH"
 
 # Manually pull the needed images
