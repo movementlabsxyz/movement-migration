@@ -115,6 +115,7 @@ pub mod test {
 		// exit the test is fine when you only have one test per crate because when cargo test is run across a workspace, it actually multi-processes the tests by crate
 		std::process::exit(0);
 
+		#[allow(unreachable_code)]
 		Ok(())
 	}
 }
