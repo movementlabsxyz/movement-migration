@@ -1,5 +1,5 @@
 [package]
-name = "mtma-migrator-balances-equal"
+name = "mtma-migrator-matching-feature-flags"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -12,7 +12,7 @@ rust-version = { workspace = true }
 mtma-migrator-types = { workspace = true }
 mtma-migrator-test-types = { workspace = true }
 anyhow = { workspace = true }
-mtma-migrator-test-balances-equal-criterion = { workspace = true }
+mtma-migrator-test-matching-feature-flags-criterion = { workspace = true }
 mtma-node-null-core = { workspace = true }
 tokio = { workspace = true }
 kestrel = { workspace = true }
