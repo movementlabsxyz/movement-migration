@@ -57,6 +57,10 @@
           qemu_kvm
           qemu-utils
           libvirt
+          kubectl
+          kubernetes-helm
+          kustomize
+          minikube
         ] ++ lib.optionals stdenv.isDarwin [
           fixDarwinDylibNames
         ] ++ lib.optionals stdenv.isLinux [
