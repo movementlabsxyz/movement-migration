@@ -13437,6 +13437,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "kestrel",
+ "mtma-migrator-pre-l1-merge-core",
  "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
@@ -15132,18 +15133,22 @@ dependencies = [
  "jsonlvar",
  "kestrel",
  "movement-core-util",
+ "movement-signer-loader",
  "movement-types",
+ "mtma-types",
  "orfile",
  "ready-docker",
  "regex",
  "reqwest 0.12.15",
  "serde",
+ "serde_json",
  "strip-ansi-escapes",
  "syncador",
  "tempdir",
  "thiserror 1.0.69",
  "tokio",
  "tracing",
+ "tracing-test",
  "uuid",
 ]
 
@@ -15153,6 +15158,7 @@ version = "0.0.1"
 dependencies = [
  "maptos-opt-executor",
  "movement-client",
+ "movement-config",
  "movement-util",
 ]
 
@@ -15764,6 +15770,57 @@ dependencies = [
 ]
 
 [[package]]
+name = "mtma-migrator-balances-equal"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "kestrel",
+ "mtma-migrator-test-balances-equal-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-replay-core",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
+ "mtma-types",
+ "rand 0.7.3",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-migrator-checks-pre-l1-merge"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "kestrel",
+ "movement-core",
+ "mtma-migrator-pre-l1-merge-core",
+ "mtma-migrator-test-accounts-equal-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-preludes",
+ "mtma-node-replay-core",
+ "mtma-node-test-global-storage-includes-criterion",
+ "mtma-node-test-global-storage-injective-criterion",
+ "mtma-node-test-global-storage-not-empty-criterion",
+ "mtma-node-test-types",
+ "mtma-types",
+ "rand 0.7.3",
+ "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
 name = "mtma-migrator-null-core"
 version = "0.0.1"
 dependencies = [
@@ -15803,9 +15860,14 @@ dependencies = [
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
+ "hex",
+ "movement-core",
+ "movement-signer",
+ "movement-signer-loader",
  "mtma-migrator-types",
  "mtma-node-null-core",
  "mtma-node-types",
+ "mtma-types",
  "orfile",
  "serde",
  "thiserror 1.0.69",
@@ -15817,6 +15879,18 @@ dependencies = [
 
 [[package]]
 name = "mtma-migrator-test-accounts-equal-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "bcs 0.1.4",
+ "bcs-ext",
+ "mtma-migrator-test-types",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "mtma-migrator-test-balances-equal-criterion"
 version = "0.0.1"
 dependencies = [
  "anyhow",
@@ -23265,43 +23339,3 @@ dependencies = [
  "cc",
  "pkg-config",
 ]
-
-[[patch.unused]]
-name = "futures"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"
-
-[[patch.unused]]
-name = "futures-channel"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"
-
-[[patch.unused]]
-name = "futures-core"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"
-
-[[patch.unused]]
-name = "futures-executor"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"
-
-[[patch.unused]]
-name = "futures-io"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"
-
-[[patch.unused]]
-name = "futures-sink"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"
-
-[[patch.unused]]
-name = "futures-task"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"
-
-[[patch.unused]]
-name = "futures-util"
-version = "0.3.30"
-source = "git+https://github.com/aptos-labs/futures-rs?branch=backport#1845d7d36bc4bccbc0b57be68fbc05abd0b8bc68"

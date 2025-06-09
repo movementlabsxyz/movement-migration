@@ -19,10 +19,9 @@ pub enum MigrateError {
 }
 
 /// The migration struct will be use to run a migration from Movement
-#[derive(Debug, Clone)]
 pub struct Migrate<S>
 where
-	S: ReleaseSigner + Debug + Clone + Send + Sync + 'static,
+	S: ReleaseSigner + Send + Sync + 'static,
 {
 	pub(crate) release_signer: S,
 	pub(crate) mtma_node_null: MtmaNodeNullMigrate,
@@ -30,7 +29,7 @@ where
 
 impl<S> Migrate<S>
 where
-	S: ReleaseSigner + Debug + Clone + Send + Sync + 'static,
+	S: ReleaseSigner + Send + Sync + 'static,
 {
 	pub fn new(release_signer: S, mtma_node_null: MtmaNodeNullMigrate) -> Self {
 		Self { release_signer, mtma_node_null }
@@ -47,7 +46,7 @@ where
 
 impl<S> Migrationish for Migrate<S>
 where
-	S: ReleaseSigner + Debug + Clone + Send + Sync + 'static,
+	S: ReleaseSigner + Send + Sync + 'static,
 {
 	async fn migrate(
 		&self,
