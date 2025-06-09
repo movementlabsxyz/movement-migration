@@ -2,18 +2,15 @@
 pub mod test {
 
 	use anyhow::Context;
-	use mtma_node_test_types::criterion::movement_executor::maptos_opt_executor::aptos_types::account_address::AccountAddress;
+	use movement_core::Movement;
 	use mtma_migrator_pre_l1_merge_core::config::Config as PreL1MergeConfig;
 	use mtma_migrator_test_accounts_equal_criterion::AccountsEqual;
 	use mtma_migrator_test_types::check::checked_migration;
-	use mtma_migrator_types::migrator::{movement_migrator::{Overlays, MovementMigrator, Runner}};
+	use mtma_migrator_types::migrator::movement_migrator::{MovementMigrator, Overlays, Runner};
 	use mtma_node_test_types::prelude::Prelude;
-	use std::str::FromStr;
-	use tracing::info;
-	use movement_core::Movement;
-	use mtma_types::movement::movement_config::Config as MovementConfig;
-	use hex;
 	use mtma_types::movement::aptos_sdk::types::account_config::aptos_test_root_address;
+	use mtma_types::movement::movement_config::Config as MovementConfig;
+	use tracing::info;
 
 	#[tokio::test(flavor = "multi_thread")]
 	#[tracing_test::traced_test]
@@ -56,7 +53,7 @@ pub mod test {
 
 			// wait for the rest client to be ready
 			info!("Waiting for REST client to be ready (timeout: 600s)");
-			let mut rest_api_url = movement_migrator
+			let rest_api_url = movement_migrator
 				.wait_for_rest_api_url(tokio::time::Duration::from_secs(600))
 				.await?;
 			info!("REST API URL: {}", rest_api_url);
@@ -112,8 +109,7 @@ pub mod test {
 			}
 			info!("Migration succeeded");
 
-			// Let the task run in the background and let the Drop implementation handle the shutdown
-			drop(movement_migrator_task);
+			kestrel::end!(movement_migrator_task)?;
 		}
 
 		// exit the test is fine when you only have one test per crate because when cargo test is run across a workspace, it actually multi-processes the tests by crate
