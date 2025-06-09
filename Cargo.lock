@@ -15130,6 +15130,7 @@ dependencies = [
  "maptos-opt-executor",
  "movement-client",
  "movement-util",
+ "vendor-util",
 ]
 
 [[package]]

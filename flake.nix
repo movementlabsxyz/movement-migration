@@ -4,7 +4,6 @@
     rust-overlay.url = "github:oxalica/rust-overlay/47beae969336c05e892e1e4a9dbaac9593de34ab";
     flake-utils.url = "github:numtide/flake-utils";
     crane.url = "github:ipetkov/crane";
-    movement.url = "github:movementlabsxyz/movement/aa1ffed1a113441a65662792d15682ad52406108";
   };
 
   outputs = { nixpkgs, rust-overlay, flake-utils, crane, movement, ... }:
@@ -125,10 +124,6 @@
 
               # Add ./target/release/* to PATH
               export PATH="$PATH:$(pwd)/target/release"
-
-              # Create symbolic link to movement repository
-              mkdir -p .vendors
-              ln -sfn ${movementRepo} .vendors/movement
 
               # Copy over ./githooks/pre-commit to .git/hooks/pre-commit
               cp $(pwd)/.githooks/pre-commit $(pwd)/.git/hooks/pre-commit
