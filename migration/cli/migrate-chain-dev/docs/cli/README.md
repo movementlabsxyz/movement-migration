@@ -103,12 +103,16 @@ Migrate from Movement to MovementAptos
 
 Run migrate with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
 
-**Usage:** `mtma-migrate-chain-dev migrate where --movement-state-db-path <MOVEMENT_STATE_DB_PATH> --movement-aptos-state-db-path <MOVEMENT_APTOS_STATE_DB_PATH>`
+**Usage:** `mtma-migrate-chain-dev migrate where --from <FROM> --to <TO> --maptos-signer <MAPTOS_SIGNER> --da-signer <DA_SIGNER> --mcr-signer <MCR_SIGNER> --movement-args <MOVEMENT_ARGS>`
 
 ###### **Options:**
 
-* `--movement-state-db-path <MOVEMENT_STATE_DB_PATH>` — The path to the input Movement state database
-* `--movement-aptos-state-db-path <MOVEMENT_APTOS_STATE_DB_PATH>` — The path to the output MovementAptos state database
+* `--from <FROM>` — The known release you are migrating from, eg elsa or biarritz-rc1
+* `--to <TO>` — The known release you are migrating to, eg biarritz-rc1 or pre-l1-merge
+* `--maptos-signer <MAPTOS_SIGNER>` — The canonical string for the Maptos signer used in the migration
+* `--da-signer <DA_SIGNER>` — The canonical string for the DA signer used in the migration
+* `--mcr-signer <MCR_SIGNER>` — The canonical string for the MCR signer used in the migration
+* `--movement-args <MOVEMENT_ARGS>` — Movement configuration arguments
 
 
 
