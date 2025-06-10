@@ -1,5 +1,5 @@
 use anyhow::Context;
-use bcs_ext::{comparison::BcsEq, conversion::BcsInto};
+use bcs_ext::conversion::BcsInto;
 use mtma_migrator_test_types::criterion::{
 	Criterion, CriterionError, Criterionish, MovementAptosMigrator, MovementMigrator,
 };
@@ -83,7 +83,6 @@ impl Criterionish for BalancesEqual {
 					format!("movement and movement aptos account balances have different values: {:?} != {:?}", movement_account_balance, movement_aptos_account_balance).into(),
 				));
 			}
-			
 		}
 
 		Ok(())

@@ -13435,22 +13435,13 @@ name = "migrator-sketchpad"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "kestrel",
  "mtma-migrator-pre-l1-merge-core",
  "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
  "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-replay-core",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
  "mtma-node-test-types",
- "mtma-types",
- "rand 0.7.3",
- "tempfile",
  "tokio",
  "tracing",
  "tracing-test",
@@ -15013,6 +15004,7 @@ dependencies = [
  "kestrel",
  "mtma-types",
  "orfile",
+ "portpicker",
  "rand 0.7.3",
  "reqwest 0.12.15",
  "serde",
@@ -15774,20 +15766,28 @@ name = "mtma-migrator-balances-equal"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "kestrel",
  "mtma-migrator-test-balances-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
  "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-replay-core",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
  "mtma-node-test-types",
- "mtma-types",
- "rand 0.7.3",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-migrator-matching-feature-flags"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "kestrel",
+ "mtma-migrator-test-matching-feature-flags-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-test-types",
  "tokio",
  "tracing",
  "tracing-test",
@@ -15905,7 +15905,31 @@ dependencies = [
 name = "mtma-migrator-test-empty-criterion"
 version = "0.0.1"
 dependencies = [
- "mtma-node-test-types",
+ "mtma-migrator-test-types",
+]
+
+[[package]]
+name = "mtma-migrator-test-matching-feature-flags-criterion"
+version = "0.0.1"
+dependencies = [
+ "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "movement-client",
+ "mtma-migrator-test-types",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "mtma-migrator-test-transacting-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "bcs 0.1.4",
+ "mtma-migrator-test-types",
+ "rand 0.7.3",
+ "tokio",
 ]
 
 [[package]]
@@ -15926,6 +15950,24 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "mtma-migrator-transacting"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "kestrel",
+ "mtma-migrator-test-transacting-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-test-types",
+ "rand 0.7.3",
+ "tokio",
+ "tracing",
+ "tracing-test",
 ]
 
 [[package]]
@@ -17698,6 +17740,15 @@ name = "portable-atomic"
 version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "350e9b48cbc6b0e028b0473b114454c6316e57336ee184ceab6e53f72c178b3e"
+
+[[package]]
+name = "portpicker"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "be97d76faf1bfab666e1375477b23fde79eccf0276e9b63b92a39d676a889ba9"
+dependencies = [
+ "rand 0.8.5",
+]
 
 [[package]]
 name = "poseidon-ark"
