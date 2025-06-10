@@ -11,7 +11,7 @@ jobs:
         command:
           # cargo checks and tests
           - cargo check --all-targets
-          - RUST_MIN_STACK=8388608 cargo test
+          - RUST_MIN_STACK=8388608 cargo test -- --nocapture
 
     with:
       command: ${{ matrix.command }}

@@ -9,7 +9,6 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-hex = { workspace = true }
 mtma-types = { workspace = true }
 mtma-migrator-types = { workspace = true }
 mtma-migrator-test-types = { workspace = true }
