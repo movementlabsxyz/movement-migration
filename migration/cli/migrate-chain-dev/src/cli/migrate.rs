@@ -1,5 +1,5 @@
 use clap::Parser;
-use mtma_core::Config;
+use mtma_migrate_chain_core::Config;
 use orfile::Orfile;
 use serde::{Deserialize, Serialize};
 

@@ -1,0 +1,19 @@
+[package]
+name = "mtma-migrator-test-matching-feature-flags-criterion"
+version = { workspace = true }
+edition = { workspace = true }
+license = { workspace = true }
+authors = { workspace = true }
+homepage = { workspace = true }
+publish = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+mtma-migrator-test-types = { workspace = true }
+movement-client = { workspace = true }
+aptos-rest-client = { workspace = true }
+tokio = { workspace = true }
+serde_json = { workspace = true }
+
+[lints]
+workspace = true

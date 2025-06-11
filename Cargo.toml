@@ -104,13 +104,16 @@ portpicker = "0.1.0"
 
 
 # movement
-maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "8f820a5c23ce2b632200043acdabb3e6582c078a" }
-
+maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+aptos-framework-pre-l1-merge-release = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-signer = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-signer-loader = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
+movement-config = { git = "https://github.com/movementlabsxyz/movement.git", rev = "07d5fe82f2c824a7f7e032c9dce339afdbbcb5a0" }
 
 # aptos-core
 aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
@@ -129,11 +132,6 @@ aptos-crypto = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev 
 aptos-executor-types = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 aptos-vm-genesis = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }
 
-
-# secure-signing
-secure-signer = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
-secure-signer-loader = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
-secure-signer-aws-kms = { git = "https://github.com/movementlabsxyz/secure-signing.git", rev = "f37eebd6d494d21b26b2faa44e1188de42ff1007" }
 
 # kestrel 
 kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
@@ -169,8 +167,11 @@ mtma-track-dev = { path = "migration/cli/track-dev" }
 mtma-core = { path = "migration/core/mtma" }
 mtma-null-core = { path = "migration/core/mtma-null" }
 mtma-node-replay-core = { path = "migration/core/node/mtma-replay" }
+
 #### migrator
 mtma-migrator-null-core = { path = "migration/core/migrator/mtma-null" }
+mtma-migrator-pre-l1-merge-core = { path = "migration/core/migrator/pre-l1-merge" }
+mtma-migrate-chain-core = { path = "migration/core/mtma-migrate-chain" }
 
 #### node
 mtma-node-null-core = { path = "migration/core/node/mtma-null" }
@@ -191,6 +192,9 @@ mtma-node-test-global-storage-not-empty-criterion = { path = "checks/node/citeri
 
 ### migrator
 mtma-migrator-test-types = { path = "checks/migrator/util/types" }
+mtma-migrator-test-empty-criterion = { path = "checks/migrator/citeria/empty" }
+mtma-migrator-test-matching-feature-flags-criterion = { path = "checks/migrator/citeria/matching-feature-flags" }
+mtma-migrator-test-transacting-criterion = { path = "checks/migrator/citeria/transacting" }
 mtma-migrator-test-accounts-equal-criterion = { path = "checks/migrator/citeria/accounts-equal" }
 mtma-migrator-test-balances-equal-criterion = { path = "checks/migrator/citeria/balances-equal" }
 mtma-migrator-test-governance-criterion = { path = "checks/migrator/citeria/governance" }
@@ -255,11 +259,3 @@ debug = true
 serde-reflection = { git = "https://github.com/aptos-labs/serde-reflection", rev = "73b6bbf748334b71ff6d7d09d06a29e3062ca075" }
 merlin = { git = "https://github.com/aptos-labs/merlin" }
 x25519-dalek = { git = "https://github.com/aptos-labs/x25519-dalek", branch = "zeroize_v1" }
-futures = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }
-futures-channel = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }
-futures-executor = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }
-futures-core = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }
-futures-util = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }
-futures-sink = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }
-futures-io = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }
-futures-task = { git = "https://github.com/aptos-labs/futures-rs", branch = "backport" }

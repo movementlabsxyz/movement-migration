@@ -9,27 +9,19 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-mtma-types = { workspace = true }
 mtma-migrator-types = { workspace = true }
 mtma-migrator-test-types = { workspace = true }
 anyhow = { workspace = true }
-mtma-node-replay-core = { workspace = true }
-mtma-node-test-global-storage-injective-criterion = { workspace = true }
-mtma-node-test-global-storage-includes-criterion = { workspace = true }
-mtma-node-test-global-storage-not-empty-criterion = { workspace = true }
 mtma-migrator-test-accounts-equal-criterion = { workspace = true }
-mtma-node-preludes = { workspace = true }
 mtma-node-null-core = { workspace = true }
 tokio = { workspace = true }
-chrono = { workspace = true }
-rand = { workspace = true }
 kestrel = { workspace = true }
 mtma-node-test-types = { workspace = true }
+mtma-migrator-pre-l1-merge-core = { workspace = true }
 
 [dev-dependencies]
 tracing-test = { workspace = true }
 tracing = { workspace = true }
-tempfile = { workspace = true }
 
 [lints]
 workspace = true
