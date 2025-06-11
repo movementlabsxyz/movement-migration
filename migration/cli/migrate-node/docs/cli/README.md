@@ -118,6 +118,14 @@ Select migration over the node
 
 **Usage:** `mtma-migrate-node migrate select [OPTIONS] [-- <EXTRA_ARGS>...]`
 
+###### **Arguments:**
+
+* `<EXTRA_ARGS>` — Extra arguments to be passed to subcommands
+
+###### **Options:**
+
+* `--null` — Enable the null selection
+
 Selection (1/1): null
 The config for the migration
 
@@ -127,14 +135,6 @@ Options:
   -h, --help  Print help (see more with '--help')
 
 
-
-###### **Arguments:**
-
-* `<EXTRA_ARGS>` — Extra arguments to be passed to subcommands
-
-###### **Options:**
-
-* `--null` — Enable the null selection
 
 
 

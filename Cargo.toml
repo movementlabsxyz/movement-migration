@@ -146,7 +146,7 @@ orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "5473fc4
 slect = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "5473fc4e26175974509088eb88660a0269e4f39e" }
 
 # docs
-clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ext.git", rev = "3d729560f591c734d8b73e2ed128475bb1897003" }
+clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ext.git", rev = "a4c6c00193baa50eefa214bd74b4a1d50c3255a0" }
 
 # internal
 ## migration
