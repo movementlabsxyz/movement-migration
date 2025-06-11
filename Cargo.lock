@@ -12777,7 +12777,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -15726,6 +15726,7 @@ dependencies = [
  "orfile",
  "rand 0.7.3",
  "serde",
+ "slect",
  "sysinfo 0.34.2",
  "tokio",
  "tracing",
@@ -15778,22 +15779,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mtma-migrator-matching-feature-flags"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "kestrel",
- "mtma-migrator-test-matching-feature-flags-criterion",
- "mtma-migrator-test-types",
- "mtma-migrator-types",
- "mtma-node-null-core",
- "mtma-node-test-types",
- "tokio",
- "tracing",
- "tracing-test",
-]
-
-[[package]]
 name = "mtma-migrator-checks-pre-l1-merge"
 version = "0.0.1"
 dependencies = [
@@ -15815,6 +15800,22 @@ dependencies = [
  "mtma-types",
  "rand 0.7.3",
  "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-migrator-matching-feature-flags"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "kestrel",
+ "mtma-migrator-test-matching-feature-flags-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-test-types",
  "tokio",
  "tracing",
  "tracing-test",
@@ -16874,7 +16875,7 @@ dependencies = [
 [[package]]
 name = "orfile"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=b49cb42495816fa00a1107be5bbf41aff3a8255d#b49cb42495816fa00a1107be5bbf41aff3a8255d"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=c34c5927796c87e50a2e931760e3a226b5aa4ebf#c34c5927796c87e50a2e931760e3a226b5aa4ebf"
 dependencies = [
  "anyhow",
  "orfile-macro",
@@ -16885,7 +16886,7 @@ dependencies = [
 [[package]]
 name = "orfile-macro"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=b49cb42495816fa00a1107be5bbf41aff3a8255d#b49cb42495816fa00a1107be5bbf41aff3a8255d"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=c34c5927796c87e50a2e931760e3a226b5aa4ebf#c34c5927796c87e50a2e931760e3a226b5aa4ebf"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -16896,7 +16897,7 @@ dependencies = [
 [[package]]
 name = "orfile-util"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=b49cb42495816fa00a1107be5bbf41aff3a8255d#b49cb42495816fa00a1107be5bbf41aff3a8255d"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=c34c5927796c87e50a2e931760e3a226b5aa4ebf#c34c5927796c87e50a2e931760e3a226b5aa4ebf"
 dependencies = [
  "serde",
  "serde_json",
@@ -20232,6 +20233,43 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f92a496fb766b417c996b9c5e57daf2f7ad3b0bebe1ccfca4856390e3d3bb67"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "slect"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=c34c5927796c87e50a2e931760e3a226b5aa4ebf#c34c5927796c87e50a2e931760e3a226b5aa4ebf"
+dependencies = [
+ "anyhow",
+ "once_cell",
+ "serde_json",
+ "slect-macro",
+ "slect-util",
+]
+
+[[package]]
+name = "slect-macro"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=c34c5927796c87e50a2e931760e3a226b5aa4ebf#c34c5927796c87e50a2e931760e3a226b5aa4ebf"
+dependencies = [
+ "heck 0.4.1",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "slect-util"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=c34c5927796c87e50a2e931760e3a226b5aa4ebf#c34c5927796c87e50a2e931760e3a226b5aa4ebf"
+dependencies = [
+ "clap 4.5.36",
+ "once_cell",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
 ]
 
 [[package]]

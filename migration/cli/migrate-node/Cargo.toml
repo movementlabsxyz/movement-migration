@@ -32,6 +32,7 @@ futures = { workspace = true }
 sysinfo = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
+slect = { workspace = true }
 
 [lints]
 workspace = true
