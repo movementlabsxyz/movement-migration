@@ -134,7 +134,7 @@ Options:
 
 ###### **Options:**
 
-* `--null` — Enable the #flag_names subcommand
+* `--null` — Enable the null selection
 
 
 
