@@ -19,7 +19,7 @@ pub enum MtmaMigrateNodeSubcommand {
 	Markdown(Markdown),
 	/// Migrate from Movement to MovementAptos.
 	#[clap(subcommand)]
-	Migrate(migrate::or_file::Migrate),
+	Migrate(migrate::Migrate),
 }
 
 /// Implement the `From` trait for `MtmaMigrateNode` to convert it into a `MtmaMigrateNodeSubcommand`.
