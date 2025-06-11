@@ -126,7 +126,7 @@ Select migration over the node
 
 * `--null` — Enable the null selection
 
-Selection (1/1): null
+**Selection (1/1):** `null`
 The config for the migration
 
 Usage: --null.*
