@@ -120,7 +120,7 @@ Select migration over the node
 
 ###### **Arguments:**
 
-* `<EXTRA_ARGS>` — Extra arguments to be passed to subcommands
+* `<EXTRA_ARGS>` — Extra arguments to be passed to selections
 
 ###### **Options:**
 
@@ -129,7 +129,7 @@ Select migration over the node
 Selection (1/1): null
 The config for the migration
 
-Usage: null{}
+Usage: --null.*
 
 Options:
   -h, --help  Print help (see more with '--help')

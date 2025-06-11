@@ -142,8 +142,8 @@ include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev =
 ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
 
 # orfile
-orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "5473fc4e26175974509088eb88660a0269e4f39e" }
-slect = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "5473fc4e26175974509088eb88660a0269e4f39e" }
+orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "0af1c7d21d2565f3b676bad67b4b9ccd50c083d0" }
+slect = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "0af1c7d21d2565f3b676bad67b4b9ccd50c083d0" }
 
 # docs
 clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ext.git", rev = "a4c6c00193baa50eefa214bd74b4a1d50c3255a0" }

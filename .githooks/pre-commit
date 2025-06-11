@@ -5,6 +5,7 @@ set -e
 # CLAP CLI
 ##########
 CLAP_LIST_FILE="clap-markdown-list"
+SELECT_TOOL_MARKDOWN="true"
 
 # Form a markdown string that will be used to capture an index of documented CLIs
 workspace_root=$(cargo metadata --no-deps --format-version 1 | jq -r '.workspace_root')
