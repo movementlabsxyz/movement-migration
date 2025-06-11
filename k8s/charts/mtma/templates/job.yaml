@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.job.name }}
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: {{ toJson .Values.job.args }}
+          volumeMounts:
+            - name: movement
+              mountPath: {{ .Values.volume.mountPath | quote }}
+      volumes:
+        - name: movement
+          persistentVolumeClaim:
+            claimName: {{ .Values.volume.persistentVolumeClaim }}
