@@ -16875,7 +16875,7 @@ dependencies = [
 [[package]]
 name = "orfile"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0af1c7d21d2565f3b676bad67b4b9ccd50c083d0#0af1c7d21d2565f3b676bad67b4b9ccd50c083d0"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "anyhow",
  "orfile-macro",
@@ -16886,7 +16886,7 @@ dependencies = [
 [[package]]
 name = "orfile-macro"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0af1c7d21d2565f3b676bad67b4b9ccd50c083d0#0af1c7d21d2565f3b676bad67b4b9ccd50c083d0"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -16897,7 +16897,7 @@ dependencies = [
 [[package]]
 name = "orfile-util"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0af1c7d21d2565f3b676bad67b4b9ccd50c083d0#0af1c7d21d2565f3b676bad67b4b9ccd50c083d0"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "serde",
  "serde_json",
@@ -20238,7 +20238,7 @@ dependencies = [
 [[package]]
 name = "slect"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0af1c7d21d2565f3b676bad67b4b9ccd50c083d0#0af1c7d21d2565f3b676bad67b4b9ccd50c083d0"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "anyhow",
  "once_cell",
@@ -20250,7 +20250,7 @@ dependencies = [
 [[package]]
 name = "slect-macro"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0af1c7d21d2565f3b676bad67b4b9ccd50c083d0#0af1c7d21d2565f3b676bad67b4b9ccd50c083d0"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "heck 0.4.1",
  "proc-macro-error",
@@ -20262,7 +20262,7 @@ dependencies = [
 [[package]]
 name = "slect-util"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=0af1c7d21d2565f3b676bad67b4b9ccd50c083d0#0af1c7d21d2565f3b676bad67b4b9ccd50c083d0"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "clap 4.5.36",
  "once_cell",
