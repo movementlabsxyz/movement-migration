@@ -35,6 +35,8 @@ movement-signer-loader = { workspace = true }
 hex = { workspace = true }
 mtma-types = { workspace = true }
 movement-core = { workspace = true }
+mtma-environment-types = { workspace = true }
+kestrel = { workspace = true }
 
 [lints]
 workspace = true

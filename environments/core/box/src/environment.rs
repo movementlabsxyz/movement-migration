@@ -1,7 +1,7 @@
 /// Contains the configuration structs and logic for the migration.
 pub mod config;
 /// Contains the logic for the migration.
-pub mod migrate;
+pub mod environment;
 
 pub use config::*;
-pub use migrate::*;
+pub use environment::*;
