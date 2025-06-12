@@ -4,9 +4,9 @@ use mtma_migrator_test_types::criterion::{
 };
 use std::str::FromStr;
 
-pub struct GlobalFeatureCheck;
+pub struct GovernanceCheck;
 
-impl GlobalFeatureCheck {
+impl GovernanceCheck {
 	pub fn new() -> Self {
 		Self {}
 	}
@@ -16,7 +16,7 @@ impl GlobalFeatureCheck {
 	}
 }
 
-impl Criterionish for GlobalFeatureCheck {
+impl Criterionish for GovernanceCheck {
 	async fn satisfies(
 		&self,
 		_movement_migrator: &MovementMigrator,
