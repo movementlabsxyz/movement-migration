@@ -10,7 +10,6 @@ rust-version = { workspace = true }
 
 [dependencies]
 mtma-migrator-test-types = { workspace = true }
-bcs = { workspace = true }
 bcs-ext = { workspace = true }
 tokio = { workspace = true }
 anyhow = { workspace = true }

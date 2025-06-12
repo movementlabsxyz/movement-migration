@@ -9,15 +9,10 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-tokio = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true, features = ["derive"] }
-dotenv = { workspace = true }
 anyhow = { workspace = true }
-clap-markdown-ext = { workspace = true }
 thiserror = { workspace = true }
-orfile = { workspace = true }
-mtma-core = { workspace = true }
 
 [lints]
 workspace = true 

@@ -12,11 +12,8 @@ rust-version = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
 anyhow = { workspace = true }
-hex = { workspace = true }
-syncador = { workspace = true }
 tokio = { workspace = true }
 aptos-node = { workspace = true }
-aptos-config = { workspace = true }
 serde_json = { workspace = true }
 clap = { workspace = true }
 jsonlvar = { workspace = true }

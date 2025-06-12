@@ -10,26 +10,11 @@ rust-version = { workspace = true }
 
 [dependencies]
 tokio = { workspace = true }
-serde = { workspace = true, features = ["derive"] }
 clap = { workspace = true, features = ["derive"] }
 dotenv = { workspace = true }
 anyhow = { workspace = true }
 clap-markdown-ext = { workspace = true }
-orfile = { workspace = true }
-mtma-core = { workspace = true }
 jemallocator = { workspace = true }
-mtma-node-null-core = { workspace = true }
-mtma-node-test-global-storage-injective-criterion = { workspace = true }
-mtma-node-test-global-storage-includes-criterion = { workspace = true }
-mtma-node-test-global-storage-not-empty-criterion = { workspace = true }
-mtma-node-preludes = { workspace = true }
-mtma-node-test-types = { workspace = true }
-movement-syncing = { workspace = true }
-maptos-execution-util = { workspace = true }
-chrono = { workspace = true }
-rand = { workspace = true }
-futures = { workspace = true }
-sysinfo = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 
@@ -40,6 +25,9 @@ mtma-track = { workspace = true }
 mtma-check-dev = { workspace = true }
 mtma-migrate-dev = { workspace = true }
 mtma-track-dev = { workspace = true }
+
+[package.metadata.cargo-machete]
+ignored = ["tracing"]
 
 [lints]
 workspace = true
