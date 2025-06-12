@@ -216,6 +216,14 @@ movement-aptos-core = { path = "util/movement-aptos/core" }
 movement-aptos-core-util = { path = "util/movement-aptos/core-util" }
 mtma-types = { path = "util/types" }
 
+## Environments
+### util
+mtma-environment-types = { path = "environments/util/types" }
+### core
+mtma-testing-environment = { path = "environments/core/testing" }
+mtma-provisioner-environment = { path = "environments/core/provisioner" }
+mtma-box-environment = { path = "environments/box/provisioner" }
+
 [workspace.lints.clippy]
 debug_assert_with_mut_call = "deny"
 inefficient_to_string = "deny"

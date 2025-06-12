@@ -124,9 +124,18 @@ Select migration over the node
 
 ###### **Options:**
 
+* `--environment-testing` — Enable the environment-testing selection
 * `--null` — Enable the null selection
 
-**Selection (1/1):** `null`
+**Selection (1/2):** `environment-testing`
+The config for the [TestingEnvironment]
+
+Usage: --environment-testing.*
+
+Options:
+  -h, --help  Print help (see more with '--help')
+
+**Selection (2/2):** `null`
 The config for the migration
 
 Usage: --null.*
