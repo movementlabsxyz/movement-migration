@@ -125,9 +125,11 @@ Select migration over the node
 ###### **Options:**
 
 * `--environment-testing` — Enable the environment-testing selection
+* `--environment-box` — Enable the environment-box selection
+* `--environment-provisioner` — Enable the environment-provisioner selection
 * `--null` — Enable the null selection
 
-**Selection (1/2):** `environment-testing`
+**Selection (1/4):** `environment-testing`
 The config for the [TestingEnvironment]
 
 Usage: --environment-testing.*
@@ -135,7 +137,23 @@ Usage: --environment-testing.*
 Options:
   -h, --help  Print help (see more with '--help')
 
-**Selection (2/2):** `null`
+**Selection (2/4):** `environment-box`
+The config for the [BoxEnvironment]
+
+Usage: --environment-box.*
+
+Options:
+  -h, --help  Print help (see more with '--help')
+
+**Selection (3/4):** `environment-provisioner`
+The config for the [ProvisionerEnvironment]
+
+Usage: --environment-provisioner.*
+
+Options:
+  -h, --help  Print help (see more with '--help')
+
+**Selection (4/4):** `null`
 The config for the migration
 
 Usage: --null.*
