@@ -15444,6 +15444,7 @@ name = "mtma-box-environment"
 version = "0.0.1"
 dependencies = [
  "anyhow",
+ "clap 4.5.36",
  "mtma-environment-types",
  "mtma-migrator-types",
  "serde",
@@ -15973,6 +15974,7 @@ name = "mtma-provisioner-environment"
 version = "0.0.1"
 dependencies = [
  "anyhow",
+ "clap 4.5.36",
  "mtma-environment-types",
  "mtma-migrator-types",
  "serde",
@@ -15984,12 +15986,14 @@ name = "mtma-testing-environment"
 version = "0.0.1"
 dependencies = [
  "anyhow",
+ "clap 4.5.36",
  "kestrel",
  "movement-core",
  "mtma-environment-types",
  "mtma-migrator-types",
  "serde",
  "thiserror 1.0.69",
+ "tokio",
 ]
 
 [[package]]

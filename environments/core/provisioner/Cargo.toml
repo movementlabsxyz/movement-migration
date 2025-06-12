@@ -11,6 +11,7 @@ rust-version = { workspace = true }
 [dependencies]
 serde = { workspace = true, features = ["derive"] }
 anyhow = { workspace = true }
+clap = { workspace = true }
 thiserror = { workspace = true }
 mtma-migrator-types = { workspace = true }
 mtma-environment-types = { workspace = true }
