@@ -1,6 +1,16 @@
 #!/bin/bash
 
 set -e
+########
+# Cargo dependencies
+#######
+
+# if cargo machete does not return 0
+cargo machete || {
+  echo "❌ You have unused dependencies in your Cargo.toml. Check the above."
+  exit 1
+}
+
 ##########
 # CLAP CLI
 ##########

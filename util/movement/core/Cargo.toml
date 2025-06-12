@@ -12,11 +12,6 @@ rust-version = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
 anyhow = { workspace = true }
-hex = { workspace = true }
-syncador = { workspace = true }
-movement-types = { workspace = true }
-tempdir = { workspace = true }
-uuid = { workspace = true }
 include-vendor = { workspace = true }
 tokio = { workspace = true }
 jsonlvar = { workspace = true }

@@ -57,6 +57,7 @@
           qemu_kvm
           qemu-utils
           libvirt
+          cargo-machete
         ] ++ lib.optionals stdenv.isDarwin [
           fixDarwinDylibNames
         ] ++ lib.optionals stdenv.isLinux [

@@ -12,15 +12,10 @@ rust-version = { workspace = true }
 mtma-node-test-types = { workspace = true }
 anyhow = { workspace = true }
 mtma-node-null-core = { workspace = true }
-mtma-node-test-global-storage-injective-criterion = { workspace = true }
 mtma-node-test-global-storage-includes-criterion = { workspace = true }
-mtma-node-test-global-storage-not-empty-criterion = { workspace = true }
-mtma-node-preludes = { workspace = true }
 movement-syncing = { workspace = true }
 maptos-execution-util = { workspace = true }
 tokio = { workspace = true }
-chrono = { workspace = true }
-rand = { workspace = true }
 futures = { workspace = true }
 sysinfo = { workspace = true }
 tracing = { workspace = true }
