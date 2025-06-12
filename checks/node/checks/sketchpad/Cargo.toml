@@ -18,8 +18,6 @@ mtma-node-test-global-storage-includes-criterion = { workspace = true }
 mtma-node-test-global-storage-not-empty-criterion = { workspace = true }
 mtma-node-preludes = { workspace = true }
 tokio = { workspace = true }
-chrono = { workspace = true }
-rand = { workspace = true }
 
 [dev-dependencies]
 tracing-test = { workspace = true }

@@ -13436,7 +13436,6 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "kestrel",
- "mtma-migrator-pre-l1-merge-core",
  "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
@@ -14871,11 +14870,9 @@ dependencies = [
  "dotenv",
  "jemallocator",
  "movement-core",
- "mtma-core",
  "orfile",
  "serde",
  "tokio",
- "tracing",
  "tracing-subscriber 0.3.19",
 ]
 
@@ -14994,12 +14991,10 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "aptos-cached-packages 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "aptos-node 0.0.0-main (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "cargo_metadata 0.19.2",
  "chrono",
  "clap 4.5.36",
- "hex",
  "jsonlvar",
  "kestrel",
  "mtma-types",
@@ -15010,7 +15005,6 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_yaml 0.8.26",
- "syncador",
  "thiserror 1.0.69",
  "tokio",
  "tracing",
@@ -15120,13 +15114,11 @@ dependencies = [
  "anyhow",
  "cargo_metadata 0.19.2",
  "clap 4.5.36",
- "hex",
  "include-vendor",
  "jsonlvar",
  "kestrel",
  "movement-core-util",
  "movement-signer-loader",
- "movement-types",
  "mtma-types",
  "orfile",
  "ready-docker",
@@ -15135,13 +15127,10 @@ dependencies = [
  "serde",
  "serde_json",
  "strip-ansi-escapes",
- "syncador",
- "tempdir",
  "thiserror 1.0.69",
  "tokio",
  "tracing",
  "tracing-test",
- "uuid",
 ]
 
 [[package]]
@@ -15362,9 +15351,7 @@ name = "movement-syncing"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "hex",
  "movement-types",
- "serde",
  "syncador",
  "tempdir",
  "uuid",
@@ -15440,28 +15427,28 @@ name = "mtma"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
  "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
+]
+
+[[package]]
+name = "mtma-box-environment"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap 4.5.36",
+ "mtma-environment-types",
+ "mtma-migrator-types",
+ "serde",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -15469,25 +15456,12 @@ name = "mtma-check"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
- "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15498,25 +15472,12 @@ name = "mtma-check-dev"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
- "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15526,14 +15487,9 @@ dependencies = [
 name = "mtma-core"
 version = "0.0.1"
 dependencies = [
- "anyhow",
  "clap 4.5.36",
- "clap-markdown-ext",
- "dotenv",
- "orfile",
  "serde",
  "thiserror 1.0.69",
- "tokio",
 ]
 
 [[package]]
@@ -15541,34 +15497,27 @@ name = "mtma-dev"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
  "mtma-check",
  "mtma-check-dev",
- "mtma-core",
  "mtma-migrate",
  "mtma-migrate-dev",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "mtma-track",
  "mtma-track-dev",
- "orfile",
- "rand 0.7.3",
- "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
+]
+
+[[package]]
+name = "mtma-environment-types"
+version = "0.0.1"
+dependencies = [
+ "mtma-migrator-types",
+ "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -15576,25 +15525,13 @@ name = "mtma-migrate"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
  "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15605,25 +15542,13 @@ name = "mtma-migrate-chain"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
  "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15635,13 +15560,8 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap 4.5.36",
- "clap-markdown-ext",
- "dotenv",
- "mtma-core",
- "orfile",
  "serde",
  "thiserror 1.0.69",
- "tokio",
 ]
 
 [[package]]
@@ -15649,26 +15569,13 @@ name = "mtma-migrate-chain-dev"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
- "mtma-core",
  "mtma-migrate-chain-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15679,25 +15586,13 @@ name = "mtma-migrate-dev"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
  "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15708,26 +15603,20 @@ name = "mtma-migrate-node"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
+ "mtma-box-environment",
  "mtma-core",
+ "mtma-environment-types",
+ "mtma-migrator-types",
  "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
+ "mtma-provisioner-environment",
+ "mtma-testing-environment",
  "orfile",
- "rand 0.7.3",
  "serde",
  "slect",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15738,7 +15627,6 @@ name = "mtma-migrate-node-dev"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
@@ -15746,17 +15634,11 @@ dependencies = [
  "jemallocator",
  "maptos-execution-util",
  "movement-syncing",
- "mtma-core",
  "mtma-node-null-core",
- "mtma-node-preludes",
  "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
  "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -15783,22 +15665,14 @@ name = "mtma-migrator-checks-pre-l1-merge"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "kestrel",
  "movement-core",
  "mtma-migrator-pre-l1-merge-core",
  "mtma-migrator-test-accounts-equal-criterion",
  "mtma-migrator-test-types",
  "mtma-migrator-types",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-replay-core",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
  "mtma-node-test-types",
  "mtma-types",
- "rand 0.7.3",
  "tempfile",
  "tokio",
  "tracing",
@@ -15826,21 +15700,12 @@ name = "mtma-migrator-null-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-db 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "chrono",
  "clap 4.5.36",
- "clap-markdown-ext",
- "dotenv",
  "mtma-node-types",
  "mtma-types",
- "orfile",
  "serde",
  "thiserror 1.0.69",
- "tokio",
  "tracing",
  "uuid",
  "walkdir",
@@ -15851,31 +15716,16 @@ name = "mtma-migrator-pre-l1-merge-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-db 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "aptos-framework-pre-l1-merge-release",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "chrono",
  "clap 4.5.36",
- "clap-markdown-ext",
- "dotenv",
  "hex",
  "movement-core",
- "movement-signer",
- "movement-signer-loader",
  "mtma-migrator-types",
  "mtma-node-null-core",
- "mtma-node-types",
  "mtma-types",
- "orfile",
  "serde",
  "thiserror 1.0.69",
  "tokio",
- "tracing",
- "uuid",
- "walkdir",
 ]
 
 [[package]]
@@ -15883,7 +15733,6 @@ name = "mtma-migrator-test-accounts-equal-criterion"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "bcs 0.1.4",
  "bcs-ext",
  "mtma-migrator-test-types",
  "tokio",
@@ -15895,7 +15744,6 @@ name = "mtma-migrator-test-balances-equal-criterion"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "bcs 0.1.4",
  "bcs-ext",
  "mtma-migrator-test-types",
  "tokio",
@@ -15925,7 +15773,6 @@ name = "mtma-migrator-test-transacting-criterion"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "bcs 0.1.4",
  "mtma-migrator-test-types",
@@ -15938,16 +15785,9 @@ name = "mtma-migrator-test-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-sdk 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "bcs 0.1.4",
- "hex",
  "kestrel",
- "movement-client",
  "mtma-migrator-types",
  "mtma-node-test-types",
- "mtma-types",
- "serde",
  "thiserror 1.0.69",
  "tokio",
  "tracing",
@@ -15976,24 +15816,12 @@ name = "mtma-migrator-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "either",
- "hex",
  "kestrel",
- "maptos-opt-executor",
  "movement-aptos-core",
- "movement-client",
  "movement-core",
  "mtma-node-types",
  "mtma-types",
- "serde",
  "thiserror 1.0.69",
- "tracing",
 ]
 
 [[package]]
@@ -16001,17 +15829,12 @@ name = "mtma-node-checks-mainnet"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "futures",
  "maptos-execution-util",
  "movement-syncing",
  "mtma-node-null-core",
- "mtma-node-preludes",
  "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
  "mtma-node-test-types",
- "rand 0.7.3",
  "sysinfo 0.34.2",
  "tokio",
  "tracing",
@@ -16023,7 +15846,6 @@ name = "mtma-node-checks-sketchpad"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "mtma-node-null-core",
  "mtma-node-preludes",
  "mtma-node-replay-core",
@@ -16031,7 +15853,6 @@ dependencies = [
  "mtma-node-test-global-storage-injective-criterion",
  "mtma-node-test-global-storage-not-empty-criterion",
  "mtma-node-test-types",
- "rand 0.7.3",
  "tokio",
  "tracing",
  "tracing-test",
@@ -16042,21 +15863,12 @@ name = "mtma-node-null-core"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-config 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-db 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "chrono",
  "clap 4.5.36",
- "clap-markdown-ext",
- "dotenv",
  "mtma-node-types",
  "mtma-types",
- "orfile",
  "serde",
  "thiserror 1.0.69",
- "tokio",
  "tracing",
  "uuid",
  "walkdir",
@@ -16066,20 +15878,10 @@ dependencies = [
 name = "mtma-node-preludes"
 version = "0.0.1"
 dependencies = [
- "anyhow",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "chrono",
- "either",
- "hex",
- "maptos-opt-executor",
  "mtma-node-test-types",
- "mtma-node-types",
  "rand 0.7.3",
- "serde",
- "thiserror 1.0.69",
 ]
 
 [[package]]
@@ -16094,22 +15896,16 @@ dependencies = [
  "aptos-executor-types 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "aptos-vm-genesis 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "bcs 0.1.4",
  "bcs-ext",
  "chrono",
  "clap 4.5.36",
- "clap-markdown-ext",
- "dotenv",
  "mtma-node-types",
- "orfile",
  "serde",
  "thiserror 1.0.69",
- "tokio",
  "tracing",
  "uuid",
- "walkdir",
 ]
 
 [[package]]
@@ -16123,7 +15919,6 @@ dependencies = [
 name = "mtma-node-test-global-storage-includes-criterion"
 version = "0.0.1"
 dependencies = [
- "anyhow",
  "mtma-node-test-types",
  "mtma-types",
  "tracing",
@@ -16133,7 +15928,6 @@ dependencies = [
 name = "mtma-node-test-global-storage-injective-criterion"
 version = "0.0.1"
 dependencies = [
- "anyhow",
  "mtma-node-test-types",
  "mtma-types",
  "tracing",
@@ -16143,7 +15937,6 @@ dependencies = [
 name = "mtma-node-test-global-storage-not-empty-criterion"
 version = "0.0.1"
 dependencies = [
- "anyhow",
  "mtma-node-test-types",
 ]
 
@@ -16151,18 +15944,9 @@ dependencies = [
 name = "mtma-node-test-types"
 version = "0.0.1"
 dependencies = [
- "anyhow",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "chrono",
- "either",
- "hex",
- "maptos-opt-executor",
  "mtma-node-types",
  "mtma-types",
- "serde",
  "thiserror 1.0.69",
 ]
 
@@ -16171,21 +15955,14 @@ name = "mtma-node-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "aptos-executor 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-storage-interface 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-types 0.0.3 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
- "aptos-vm 0.1.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
  "either",
  "futures-channel",
- "hex",
  "maptos-opt-executor",
  "movement-aptos-core",
  "movement-util",
  "mtma-types",
- "serde",
  "tempfile",
  "thiserror 1.0.69",
- "tokio",
  "tracing",
  "tracing-test",
  "uuid",
@@ -16193,29 +15970,43 @@ dependencies = [
 ]
 
 [[package]]
+name = "mtma-provisioner-environment"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap 4.5.36",
+ "mtma-environment-types",
+ "mtma-migrator-types",
+ "serde",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "mtma-testing-environment"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "clap 4.5.36",
+ "kestrel",
+ "movement-core",
+ "mtma-environment-types",
+ "mtma-migrator-types",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
 name = "mtma-track"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
- "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -16226,25 +16017,12 @@ name = "mtma-track-dev"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "chrono",
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
- "maptos-execution-util",
- "movement-syncing",
- "mtma-core",
- "mtma-node-null-core",
- "mtma-node-preludes",
- "mtma-node-test-global-storage-includes-criterion",
- "mtma-node-test-global-storage-injective-criterion",
- "mtma-node-test-global-storage-not-empty-criterion",
- "mtma-node-test-types",
  "orfile",
- "rand 0.7.3",
  "serde",
- "sysinfo 0.34.2",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",

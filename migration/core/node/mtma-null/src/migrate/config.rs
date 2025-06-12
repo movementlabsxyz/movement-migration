@@ -9,7 +9,7 @@ pub enum MigrateConfigError {
 	Build(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
-/// The config for the migration.
+/// The config for the null migration.
 ///
 /// All fields should be easily statically encodable to a CLI argument.
 /// This is the frontend for the core API.

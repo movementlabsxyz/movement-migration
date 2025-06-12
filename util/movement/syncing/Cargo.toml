@@ -9,9 +9,7 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-serde = { workspace = true }
 anyhow = { workspace = true }
-hex = { workspace = true }
 syncador = { workspace = true }
 movement-types = { workspace = true }
 tempdir = { workspace = true }

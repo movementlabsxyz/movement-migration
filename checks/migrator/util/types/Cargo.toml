@@ -11,16 +11,9 @@ rust-version = { workspace = true }
 [dependencies]
 mtma-node-test-types = { workspace = true }
 mtma-migrator-types = { workspace = true }
-serde = { workspace = true }
 anyhow = { workspace = true }
-hex = { workspace = true }
-movement-client = { workspace = true }
-aptos-rest-client = { workspace = true }
-aptos-sdk = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }
-bcs = { workspace = true }
-mtma-types = { workspace = true }
 kestrel = { workspace = true }
 tracing = { workspace = true }
 
