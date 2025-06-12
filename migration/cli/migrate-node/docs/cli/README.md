@@ -154,7 +154,7 @@ Options:
   -h, --help  Print help (see more with '--help')
 
 **Selection (4/4):** `null`
-The config for the migration
+The config for the null migration
 
 Usage: --null.*
 
