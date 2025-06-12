@@ -15778,22 +15778,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mtma-migrator-matching-feature-flags"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "kestrel",
- "mtma-migrator-test-matching-feature-flags-criterion",
- "mtma-migrator-test-types",
- "mtma-migrator-types",
- "mtma-node-null-core",
- "mtma-node-test-types",
- "tokio",
- "tracing",
- "tracing-test",
-]
-
-[[package]]
 name = "mtma-migrator-checks-pre-l1-merge"
 version = "0.0.1"
 dependencies = [
@@ -15815,6 +15799,38 @@ dependencies = [
  "mtma-types",
  "rand 0.7.3",
  "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-migrator-governance"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "kestrel",
+ "mtma-migrator-test-governance-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-test-types",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-migrator-matching-feature-flags"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "kestrel",
+ "mtma-migrator-test-matching-feature-flags-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-test-types",
  "tokio",
  "tracing",
  "tracing-test",
@@ -15906,6 +15922,19 @@ name = "mtma-migrator-test-empty-criterion"
 version = "0.0.1"
 dependencies = [
  "mtma-migrator-test-types",
+]
+
+[[package]]
+name = "mtma-migrator-test-governance-criterion"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "aptos-rest-client 0.0.0 (git+https://github.com/movementlabsxyz/aptos-core.git?rev=cb3b7b02f68c7d6982257e4c59955d0e63b513db)",
+ "movement-client",
+ "mtma-migrator-test-types",
+ "serde_json",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

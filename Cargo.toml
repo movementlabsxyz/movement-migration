@@ -197,6 +197,7 @@ mtma-migrator-test-matching-feature-flags-criterion = { path = "checks/migrator/
 mtma-migrator-test-transacting-criterion = { path = "checks/migrator/citeria/transacting" }
 mtma-migrator-test-accounts-equal-criterion = { path = "checks/migrator/citeria/accounts-equal" }
 mtma-migrator-test-balances-equal-criterion = { path = "checks/migrator/citeria/balances-equal" }
+mtma-migrator-test-governance-criterion = { path = "checks/migrator/citeria/governance" }
 
 ## util
 bcs-ext = { path = "util/bcs-ext" }
