@@ -10,15 +10,22 @@ members = [
     "migration/core/node/*",
     "migration/core/migrator/*",
     "migration/util/*",
-    # executor
+
+    # environments
+    "environments/core/*",
+    "environments/util/*",
+
+    # checks
+    ## node
     "checks/node/util/*",
     "checks/node/citeria/*",
     "checks/node/checks/*",
     "checks/node/preludes",
-    # e2e
+    ## migrator
     "checks/migrator/util/*",
     "checks/migrator/citeria/*",
     "checks/migrator/checks/*",
+
     # util
     "util/bcs-ext",
     "util/movement/*",
