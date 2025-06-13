@@ -28,6 +28,8 @@ movement-client = { workspace = true }
 aptos-rest-client = { workspace = true }
 aptos-config = { workspace = true }
 mtma-types = { workspace = true }
+reqwest = { workspace = true }
+mtma-util = { workspace = true }
 
 [lints]
 workspace = true

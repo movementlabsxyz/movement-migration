@@ -8,28 +8,9 @@ use mtma_types::movement_aptos::aptos_db::AptosDB;
 use mtma_types::movement_aptos::aptos_storage_interface::DbReaderWriter;
 
 use anyhow::Context;
-use std::fs;
+use mtma_util::file::copy_dir_recursive;
 use std::path::Path;
 use tracing::info;
-use walkdir::WalkDir;
-
-/// Copies a directory recursively.
-///
-/// todo: move this out of the migration module
-fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
-	for entry in WalkDir::new(src) {
-		let entry = entry?;
-		let rel_path = entry.path().strip_prefix(src).unwrap();
-		let dest_path = dst.join(rel_path);
-
-		if entry.file_type().is_dir() {
-			fs::create_dir_all(&dest_path)?;
-		} else {
-			fs::copy(entry.path(), &dest_path)?;
-		}
-	}
-	Ok(())
-}
 
 /// Errors thrown during the migration.
 #[derive(Debug, thiserror::Error)]

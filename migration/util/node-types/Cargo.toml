@@ -27,6 +27,7 @@ movement-util = { workspace = true }
 uuid = { workspace = true }
 walkdir = { workspace = true }
 mtma-types = { workspace = true }
+mtma-util = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }

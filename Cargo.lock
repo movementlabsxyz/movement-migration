@@ -15885,6 +15885,7 @@ dependencies = [
  "dotenv",
  "mtma-node-types",
  "mtma-types",
+ "mtma-util",
  "orfile",
  "serde",
  "thiserror 1.0.69",
@@ -16039,6 +16040,8 @@ dependencies = [
  "movement-core",
  "mtma-node-types",
  "mtma-types",
+ "mtma-util",
+ "reqwest 0.12.15",
  "serde",
  "thiserror 1.0.69",
  "tracing",
@@ -16101,6 +16104,7 @@ dependencies = [
  "dotenv",
  "mtma-node-types",
  "mtma-types",
+ "mtma-util",
  "orfile",
  "serde",
  "thiserror 1.0.69",
@@ -16230,6 +16234,7 @@ dependencies = [
  "movement-aptos-core",
  "movement-util",
  "mtma-types",
+ "mtma-util",
  "serde",
  "tempfile",
  "thiserror 1.0.69",
@@ -16372,6 +16377,19 @@ version = "0.0.1"
 dependencies = [
  "movement-aptos-core-util",
  "movement-core-util",
+]
+
+[[package]]
+name = "mtma-util"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "bcs 0.1.4",
+ "serde",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+ "walkdir",
 ]
 
 [[package]]
