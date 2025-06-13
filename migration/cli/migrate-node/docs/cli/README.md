@@ -140,7 +140,13 @@ Options:
 **Selection (2/4):** `environment-box`
 The config for the [BoxEnvironment]
 
-Usage: --environment-box.*
+Usage: --environment-box.* <REST_API_URL> <DB_DIR> [SNAPSHOT_DIR]
+
+Arguments:
+  <REST_API_URL>  The rest api url of the box environment
+  <DB_DIR>        The db dir of the box environment
+  [SNAPSHOT_DIR]  Whether to isolate the box environment by snapshotting the movement runner and where to store the
+                  snapshot
 
 Options:
   -h, --help  Print help (see more with '--help')
