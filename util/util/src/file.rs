@@ -102,6 +102,9 @@ pub fn copy_dir_recursive_with_ignore(
 #[cfg(test)]
 mod test {
 	use super::*;
+	use std::fs::Permissions;
+	use std::os::unix::fs::PermissionsExt;
+	use std::path::PathBuf;
 	use tempfile::TempDir;
 
 	#[test]

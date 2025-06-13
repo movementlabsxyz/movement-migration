@@ -15711,7 +15711,6 @@ dependencies = [
  "thiserror 1.0.69",
  "tracing",
  "uuid",
- "walkdir",
 ]
 
 [[package]]
@@ -15880,7 +15879,6 @@ dependencies = [
  "thiserror 1.0.69",
  "tracing",
  "uuid",
- "walkdir",
 ]
 
 [[package]]
@@ -16051,11 +16049,9 @@ name = "mtma-util"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "bcs 0.1.4",
- "serde",
- "thiserror 1.0.69",
- "tokio",
+ "tempfile",
  "tracing",
+ "tracing-test",
  "walkdir",
 ]
 
