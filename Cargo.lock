@@ -16043,7 +16043,9 @@ dependencies = [
  "mtma-util",
  "reqwest 0.12.15",
  "serde",
+ "tempfile",
  "thiserror 1.0.69",
+ "tokio",
  "tracing",
 ]
 

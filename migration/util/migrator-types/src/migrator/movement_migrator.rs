@@ -141,3 +141,44 @@ impl MovementMigrator {
 		Ok(Self::new(Runner::Movement(Movement::try_from_dot_movement_dir(path)?)))
 	}
 }
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	#[tokio::test]
+	async fn test_snapshot() -> Result<(), anyhow::Error> {
+		let mut migrator = MovementMigrator::try_temp()?;
+		migrator.set_overlays(Overlays::default());
+
+		let migrator_for_task = migrator.clone();
+		let migrator_task = kestrel::task(async move { migrator_for_task.run().await });
+
+		// wait for the rest api to be ready
+		let _rest_api_url =
+			migrator.wait_for_rest_api_url(tokio::time::Duration::from_secs(300)).await?;
+
+		// end the migrator task
+		kestrel::end!(migrator_task)?;
+
+		// snapshot the migrator
+		let snapshot_dir = tempfile::tempdir()?;
+		let mut snapshot_migrator = migrator.snapshot(snapshot_dir.path().to_path_buf()).await?;
+		snapshot_migrator.set_overlays(Overlays::default());
+
+		// run the snapshot migrator
+		let snapshot_migrator_for_task = snapshot_migrator.clone();
+		let snapshot_migrator_task =
+			kestrel::task(async move { snapshot_migrator_for_task.run().await });
+
+		// wait for the rest api to be ready
+		let _rest_api_url = snapshot_migrator
+			.wait_for_rest_api_url(tokio::time::Duration::from_secs(300))
+			.await?;
+
+		// end the snapshot migrator task
+		kestrel::end!(snapshot_migrator_task)?;
+
+		Ok(())
+	}
+}
