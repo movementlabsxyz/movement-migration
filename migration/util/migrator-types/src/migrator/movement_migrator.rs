@@ -8,7 +8,7 @@ use mtma_types::movement::movement_client::rest_client::Client as MovementRestCl
 pub mod live;
 pub use live::LiveMigrator;
 use mtma_util::file::copy_dir_recursive;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tracing::warn;
 
 /// An enum supporting different types of runners.
@@ -126,9 +126,9 @@ impl MovementMigrator {
 	}
 
 	/// Recursively copies the dir for the runner to the given path
-	pub async fn copy_dir(&self, path: PathBuf) -> Result<(), anyhow::Error> {
+	pub async fn copy_dir(&self, path: &Path) -> Result<(), anyhow::Error> {
 		let dir = self.dir();
-		copy_dir_recursive(&dir, &path).context("failed to copy dir for MovementMigrator")?;
+		copy_dir_recursive(&dir, path).context("failed to copy dir for MovementMigrator")?;
 		Ok(())
 	}
 
@@ -136,7 +136,7 @@ impl MovementMigrator {
 	///
 	/// NOTE: this can be used to, for example, transition from a live migrator to a movement runner.
 	pub async fn snapshot(&self, path: PathBuf) -> Result<Self, anyhow::Error> {
-		self.copy_dir(path.clone()).await?;
+		self.copy_dir(&path).await?;
 
 		Ok(Self::new(Runner::Movement(Movement::try_from_dot_movement_dir(path)?)))
 	}
