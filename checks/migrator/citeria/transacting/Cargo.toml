@@ -11,7 +11,6 @@ rust-version = { workspace = true }
 [dependencies]
 mtma-migrator-test-types = { workspace = true }
 anyhow = { workspace = true }
-aptos-rest-client = { workspace = true }
 aptos-sdk = { workspace = true }
 bcs = { workspace = true }
 rand = { workspace = true }

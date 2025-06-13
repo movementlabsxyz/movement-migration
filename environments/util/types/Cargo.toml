@@ -10,7 +10,6 @@ rust-version = { workspace = true }
 
 [dependencies]
 mtma-migrator-types = { workspace = true }
-anyhow = { workspace = true }
 thiserror = { workspace = true }
 
 [lints]

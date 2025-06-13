@@ -9,20 +9,13 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-serde = { workspace = true }
 anyhow = { workspace = true }
-hex = { workspace = true }
 maptos-opt-executor = { workspace = true }
-aptos-executor = { workspace = true }
-aptos-vm = { workspace = true }
-aptos-types = { workspace = true }
 thiserror = { workspace = true }
-aptos-storage-interface = { workspace = true }
 either = { workspace = true }
 tracing = { workspace = true }
 movement-aptos-core = { workspace = true }
 futures-channel = { workspace = true }
-tokio = { workspace = true }
 movement-util = { workspace = true }
 uuid = { workspace = true }
 walkdir = { workspace = true }

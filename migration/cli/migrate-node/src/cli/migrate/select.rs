@@ -1,4 +1,3 @@
-use anyhow::Context;
 use clap::Parser;
 use mtma_box_environment::Config as BoxEnvironmentConfig;
 use mtma_environment_types::Environmentish;
