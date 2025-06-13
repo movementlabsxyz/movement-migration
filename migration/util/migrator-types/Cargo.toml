@@ -16,6 +16,13 @@ movement-core = { workspace = true }
 movement-aptos-core = { workspace = true }
 kestrel = { workspace = true }
 mtma-types = { workspace = true }
+reqwest = { workspace = true }
+mtma-util = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
 
 [lints]
 workspace = true

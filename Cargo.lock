@@ -15445,10 +15445,12 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap 4.5.36",
+ "kestrel",
  "mtma-environment-types",
  "mtma-migrator-types",
  "serde",
  "thiserror 1.0.69",
+ "tokio",
 ]
 
 [[package]]
@@ -15704,11 +15706,11 @@ dependencies = [
  "clap 4.5.36",
  "mtma-node-types",
  "mtma-types",
+ "mtma-util",
  "serde",
  "thiserror 1.0.69",
  "tracing",
  "uuid",
- "walkdir",
 ]
 
 [[package]]
@@ -15821,7 +15823,12 @@ dependencies = [
  "movement-core",
  "mtma-node-types",
  "mtma-types",
+ "mtma-util",
+ "reqwest 0.12.15",
+ "tempfile",
  "thiserror 1.0.69",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -15867,11 +15874,11 @@ dependencies = [
  "clap 4.5.36",
  "mtma-node-types",
  "mtma-types",
+ "mtma-util",
  "serde",
  "thiserror 1.0.69",
  "tracing",
  "uuid",
- "walkdir",
 ]
 
 [[package]]
@@ -15961,6 +15968,7 @@ dependencies = [
  "movement-aptos-core",
  "movement-util",
  "mtma-types",
+ "mtma-util",
  "tempfile",
  "thiserror 1.0.69",
  "tracing",
@@ -16034,6 +16042,17 @@ version = "0.0.1"
 dependencies = [
  "movement-aptos-core-util",
  "movement-core-util",
+]
+
+[[package]]
+name = "mtma-util"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "tempfile",
+ "tracing",
+ "tracing-test",
+ "walkdir",
 ]
 
 [[package]]
