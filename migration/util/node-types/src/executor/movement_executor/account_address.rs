@@ -1,8 +1,8 @@
 use super::GlobalStateKeyIterable;
-use super::MovementNode;
+use super::{MovementNode, MovementOptExecutor};
 use mtma_types::movement::aptos_types::account_address::AccountAddress;
 use mtma_types::movement::aptos_types::state_store::state_key::inner::StateKeyInner;
-use tracing::{debug, info};
+use tracing::debug;
 
 impl MovementNode {
 	/// Iterates over all account keys
@@ -39,5 +39,75 @@ impl AccountAddressIterable {
 		});
 
 		Ok(Box::new(addresses_iter))
+	}
+}
+
+#[cfg(test)]
+mod test {
+	use super::*;
+	use std::collections::HashSet;
+	use tracing::info;
+
+	#[tokio::test]
+	#[tracing_test::traced_test]
+	async fn test_iter_account_addresses() -> Result<(), anyhow::Error> {
+		// form the executor
+		let (movement_opt_executor, _temp_dir, _private_key, _receiver) =
+			MovementOptExecutor::try_generated().await?;
+		let movement_node = MovementNode::new(movement_opt_executor);
+
+		// form the iterable
+		let account_address_iterable = movement_node.iter_account_addresses(Some(0));
+		let account_addresses = account_address_iterable.iter()?;
+
+		let mut found_account_addresses = HashSet::new();
+		for account_address in account_addresses {
+			let account_address = account_address?;
+			info!("Account address: {:?}", account_address);
+			found_account_addresses.insert(account_address);
+		}
+
+		let comparison_account_addresses = HashSet::from([
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000001",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000002",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000003",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000004",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000005",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000006",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000007",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000008",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x0000000000000000000000000000000000000000000000000000000000000009",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x000000000000000000000000000000000000000000000000000000000000000a",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0x000000000000000000000000000000000000000000000000000000000a550c18",
+			)?,
+			AccountAddress::from_hex_literal(
+				"0xd1126ce48bd65fb72190dbd9a6eaa65ba973f1e1664ac0cfba4db1d071fd0c36",
+			)?,
+		]);
+
+		assert_eq!(found_account_addresses, comparison_account_addresses);
+
+		Ok(())
 	}
 }
