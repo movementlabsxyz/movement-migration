@@ -65,7 +65,6 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	});
 
 	// wait for the rest client to be ready
-	// once we have this, there should also be a config, so we can then kill off the migrator and proceed
 	info!("Waiting for movement migrator rest client");
 	movement_migrator
 		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(120))
@@ -84,18 +83,11 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	// Run the criteria
 	info!("Running criteria");
 	for criterion in criteria {
-		match criterion
+		criterion
 			.satisfies(&movement_migrator, &movement_aptos_migrator)
 			.await
 			.context("failed to satisfy criterion")
-			.map_err(|e| CheckError::Criteria(e.into()))
-		{
-			Ok(()) => {}
-			Err(e) => {
-				info!("Criterion failed: {:?}", e);
-				return Err(e);
-			}
-		}
+			.map_err(|e| CheckError::Criteria(e.into()))?;
 	}
 
 	// kill the movement migrator

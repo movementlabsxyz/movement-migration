@@ -15955,6 +15955,7 @@ name = "mtma-node-types"
 version = "0.0.1"
 dependencies = [
  "anyhow",
+ "bytes",
  "either",
  "futures-channel",
  "maptos-opt-executor",
