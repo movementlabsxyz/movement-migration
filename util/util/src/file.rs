@@ -5,16 +5,26 @@ use tracing::{debug, info};
 use walkdir::WalkDir;
 
 /// Copies a directory recursively.
-pub fn copy_dir_recursive(src: &Path, dst: &Path) -> std::io::Result<()> {
+pub fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<(), anyhow::Error> {
 	for entry in WalkDir::new(src) {
 		let entry = entry?;
 		let rel_path = entry.path().strip_prefix(src).unwrap();
 		let dest_path = dst.join(rel_path);
 
 		if entry.file_type().is_dir() {
-			fs::create_dir_all(&dest_path)?;
+			let permissions = fs::metadata(&entry.path()).context(format!(
+				"failed to get permissions while copying directory recursively from {src:?} {entry:?} to {dst:?}"
+			))?;
+			fs::create_dir_all(&dest_path).context(format!(
+				"failed to create directory while copying directory recursively from {src:?} {entry:?} {permissions:?} to {dst:?}"
+			))?;
 		} else {
-			fs::copy(entry.path(), &dest_path)?;
+			let permissions = fs::metadata(&entry.path()).context(format!(
+				"failed to get permissions while copying file recursively from {src:?} {entry:?} to {dst:?}"
+			))?;
+			fs::copy(entry.path(), &dest_path).context(format!(
+				"failed to copy file while copying directory recursively from {src:?} {entry:?} {permissions:?} to {dst:?}"
+			))?;
 		}
 	}
 	Ok(())
