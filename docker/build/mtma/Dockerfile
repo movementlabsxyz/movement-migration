@@ -39,7 +39,7 @@ RUN mkdir -p /run/user/1000/podman && \
 
 # Copy runtime bootstrap script
 COPY docker/build/mtma/entry.sh /app/entry.sh
-RUN chmod +x /app/entry.sh
+RUN chmod +x /app/entry.sh && chown mtma:mtma /app/entry.sh
 
 # Switch to non-root user
 USER mtma

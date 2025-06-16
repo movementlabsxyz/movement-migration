@@ -39,8 +39,8 @@ RUN mkdir -p /run/user/1000/podman && \
     chown -R movement:movement /run/user/1000 /app /nix
 
 # Copy runtime bootstrap script
-COPY docker/build/movement/entry.sh /app/entry.sh
-RUN chmod +x /app/entry.sh
+COPY docker/build/mtma/entry.sh /app/entry.sh
+RUN chmod +x /app/entry.sh && chown mtma:mtma /app/entry.sh
 
 # Switch to non-root user
 USER movement
