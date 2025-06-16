@@ -50,3 +50,27 @@ jobs:
           - mtma
     with:
       container_name: ${{ matrix.container_name }}
+
+  run-container-checks:
+    needs: 
+      - build-push-checked-containers
+    uses: ./.github/workflows/container-check.yml
+    with:
+      container_checks: |
+        [
+          {
+            "container": "movement",
+            "command": "--help"
+          },
+          {
+            "container": "movement-aptos",
+            "command": "--help"
+          },
+          {
+            "container": "mtma",
+            "command": "--help"
+          }
+        ]
+      github_sha: ${{ github.sha }}
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

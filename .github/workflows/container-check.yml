@@ -1,0 +1,69 @@
+name: Container Check Runner
+
+on:
+  workflow_call:
+    inputs:
+      container_checks:
+        required: true
+        type: string
+        description: 'JSON array of container checks in format [{"container": "container-name", "command": "command-to-run"}]'
+      github_sha:
+        required: true
+        type: string
+        description: 'The GITHUB_SHA to check against'
+      registry:
+        required: false
+        type: string
+        default: 'ghcr.io'
+        description: 'Container registry to use'
+      registry_owner:
+        required: false
+        type: string
+        default: '${{ github.repository_owner }}'
+        description: 'Container registry owner'
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+        description: 'GitHub token for registry access'
+
+jobs:
+  run-container-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Parse container checks
+        id: parse-checks
+        run: |
+          echo "checks<<EOF" >> $GITHUB_OUTPUT
+          echo '${{ inputs.container_checks }}' >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Run container checks
+        run: |
+          # Login to container registry
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ inputs.registry }} -u ${{ github.actor }} --password-stdin
+          
+          # Read and parse the checks
+          checks=$(cat <<'EOF'
+          ${{ steps.parse-checks.outputs.checks }}
+          EOF
+          )
+          
+          # Run each check
+          echo "$checks" | jq -c '.[]' | while read -r check; do
+            container=$(echo "$check" | jq -r '.container')
+            command=$(echo "$check" | jq -r '.command')
+            
+            echo "Running check for container: $container"
+            echo "Command: $command"
+            
+            # Pull the container
+            docker pull ${{ inputs.registry }}/${{ inputs.registry_owner }}/$container:${{ inputs.github_sha }}
+            
+            # Run the check
+            if ! docker run --rm ${{ inputs.registry }}/${{ inputs.registry_owner }}/$container:${{ inputs.github_sha }} $command; then
+              echo "Check failed for container: $container"
+              exit 1
+            fi
+            
+            echo "Check passed for container: $container"
+          done 
