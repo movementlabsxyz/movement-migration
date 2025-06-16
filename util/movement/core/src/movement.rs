@@ -157,12 +157,39 @@ impl Default for Overlays {
 	}
 }
 
+#[derive(Debug, Clone)]
+pub enum Workspace {
+	Vendor(Arc<MovementWorkspace>),
+	Path(PathBuf),
+}
+
+impl Workspace {
+	pub fn get_workspace_path(&self) -> &Path {
+		match self {
+			Self::Vendor(workspace) => workspace.get_workspace_path(),
+			Self::Path(path) => path,
+		}
+	}
+}
+
+impl From<MovementWorkspace> for Workspace {
+	fn from(workspace: MovementWorkspace) -> Self {
+		Self::Vendor(Arc::new(workspace))
+	}
+}
+
+impl From<PathBuf> for Workspace {
+	fn from(path: PathBuf) -> Self {
+		Self::Path(path)
+	}
+}
+
 #[derive(Clone)]
 pub struct Movement {
 	/// The config for the movement runner.
 	movement_config: MovementConfig,
 	/// The workspace in which [Movement] shall be run.
-	workspace: Arc<MovementWorkspace>,
+	workspace: Workspace,
 	/// The overlays to apply to the movement runner.
 	overlays: Overlays,
 	/// Whether to ping the rest api to ensure it is responding to pings.
@@ -186,14 +213,14 @@ impl Movement {
 	/// Creates a new [Movement] with the given workspace and overlays.
 	pub fn new(
 		movement_config: MovementConfig,
-		workspace: MovementWorkspace,
+		workspace: Workspace,
 		overlays: Overlays,
 		ping_rest_api: bool,
 		ping_faucet: bool,
 	) -> Self {
 		Self {
 			movement_config,
-			workspace: Arc::new(workspace),
+			workspace,
 			overlays,
 			ping_rest_api,
 			rest_api: State::new(),
@@ -202,25 +229,43 @@ impl Movement {
 		}
 	}
 
+	/// Tries to form a [Movement] from a well-formed `.movement` directory.
+	pub fn try_from_dot_movement_dir(path: PathBuf) -> Result<Self, MovementError> {
+		// read the [MovementConfig] from the .movement/config.json file
+		let config_path = path.join(".movement/config.json");
+		let config =
+			std::fs::read_to_string(config_path).map_err(|e| MovementError::Internal(e.into()))?;
+		let config: MovementConfig =
+			serde_json::from_str(&config).map_err(|e| MovementError::Internal(e.into()))?;
+
+		// set the workspace to the path
+		let workspace = Workspace::Path(path);
+
+		Ok(Self::new(config, workspace, BTreeSet::new().into(), true, true))
+	}
+
 	/// Creates a new [Movement] with a temporary workspace.
 	pub fn try_temp() -> Result<Self, MovementError> {
-		let workspace =
-			MovementWorkspace::try_temp().map_err(|e| MovementError::Internal(e.into()))?;
+		let workspace = Workspace::Vendor(Arc::new(
+			MovementWorkspace::try_temp().map_err(|e| MovementError::Internal(e.into()))?,
+		));
 		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Creates a new [Movement] within a debug directory.
 	pub fn try_debug() -> Result<Self, MovementError> {
-		let workspace =
-			MovementWorkspace::try_debug().map_err(|e| MovementError::Internal(e.into()))?;
+		let workspace = Workspace::Vendor(Arc::new(
+			MovementWorkspace::try_debug().map_err(|e| MovementError::Internal(e.into()))?,
+		));
 
 		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
 
 	/// Creates a new [Movement] within a debug home directory.
 	pub fn try_debug_home() -> Result<Self, MovementError> {
-		let workspace =
-			MovementWorkspace::try_debug_home().map_err(|e| MovementError::Internal(e.into()))?;
+		let workspace = Workspace::Vendor(Arc::new(
+			MovementWorkspace::try_debug_home().map_err(|e| MovementError::Internal(e.into()))?,
+		));
 
 		Ok(Self::new(MovementConfig::default(), workspace, BTreeSet::new().into(), true, true))
 	}
@@ -373,22 +418,40 @@ impl Movement {
 		);
 
 		// get the prepared command for the movement task
-		let mut command = Command::new(
-			self.workspace
-				.prepared_command(
-					"nix",
-					[
-						"develop",
-						"--command",
-						"bash",
-						"-c",
-						&format!(
+		let mut command = match &self.workspace {
+			// if this is a vendor workspace, we can use the prepared command
+			Workspace::Vendor(workspace) => Command::new(
+				workspace
+					.prepared_command(
+						"nix",
+						[
+							"develop",
+							"--command",
+							"bash",
+							"-c",
+							&format!(
 							"echo '' > .env && just movement-full-node docker-compose {overlays}"
 						),
-					],
-				)
-				.map_err(|e| MovementError::Internal(e.into()))?,
-		);
+						],
+					)
+					.map_err(|e| MovementError::Internal(e.into()))?,
+			),
+			// otherwise the dir should already be prepared
+			Workspace::Path(path) => Command::line(
+				"nix",
+				[
+					"develop",
+					"--command",
+					"bash",
+					"-c",
+					&format!("echo '' > .env && just movement-full-node docker-compose {overlays}"),
+				],
+				Some(path),
+				false,
+				vec![],
+				vec![],
+			),
+		};
 
 		info!(
 			"Writing movement config to {:?}",

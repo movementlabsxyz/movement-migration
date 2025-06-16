@@ -1,5 +1,5 @@
 [package]
-name = "mtma-box-environment"
+name = "mtma-util"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -9,14 +9,13 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-serde = { workspace = true, features = ["derive"] }
+walkdir = { workspace = true }
 anyhow = { workspace = true }
-clap = { workspace = true }
-thiserror = { workspace = true }
-mtma-migrator-types = { workspace = true }
-mtma-environment-types = { workspace = true }
-kestrel = { workspace = true }
-tokio = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+tracing-test = { workspace = true }
+tempfile = { workspace = true }
 
 [lints]
 workspace = true

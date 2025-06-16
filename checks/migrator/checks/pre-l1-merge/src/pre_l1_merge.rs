@@ -31,7 +31,7 @@ pub mod test {
 			// Create a Movement instance with the config
 			let movement = Movement::new(
 				movement_config.clone(),
-				movement_core::MovementWorkspace::try_temp()?,
+				movement_core::MovementWorkspace::try_temp()?.into(),
 				Overlays::default(),
 				true,
 				true,

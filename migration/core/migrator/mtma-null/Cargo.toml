@@ -15,10 +15,10 @@ anyhow = { workspace = true }
 thiserror = { workspace = true }
 mtma-node-types = { workspace = true }
 chrono = { workspace = true }
-walkdir = { workspace = true }
 uuid = { workspace = true }
 tracing = { workspace = true }
 mtma-types = { workspace = true }
+mtma-util = { workspace = true }
 
 [lints]
 workspace = true
