@@ -19,10 +19,13 @@ pub enum EnvironmentConfigError {
 #[clap(help_expected = true)]
 pub struct Config {
 	/// The rest api url of the box environment.
+	#[clap(long)]
 	pub rest_api_url: String,
 	/// The db dir of the box environment.
+	#[clap(long)]
 	pub db_dir: PathBuf,
 	/// Whether to isolate the box environment by snapshotting the movement runner and where to store the snapshot.
+	#[clap(long)]
 	pub snapshot_dir: Option<PathBuf>,
 }
 
