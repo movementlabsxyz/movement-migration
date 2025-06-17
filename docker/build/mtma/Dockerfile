@@ -20,6 +20,8 @@ RUN rust_binary="./target/release/mtma"; dest_dir="/tmp/runtime"; \
 
 FROM alpine:3.22.0
 
+RUN apk add --no-cache bash
+
 # Create non-root user
 RUN adduser -u 1000 -D -s /bin/bash mtma
 
