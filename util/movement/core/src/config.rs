@@ -79,7 +79,9 @@ impl Config {
 	pub fn build(&self) -> Result<Movement, ConfigError> {
 		Ok(Movement::new(
 			self.movement_config().map_err(|e| ConfigError::Internal(e.into()))?,
-			MovementWorkspace::try_temp().map_err(|e| ConfigError::Internal(e.into()))?,
+			MovementWorkspace::try_temp()
+				.map_err(|e| ConfigError::Internal(e.into()))?
+				.into(),
 			self.overlays(),
 			self.ping_rest_api,
 			self.ping_faucet,

@@ -31,7 +31,8 @@ members = [
     "util/movement/*",
     "util/movement-aptos/*",
     "util/bcs-ext",
-    "util/types"
+    "util/types",
+    "util/util"
 
 ]
 
@@ -215,6 +216,7 @@ movement-aptos = { path = "util/movement-aptos/movement-aptos" }
 movement-aptos-core = { path = "util/movement-aptos/core" }
 movement-aptos-core-util = { path = "util/movement-aptos/core-util" }
 mtma-types = { path = "util/types" }
+mtma-util = { path = "util/util" }
 
 ## Environments
 ### util
