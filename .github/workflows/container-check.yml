@@ -53,7 +53,7 @@ jobs:
             container=$(echo "$check" | jq -r '.container')
             command=$(echo "$check" | jq -r '.command')
             
-            echo "Running check for container: $container"
+            echo "Running check for container: $container (${{ inputs.registry }}/${{ inputs.registry_owner }}/$container:${{ inputs.github_sha }})"
             echo "Command: $command"
             
             # Pull the container
