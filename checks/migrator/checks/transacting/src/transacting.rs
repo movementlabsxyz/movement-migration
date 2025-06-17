@@ -12,7 +12,7 @@ pub mod test {
 	#[ignore = "activate when runtime problems are solved"]
 	async fn test_transacting() -> Result<(), anyhow::Error> {
 		// Form the migrator.
-		let mut movement_migrator = MovementMigrator::try_temp()?;
+		let mut movement_migrator = MovementMigrator::try_debug_home()?;
 		// TODO: use `MovementMigrator::try_debug_home()`
 		// let mut movement_migrator = MovementMigrator::try_debug_home()?;
 		movement_migrator.set_overlays(Overlays::default());

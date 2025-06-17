@@ -148,7 +148,7 @@ mod tests {
 
 	#[tokio::test]
 	async fn test_snapshot() -> Result<(), anyhow::Error> {
-		let mut migrator = MovementMigrator::try_temp()?;
+		let mut migrator = MovementMigrator::try_debug_home()?;
 		migrator.set_overlays(Overlays::default());
 
 		let migrator_for_task = migrator.clone();

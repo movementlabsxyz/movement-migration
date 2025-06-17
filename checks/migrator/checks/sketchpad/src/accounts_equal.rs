@@ -15,7 +15,7 @@ pub mod test {
 		// use a scope to ensure everything is dropped
 		{
 			// Form the migrator.
-			let mut movement_migrator = MovementMigrator::try_temp()?;
+			let mut movement_migrator = MovementMigrator::try_debug_home()?;
 			movement_migrator.set_overlays(Overlays::default());
 
 			// Start the migrator so that it's running in the background.
