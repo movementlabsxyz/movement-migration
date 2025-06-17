@@ -46,12 +46,18 @@ pub mod test {
 		// Run the checked migration.
 		let accounts_equal = AccountsEqual::new();
 		info!("Running migration");
-		checked_migration(&mut movement_migrator, &prelude, &migration, vec![accounts_equal])
-			.await?;
-		info!("Migration succeeded");
-
-		// exit the test is fine when you only have one test per crate because when cargo test is run across a workspace, it actually multi-processes the tests by crate
-		std::process::exit(0);
+		match checked_migration(&mut movement_migrator, &prelude, &migration, vec![accounts_equal])
+			.await
+		{
+			Ok(_) => {
+				info!("Migration succeeded");
+				std::process::exit(0);
+			}
+			Err(e) => {
+				info!("Migration failed: {:?}", e);
+				panic!("Migration failed: {:?}", e);
+			}
+		}
 
 		// Ok(())
 	}

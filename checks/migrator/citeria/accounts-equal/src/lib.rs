@@ -23,7 +23,6 @@ impl Criterionish for AccountsEqual {
 		movement_migrator: &MovementMigrator,
 		movement_aptos_migrator: &MovementAptosMigrator,
 	) -> Result<(), CriterionError> {
-		println!("Waiting for movement migrator rest client");
 		let movement_rest_client = movement_migrator
 			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(30))
 			.await
@@ -31,14 +30,13 @@ impl Criterionish for AccountsEqual {
 				"failed to wait for movement migrator rest client while checking accounts equal",
 			)
 			.map_err(|e| CriterionError::Internal(e.into()))?;
-		println!("Waiting for movement aptos migrator rest client");
+
 		let movement_aptos_rest_client = movement_aptos_migrator
 			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(30))
 			.await
 			.context("failed to wait for movement aptos migrator rest client while checking accounts equal")
 			.map_err(|e| CriterionError::Internal(e.into()))?;
 
-		println!("Getting movement node");
 		let movement_node =
 			movement_migrator.node().await.map_err(|e| CriterionError::Internal(e.into()))?;
 

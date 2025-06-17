@@ -11,6 +11,7 @@ pub mod faucet;
 pub mod rest_api;
 use std::path::PathBuf;
 
+use anyhow::Context;
 use faucet::{Faucet, ParseFaucet};
 use movement_signer_loader::identifiers::SignerIdentifier;
 use mtma_types::movement::movement_config::Config as MovementConfig;
@@ -372,10 +373,12 @@ impl Movement {
 			ParseFaucet::new(known_faucet_listen_url, self.ping_faucet),
 		);
 
-		// get the prepared command for the movement task
-		let mut command = Command::new(
-			self.workspace
-				.prepared_command(
+		let inner_command =
+			if tokio::fs::metadata(self.workspace_path().join(".movement/config.json"))
+				.await
+				.is_ok()
+			{
+				self.workspace.command(
 					"nix",
 					[
 						"develop",
@@ -387,8 +390,26 @@ impl Movement {
 						),
 					],
 				)
-				.map_err(|e| MovementError::Internal(e.into()))?,
-		);
+			} else {
+				self.workspace
+					.prepared_command(
+						"nix",
+						[
+							"develop",
+							"--command",
+							"bash",
+							"-c",
+							&format!(
+							"echo '' > .env && just movement-full-node docker-compose {overlays}"
+						),
+						],
+					)
+					.context("failed to prepare movement command")
+					.map_err(|e| MovementError::Internal(e.into()))?
+			};
+
+		// get the prepared command for the movement task
+		let mut command = Command::new(inner_command);
 
 		info!(
 			"Writing movement config to {:?}",
@@ -396,6 +417,7 @@ impl Movement {
 		);
 		let container_config = self
 			.container_movement_config()
+			.context("failed to get container movement config")
 			.map_err(|e| MovementError::Internal(e.into()))?;
 		// Write the [MovementConfig] to the workspace path at {workspace_path}/.movement/config.json
 		// Use tokio::fs::write to write the config to the file.
@@ -413,13 +435,16 @@ impl Movement {
 		tokio::fs::write(
 			&config_path,
 			serde_json::to_string(&container_config)
+				.context("failed to serialize movement config")
 				.map_err(|e| MovementError::Internal(e.into()))?,
 		)
 		.await
+		.context("failed to write movement config")
 		.map_err(|e| MovementError::Internal(e.into()))?;
 		// Set the permissions of the config file to 777
 		tokio::fs::set_permissions(&config_path, Permissions::from_mode(0o777))
 			.await
+			.context("failed to set permissions on movement config")
 			.map_err(|e| MovementError::Internal(e.into()))?;
 		info!("Wrote movement config");
 
@@ -429,6 +454,7 @@ impl Movement {
 				Pipe::STDOUT,
 				rest_api_fulfiller.sender().map_err(|e| MovementError::Internal(e.into()))?,
 			)
+			.context("failed to pipe command output to rest api fulfiller")
 			.map_err(|e| MovementError::Internal(e.into()))?;
 
 		// pipe command output to the faucet fulfiller
@@ -437,6 +463,7 @@ impl Movement {
 				Pipe::STDOUT,
 				faucet_fulfiller.sender().map_err(|e| MovementError::Internal(e.into()))?,
 			)
+			.context("failed to pipe command output to faucet fulfiller")
 			.map_err(|e| MovementError::Internal(e.into()))?;
 
 		// start the rest_api_fulfiller
