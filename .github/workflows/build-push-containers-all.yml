@@ -73,4 +73,4 @@ jobs:
         ]
       github_sha: ${{ github.sha }}
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      INFRA_GH_TOKEN: ${{ secrets.INFRA_GH_TOKEN }}
