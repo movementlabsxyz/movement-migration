@@ -29,7 +29,7 @@ impl TestingEnvironment {
 impl Environmentish for TestingEnvironment {
 	async fn build_movement_migrator(&self) -> Result<MovementMigrator, EnvironmentError> {
 		// Form the migrator.
-		let mut movement_migrator = MovementMigrator::try_debug_home()
+		let mut movement_migrator = MovementMigrator::try_temp()
 			.map_err(|e| TestingEnvironmentError::Internal(e.into()))?;
 		movement_migrator.set_overlays(Overlays::default());
 

@@ -444,7 +444,7 @@ impl Movement {
 					"--command",
 					"bash",
 					"-c",
-					&format!("echo '' > .env && just movement-full-node docker-compose {overlays}"),
+					&format!("echo $USER && ls -al .movement && echo '' > .env && just movement-full-node docker-compose {overlays}"),
 				],
 				Some(path),
 				false,
