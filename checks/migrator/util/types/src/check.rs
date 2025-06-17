@@ -2,7 +2,7 @@ use crate::criterion::{Criterionish, MovementMigrator};
 use anyhow::Context;
 use mtma_migrator_types::migration::Migrationish;
 use mtma_node_test_types::prelude::Prelude;
-use tracing::info;
+use tracing::{info, warn};
 
 /// Errors thrown when working with the [Config].
 #[derive(Debug, thiserror::Error)]
@@ -24,6 +24,14 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	migration: &impl Migrationish,
 	criteria: Vec<T>,
 ) -> Result<(), CheckError> {
+	// reset the states of the movement migrator
+	info!("Resetting movement migrator states");
+	movement_migrator
+		.reset_states()
+		.await
+		.context("failed to reset movement migrator states")
+		.map_err(|e| CheckError::Internal(e.into()))?;
+
 	// Get the executor
 	info!("Getting movement executor");
 	let mut movement_executor = movement_migrator
@@ -52,7 +60,10 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	info!("Tasking movement migrator");
 	let movement_migrator_for_task = movement_migrator.clone();
 	let movement_migrator_task = kestrel::task(async move {
-		movement_migrator_for_task.run().await?;
+		movement_migrator_for_task.run().await.map_err(|e| {
+			warn!("Failed to run movement migrator: {:?}", e);
+			e
+		})?;
 		Ok::<_, anyhow::Error>(())
 	});
 
@@ -65,18 +76,20 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	});
 
 	// wait for the rest client to be ready
-	// once we have this, there should also be a config, so we can then kill off the migrator and proceed
 	info!("Waiting for movement migrator rest client");
 	movement_migrator
-		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(120))
+		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(300))
 		.await
 		.context("failed to wait for movement migrator rest client")
-		.map_err(|e| CheckError::Migration(e.into()))?;
+		.map_err(|e| {
+			warn!("Failed to wait for movement migrator rest client: {:?}", e);
+			CheckError::Migration(e.into())
+		})?;
 
 	// wait for movement aptos migrator to be ready
 	info!("Waiting for movement aptos migrator rest client");
 	movement_aptos_migrator
-		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(120))
+		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(300))
 		.await
 		.context("failed to wait for movement aptos migrator rest client")
 		.map_err(|e| CheckError::Migration(e.into()))?;
@@ -84,18 +97,11 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	// Run the criteria
 	info!("Running criteria");
 	for criterion in criteria {
-		match criterion
+		criterion
 			.satisfies(&movement_migrator, &movement_aptos_migrator)
 			.await
 			.context("failed to satisfy criterion")
-			.map_err(|e| CheckError::Criteria(e.into()))
-		{
-			Ok(()) => {}
-			Err(e) => {
-				info!("Criterion failed: {:?}", e);
-				return Err(e);
-			}
-		}
+			.map_err(|e| CheckError::Criteria(e.into()))?;
 	}
 
 	// kill the movement migrator

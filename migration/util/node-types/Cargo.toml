@@ -20,10 +20,12 @@ movement-util = { workspace = true }
 uuid = { workspace = true }
 walkdir = { workspace = true }
 mtma-types = { workspace = true }
+bytes = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }
 tracing-test = { workspace = true }
+tokio = { workspace = true }
 
 [lints]
 workspace = true

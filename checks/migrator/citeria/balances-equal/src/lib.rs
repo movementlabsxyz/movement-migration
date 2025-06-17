@@ -41,19 +41,13 @@ impl Criterionish for BalancesEqual {
 
 		info!("Iterating over movement node accounts");
 		for account_address_res in movement_node
-			.iter_account_addresses(0)
+			.iter_account_addresses(Some(0))
+			.iter()
 			.map_err(|e| CriterionError::Internal(e.into()))?
 		{
-			let account_address = match account_address_res
-				.context("account address is none")
-				.map_err(|e| CriterionError::Internal(e.into()))
-			{
-				Ok(account_address) => account_address,
-				Err(e) => {
-					info!("Transaction has no sender: {:?}", e);
-					continue;
-				}
-			};
+			let account_address = account_address_res
+				.context("failed to get account address")
+				.map_err(|e| CriterionError::Internal(e.into()))?;
 
 			info!("Getting movement account balance");
 			let movement_account_balance = movement_rest_client

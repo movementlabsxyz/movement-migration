@@ -30,6 +30,7 @@ impl Criterionish for AccountsEqual {
 				"failed to wait for movement migrator rest client while checking accounts equal",
 			)
 			.map_err(|e| CriterionError::Internal(e.into()))?;
+
 		let movement_aptos_rest_client = movement_aptos_migrator
 			.wait_for_rest_client_ready(tokio::time::Duration::from_secs(30))
 			.await
@@ -41,19 +42,13 @@ impl Criterionish for AccountsEqual {
 
 		info!("Iterating over movement node accounts");
 		for account_address_res in movement_node
-			.iter_account_addresses(0)
+			.iter_account_addresses(Some(0))
+			.iter()
 			.map_err(|e| CriterionError::Internal(e.into()))?
 		{
-			let account_address = match account_address_res
-				.context("account address is none")
-				.map_err(|e| CriterionError::Internal(e.into()))
-			{
-				Ok(account_address) => account_address,
-				Err(e) => {
-					info!("Transaction has no sender: {:?}", e);
-					continue;
-				}
-			};
+			let account_address = account_address_res
+				.context("failed to get account address")
+				.map_err(|e| CriterionError::Internal(e.into()))?;
 
 			info!("Getting movement resource");
 			let movement_resource = movement_rest_client
