@@ -1,5 +1,5 @@
 [package]
-name = "migrator-sketchpad"
+name = "mtma-migrator-transacting"
 version = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
@@ -12,12 +12,13 @@ rust-version = { workspace = true }
 mtma-migrator-types = { workspace = true }
 mtma-migrator-test-types = { workspace = true }
 anyhow = { workspace = true }
-mtma-migrator-test-accounts-equal-criterion = { workspace = true }
+aptos-sdk = { workspace = true }
+mtma-migrator-test-transacting-criterion = { workspace = true }
 mtma-node-null-core = { workspace = true }
 tokio = { workspace = true }
 kestrel = { workspace = true }
 mtma-node-test-types = { workspace = true }
-mtma-migrator-pre-l1-merge-core = { workspace = true }
+rand = { workspace = true }
 
 [dev-dependencies]
 tracing-test = { workspace = true }

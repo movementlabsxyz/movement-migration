@@ -1,12 +1,13 @@
 use crate::Migrate;
 use anyhow::Context;
-use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::LocalAccountReleaseSigner;
-use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::OverrideAccountAddressReleaseSigner;
+use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::{
+	LocalAccountReleaseSigner, OverrideAccountAddressReleaseSigner,
+};
 use clap::Parser;
-use movement_core::movement::{Celestia, Eth};
-use movement_core::Config as MovementCoreConfig;
-use movement_signer::key::TryFromCanonicalString;
-use movement_signer_loader::identifiers::{local::Local, SignerIdentifier};
+use movement_core::{
+	movement::{Celestia, Eth},
+	Config as MovementCoreConfig,
+};
 use mtma_node_null_core::Config as MtmaNodeNullConfig;
 use mtma_types::movement::aptos_sdk::types::{
 	account_address::AccountAddress, account_config::aptos_test_root_address, LocalAccount,
