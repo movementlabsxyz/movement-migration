@@ -492,6 +492,13 @@ impl Movement {
 			.chain
 			.maptos_private_key_signer_identifier
 	}
+
+	/// Resets the states of the [Movement] (forces them to be filled again).
+	pub async fn reset_states(&self) -> Result<(), MovementError> {
+		self.rest_api.write().reset().await;
+		self.faucet.write().reset().await;
+		Ok(())
+	}
 }
 
 impl Drop for Movement {

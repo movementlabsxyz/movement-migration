@@ -24,6 +24,14 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	migration: &impl Migrationish,
 	criteria: Vec<T>,
 ) -> Result<(), CheckError> {
+	// reset the states of the movement migrator
+	info!("Resetting movement migrator states");
+	movement_migrator
+		.reset_states()
+		.await
+		.context("failed to reset movement migrator states")
+		.map_err(|e| CheckError::Internal(e.into()))?;
+
 	// Get the executor
 	info!("Getting movement executor");
 	let mut movement_executor = movement_migrator
@@ -42,6 +50,7 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 
 	// Run the migration
 	info!("Running migration");
+	println!("Running migration");
 	let movement_aptos_migrator = migration
 		.migrate(movement_migrator)
 		.await
@@ -49,6 +58,7 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 		.map_err(|e| CheckError::Migration(e.into()))?;
 
 	// start the movement migrator
+	println!("Tasking movement migrator");
 	info!("Tasking movement migrator");
 	let movement_migrator_for_task = movement_migrator.clone();
 	let movement_migrator_task = kestrel::task(async move {
@@ -57,6 +67,7 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	});
 
 	// start the movement aptos migrator
+	println!("Tasking movement aptos migrator");
 	info!("Tasking movement aptos migrator");
 	let movement_aptos_migrator_for_task = movement_aptos_migrator.clone();
 	let movement_aptos_migrator_task = kestrel::task(async move {
@@ -65,17 +76,22 @@ pub async fn checked_migration<T: Criterionish + Send + Sync>(
 	});
 
 	// wait for the rest client to be ready
+	println!("Waiting for movement migrator rest client");
 	info!("Waiting for movement migrator rest client");
 	movement_migrator
-		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(120))
+		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(10))
 		.await
 		.context("failed to wait for movement migrator rest client")
-		.map_err(|e| CheckError::Migration(e.into()))?;
+		.map_err(|e| {
+			println!("Failed to wait for movement migrator rest client: {:?}", e);
+			CheckError::Migration(e.into())
+		})?;
 
 	// wait for movement aptos migrator to be ready
+	println!("Waiting for movement aptos migrator rest client");
 	info!("Waiting for movement aptos migrator rest client");
 	movement_aptos_migrator
-		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(120))
+		.wait_for_rest_client_ready(tokio::time::Duration::from_secs(300))
 		.await
 		.context("failed to wait for movement aptos migrator rest client")
 		.map_err(|e| CheckError::Migration(e.into()))?;

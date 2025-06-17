@@ -142,12 +142,12 @@ aptos-vm-genesis = { git = "https://github.com/movementlabsxyz/aptos-core.git", 
 
 
 # kestrel 
-kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-include-dir = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
-ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
+kestrel = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "e23cbcc8c804d27d8ae39f582ff7eae6bebad50" }
+jsonlvar = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "e23cbcc8c804d27d8ae39f582ff7eae6bebad50" }
+commander = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "e23cbcc8c804d27d8ae39f582ff7eae6bebad50" }
+include-dir = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "e23cbcc8c804d27d8ae39f582ff7eae6bebad50" }
+include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "e23cbcc8c804d27d8ae39f582ff7eae6bebad50" }
+ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "e23cbcc8c804d27d8ae39f582ff7eae6bebad50" }
 
 # orfile
 orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "f02851242af77791b905efc19aef6af21918fb1e" }

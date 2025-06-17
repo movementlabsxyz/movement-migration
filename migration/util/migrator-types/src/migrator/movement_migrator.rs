@@ -103,4 +103,14 @@ impl MovementMigrator {
 			Runner::Movement(movement) => movement.set_overlays(overlays),
 		}
 	}
+
+	/// Resets the states of the [MovementMigrator] (forces them to be filled again).
+	pub async fn reset_states(&self) -> Result<(), anyhow::Error> {
+		match &self.runner {
+			Runner::Movement(movement) => movement
+				.reset_states()
+				.await
+				.map_err(|e| anyhow::anyhow!("failed to reset movement states: {}", e)),
+		}
+	}
 }

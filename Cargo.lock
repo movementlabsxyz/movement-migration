@@ -8935,7 +8935,7 @@ dependencies = [
 [[package]]
 name = "commander"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "anyhow",
  "futures",
@@ -12064,7 +12064,7 @@ dependencies = [
 [[package]]
 name = "include-dir"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "anyhow",
  "commander 0.1.0",
@@ -12079,7 +12079,7 @@ dependencies = [
 [[package]]
 name = "include-vendor"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "anyhow",
  "cargo_metadata 0.19.2",
@@ -12375,7 +12375,7 @@ dependencies = [
 [[package]]
 name = "jsonlvar"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "jsonlvar-core",
  "jsonlvar-macro",
@@ -12386,7 +12386,7 @@ dependencies = [
 [[package]]
 name = "jsonlvar-core"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "regex",
  "serde",
@@ -12397,7 +12397,7 @@ dependencies = [
 [[package]]
 name = "jsonlvar-macro"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -12409,7 +12409,7 @@ dependencies = [
 [[package]]
 name = "jsonlvar-tokio"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "anyhow",
  "jsonlvar",
@@ -12618,7 +12618,7 @@ dependencies = [
 [[package]]
 name = "kestrel"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "futures",
  "kestrel-macro",
@@ -12631,7 +12631,7 @@ dependencies = [
 [[package]]
 name = "kestrel-macro"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "convert_case 0.8.0",
  "proc-macro2",
@@ -12644,7 +12644,7 @@ dependencies = [
 [[package]]
 name = "kestrel-process"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "commander 0.1.0",
  "jsonlvar",
@@ -12658,7 +12658,7 @@ dependencies = [
 [[package]]
 name = "kestrel-state"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "thiserror 1.0.69",
  "tokio",
@@ -18473,7 +18473,7 @@ dependencies = [
 [[package]]
 name = "ready-docker"
 version = "0.1.0"
-source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=3220d704df7e06d1dcc5266e15eaf05db86fdb07#3220d704df7e06d1dcc5266e15eaf05db86fdb07"
+source = "git+https://github.com/movementlabsxyz/kestrel.git?rev=e23cbcc8c804d27d8ae39f582ff7eae6bebad50#e23cbcc8c804d27d8ae39f582ff7eae6bebad503"
 dependencies = [
  "anyhow",
  "bollard",

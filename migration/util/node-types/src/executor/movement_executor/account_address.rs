@@ -1,5 +1,5 @@
 use super::GlobalStateKeyIterable;
-use super::{MovementNode, MovementOptExecutor};
+use super::MovementNode;
 use mtma_types::movement::aptos_types::account_address::AccountAddress;
 use mtma_types::movement::aptos_types::state_store::state_key::inner::StateKeyInner;
 use tracing::debug;
@@ -44,6 +44,7 @@ impl AccountAddressIterable {
 
 #[cfg(test)]
 mod test {
+	use super::super::MovementOptExecutor;
 	use super::*;
 	use std::collections::HashSet;
 	use tracing::info;
