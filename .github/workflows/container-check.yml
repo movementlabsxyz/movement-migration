@@ -22,7 +22,7 @@ on:
         default: '${{ github.repository_owner }}'
         description: 'Container registry owner'
     secrets:
-      GITHUB_TOKEN:
+      INFRA_GH_TOKEN:
         required: true
         description: 'GitHub token for registry access'
 
@@ -40,7 +40,7 @@ jobs:
       - name: Run container checks
         run: |
           # Login to container registry
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ inputs.registry }} -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.INFRA_GH_TOKEN }}" | docker login ${{ inputs.registry }} -u ${{ github.actor }} --password-stdin
           
           # Read and parse the checks
           checks=$(cat <<'EOF'
