@@ -4,7 +4,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay/47beae969336c05e892e1e4a9dbaac9593de34ab";
     flake-utils.url = "github:numtide/flake-utils";
     crane.url = "github:ipetkov/crane";
-    movement.url = "github:movementlabsxyz/movement/aa1ffed1a113441a65662792d15682ad52406108";
+    movement.url = "github:movementlabsxyz/movement/c57483427c16ab637ba05bd345b65d94785a8b08";
   };
 
   outputs = { nixpkgs, rust-overlay, flake-utils, crane, movement, ... }:
