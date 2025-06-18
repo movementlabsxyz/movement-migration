@@ -4,7 +4,7 @@ pub use movement_config;
 pub use movement_util::{self, *};
 
 pub const CONTAINER_REPO: &str = "ghcr.io/movementlabsxyz";
-pub const CONTAINER_REV: &str = "c2372ff";
+pub const CONTAINER_REV: &str = "c574834";
 
 #[derive(Debug, Clone)]
 pub struct Container<'a> {
