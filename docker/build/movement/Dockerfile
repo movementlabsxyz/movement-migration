@@ -29,6 +29,7 @@ RUN adduser -u 1000 -D -s /bin/bash movement
 # Copy binary and runtime deps
 COPY --from=builder /tmp/build/target/release/movement /app/movement
 COPY --from=builder /tmp/runtime/nix/store /nix/store
+COPY --dereference --from=builder /nix/store/ /nix/store/
 
 # Environment setup
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"

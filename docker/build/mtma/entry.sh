@@ -2,8 +2,11 @@
 
 set -e
 
+echo "Debugging nix store..."
+ls -al /nix/store
 find /nix/store -type d -path '*/bin' | paste -sd: -
 export PATH="/nix/store:$(find /nix/store -type d -path '*/bin' | paste -sd: -):$PATH"
+echo "PATH: $PATH"
 
 # Start Podman machine if not running
 if ! podman machine inspect podman-machine-default --format '{{.State}}' 2>/dev/null | grep -q 'running'; then
