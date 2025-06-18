@@ -15778,22 +15778,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mtma-migrator-matching-feature-flags"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "kestrel",
- "mtma-migrator-test-matching-feature-flags-criterion",
- "mtma-migrator-test-types",
- "mtma-migrator-types",
- "mtma-node-null-core",
- "mtma-node-test-types",
- "tokio",
- "tracing",
- "tracing-test",
-]
-
-[[package]]
 name = "mtma-migrator-checks-pre-l1-merge"
 version = "0.0.1"
 dependencies = [
@@ -15815,6 +15799,22 @@ dependencies = [
  "mtma-types",
  "rand 0.7.3",
  "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
+name = "mtma-migrator-matching-feature-flags"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "kestrel",
+ "mtma-migrator-test-matching-feature-flags-criterion",
+ "mtma-migrator-test-types",
+ "mtma-migrator-types",
+ "mtma-node-null-core",
+ "mtma-node-test-types",
  "tokio",
  "tracing",
  "tracing-test",

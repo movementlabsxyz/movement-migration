@@ -57,6 +57,10 @@
           qemu_kvm
           qemu-utils
           libvirt
+          kubectl
+          kubernetes-helm
+          kustomize
+          minikube
         ] ++ lib.optionals stdenv.isDarwin [
           fixDarwinDylibNames
         ] ++ lib.optionals stdenv.isLinux [
@@ -145,8 +149,27 @@
                 else
                   echo "Warning: Could not find Podman socket"
                 fi
+
+
+                export KUBECONFIG=$PWD/k8s/minikube/kubeconfig
+                PROFILE="movement-migration"
+
+                # Start cluster if needed
+                if ! minikube status -p $PROFILE | grep -q "Running"; then
+                  echo "🚀 Starting Minikube..."
+                  minikube start -p $PROFILE --driver=podman --container-runtime=containerd
+                fi
+
+                # Export kubeconfig for project-local use
+                echo "📄 Writing kubeconfig to $KUBECONFIG"
+                minikube update-context -p $PROFILE
+                kubectl config view --raw --flatten --context=$PROFILE > ./k8s/minikube/kubeconfig
+                minikube update-context -p $PROFILE
+
+                echo "✅ Minikube is running and configured for Helm + kubectl"
+
               else 
-                echo "Build is docker podman will not be started."
+                echo "Build is docker, podman and minikube will not be started."
               fi
 
               # Add ./target/debug/* to PATH
