@@ -15617,8 +15617,8 @@ dependencies = [
  "mtma-provisioner-environment",
  "mtma-testing-environment",
  "orfile",
+ "select",
  "serde",
- "slect",
  "tokio",
  "tracing",
  "tracing-subscriber 0.3.19",
@@ -16672,7 +16672,7 @@ dependencies = [
 [[package]]
 name = "orfile"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac#e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac"
 dependencies = [
  "anyhow",
  "orfile-macro",
@@ -16683,7 +16683,7 @@ dependencies = [
 [[package]]
 name = "orfile-macro"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac#e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -16694,7 +16694,7 @@ dependencies = [
 [[package]]
 name = "orfile-util"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac#e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac"
 dependencies = [
  "serde",
  "serde_json",
@@ -19473,6 +19473,43 @@ dependencies = [
 ]
 
 [[package]]
+name = "select"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac#e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac"
+dependencies = [
+ "anyhow",
+ "once_cell",
+ "select-macro",
+ "select-util",
+ "serde_json",
+]
+
+[[package]]
+name = "select-macro"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac#e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac"
+dependencies = [
+ "heck 0.4.1",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "select-util"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac#e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac"
+dependencies = [
+ "clap 4.5.36",
+ "once_cell",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+]
+
+[[package]]
 name = "self-replace"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -20030,43 +20067,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f92a496fb766b417c996b9c5e57daf2f7ad3b0bebe1ccfca4856390e3d3bb67"
 dependencies = [
  "autocfg",
-]
-
-[[package]]
-name = "slect"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
-dependencies = [
- "anyhow",
- "once_cell",
- "serde_json",
- "slect-macro",
- "slect-util",
-]
-
-[[package]]
-name = "slect-macro"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
-dependencies = [
- "heck 0.4.1",
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn 2.0.100",
-]
-
-[[package]]
-name = "slect-util"
-version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
-dependencies = [
- "clap 4.5.36",
- "once_cell",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
- "tokio",
 ]
 
 [[package]]
