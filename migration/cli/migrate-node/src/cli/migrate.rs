@@ -10,7 +10,7 @@ pub enum Migrate {
 	/// Core migration over the node.
 	Core(core::Core),
 	/// Select migration over the node.
-	Select(select::select::Select),
+	Select(select::select_command::Select),
 }
 
 impl Migrate {

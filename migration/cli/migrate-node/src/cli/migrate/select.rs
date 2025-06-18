@@ -6,19 +6,19 @@ use mtma_migrator_types::migrator::MovementMigrator;
 use mtma_node_null_core::Config as NullConfig;
 use mtma_provisioner_environment::Config as ProvisionerEnvironmentConfig;
 use mtma_testing_environment::Config as TestingEnvironmentConfig;
+use select::Select;
 use serde::{Deserialize, Serialize};
-use slect::Slect;
 
 /// Select migration over the node.
-#[derive(Parser, Slect, Deserialize, Serialize, Debug, Clone)]
+#[derive(Parser, Select, Deserialize, Serialize, Debug, Clone)]
 #[clap(help_expected = true)]
 pub struct Select {
-	/// Extra args to pass to slect API
-	#[slect(environment_testing = TestingEnvironmentConfig, environment_box = BoxEnvironmentConfig, environment_provisioner = ProvisionerEnvironmentConfig, null = NullConfig)]
+	/// Extra args to pass to select API
+	#[select(environment_testing = TestingEnvironmentConfig, environment_box = BoxEnvironmentConfig, environment_provisioner = ProvisionerEnvironmentConfig, null = NullConfig)]
 	extra_args: Vec<String>,
 }
 
-impl select::Select {
+impl select_command::Select {
 	pub async fn get_movement_migrator(&self) -> Result<MovementMigrator, anyhow::Error> {
 		let (
 			maybe_environment_testing,
