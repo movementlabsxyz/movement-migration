@@ -9,9 +9,27 @@ WORKDIR /tmp/build
 # Set build to docker to skip the podman initilization while opening the flake
 ENV BUILD=docker
 
-# Build the Rust application
 RUN nix --extra-experimental-features "nix-command flakes" \
-        develop .#docker-build --command bash -c "cargo build --release --bin movement"
+        develop --command bash -c "mkdir -p  /tmp/executables"
+
+# Copy celestia-appd to /tmp/executables
+RUN nix --extra-experimental-features "nix-command flakes" \
+        develop --command bash -c "cp \$(which podman) /tmp/executables/podman"
+
+        # Build the Rust application
+RUN nix --extra-experimental-features "nix-command flakes" \
+        develop .#docker-build --command bash -c "cargo build --release -p movement"
+
+
+RUN rust_binary="./target/release/movement"; dest_dir="/tmp/runtime"; \
+    mkdir -p "$dest_dir"; ldd "$rust_binary" | awk '{print $3}' | \
+    grep '^/' | xargs -I {} dirname {} | sort | uniq | xargs -I {} \
+    bash -c 'mkdir -p "$0/$1" && rsync -a --copy-links "$1/" "$0/$1/"' "$dest_dir" {}
+
+RUN rust_binary="/tmp/executables/podman"; dest_dir="/tmp/runtime"; \
+    mkdir -p "$dest_dir"; ldd "$rust_binary" | awk '{print $3}' | \
+    grep '^/' | xargs -I {} dirname {} | sort | uniq | xargs -I {} \
+    bash -c 'mkdir -p "$0/$1" && rsync -a --copy-links "$1/" "$0/$1/"' "$dest_dir" {}
 
 FROM alpine:3.22.0
 
@@ -22,7 +40,10 @@ RUN adduser -u 1000 -D -s /bin/bash movement
 
 # Copy binary and runtime deps
 COPY --from=builder /tmp/build/target/release/movement /app/movement
-COPY --from=builder /nix/store /nix/store/
+COPY --from=builder /nix/store /nix/store
+
+# copy executables
+COPY --from=builder /tmp/executables/podman /usr/local/bin/podman
 
 # Environment setup
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
