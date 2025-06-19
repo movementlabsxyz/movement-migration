@@ -13,12 +13,6 @@ ENV BUILD=docker
 RUN nix --extra-experimental-features "nix-command flakes" \
         develop .#docker-build --command bash -c "cargo build --release --bin movement"
 
-RUN rust_binary="./target/release/movement"; dest_dir="/tmp/runtime"; \
-    mkdir -p "$dest_dir"; ldd "$rust_binary" | awk '{print $3}' | \
-    grep '^/' | xargs -I {} dirname {} | sort | uniq | xargs -I {} \
-    bash -c 'mkdir -p "$0/$1" && rsync -a --copy-links "$1/" "$0/$1/"' "$dest_dir" {}
-
-
 FROM alpine:3.22.0
 
 RUN apk add --no-cache bash
@@ -28,8 +22,7 @@ RUN adduser -u 1000 -D -s /bin/bash movement
 
 # Copy binary and runtime deps
 COPY --from=builder /tmp/build/target/release/movement /app/movement
-COPY --from=builder /tmp/runtime/nix/store /nix/store
-COPY --from=builder /nix/store/ /nix-bin/store/
+COPY --from=builder /nix/store /nix/store/
 
 # Environment setup
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
