@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         architecture: [x86_64, arm64]        
-    runs-on: ${{ matrix.architecture == 'x86_64' && 'buildjet-32vcpu-ubuntu-2204' || 'buildjet-32vcpu-ubuntu-2204-arm' }}
+    runs-on: ${{ matrix.architecture == 'x86_64' && 'movement-runner' || 'movement-runner-arm' }}
     steps:
 
       - name: Free Disk Space (Ubuntu)
