@@ -53,7 +53,7 @@ jobs:
 
   run-container-checks:
     needs: 
-      - build-push-checked-containers
+      - build-push-checked-manifest
     uses: ./.github/workflows/container-check.yml
     with:
       container_checks: |
