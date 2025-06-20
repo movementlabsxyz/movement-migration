@@ -44,7 +44,7 @@ if [ "$debug" = true ]; then
 fi
 
 # Get git info
-commit_hash=$(git rev-parse HEAD | cut -c1-7)
+commit_hash=$(git rev-parse HEAD)
 branch_name=$(git rev-parse --abbrev-ref HEAD)
 sanitized_branch_name=${branch_name//\//.}
 is_tag=false
