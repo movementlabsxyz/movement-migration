@@ -18,7 +18,7 @@ RUN nix --extra-experimental-features "nix-command flakes" \
 
         # Build the Rust application
 RUN nix --extra-experimental-features "nix-command flakes" \
-        develop .#docker-build --command bash -c "cargo build --release -p mtma"
+        develop .#docker-build --command bash -c "cargo build --release --bin mtma"
 
 
 RUN rust_binary="./target/release/mtma"; dest_dir="/tmp/runtime"; \
