@@ -24,6 +24,12 @@ jobs:
         architecture: [x86_64, arm64]        
     runs-on: ${{ matrix.architecture == 'x86_64' && 'buildjet-16vcpu-ubuntu-2204' || 'buildjet-16vcpu-ubuntu-2204-arm' }}
     steps:
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          
       - name: Checkout repository
         uses: actions/checkout@v4
         with: 
