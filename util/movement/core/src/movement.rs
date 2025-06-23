@@ -11,7 +11,7 @@ pub mod faucet;
 pub mod rest_api;
 use std::path::PathBuf;
 
-use faucet::{Faucet, ParseFaucet};
+use faucet::{Faucet as FaucetApi, ParseFaucet};
 use movement_signer_loader::identifiers::SignerIdentifier;
 use mtma_types::movement::movement_config::Config as MovementConfig;
 use rest_api::{ParseRestApi, RestApi};
@@ -26,90 +26,72 @@ vendor_workspace!(MovementWorkspace, "movement");
 /// The different overlays that can be applied to the movement runner. s
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Overlay {
-	/// The celestia overlay is used to run the movement runner on a select Celestia network.
-	Celestia(Celestia),
-	/// The eth overlay is used to run the movement runner on a select Ethereum network.
-	Eth(Eth),
-	/// The test migration overlay is used to run and check the migration to the L1 pre-merge chain.
-	///
-	/// TODO: in this repo, we may want to remove this from the runner and place it actual embeeded code under the -core lib for https://github.com/movementlabsxyz/movement-migration/issues/61
-	TestMigrateBiarritzRc1ToPreL1Merge,
+	/// The local overlay takes care of setting up the DA sequencer and the full nodd
+	Local(Local),
+	/// The faucet overlay adds the faucet to whatever orchestration
+	Faucet(Faucet),
+	/// The fullnode overlay is best used for connecting to an existing network
+	Fullnode(Fullnode),
 }
 
 impl Overlay {
 	/// Returns the overlay as a string as would be used in a nix command.
 	pub fn overlay_arg(&self) -> &str {
 		match self {
-			Self::Celestia(celestia) => celestia.overlay_arg(),
-			Self::Eth(eth) => eth.overlay_arg(),
-			Self::TestMigrateBiarritzRc1ToPreL1Merge => "test-migrate-biarritz-rc1-to-pre-l1-merge",
+			Self::Local(local) => local.overlay_arg(),
+			Self::Faucet(faucet) => faucet.overlay_arg(),
+			Self::Fullnode(fullnode) => fullnode.overlay_arg(),
 		}
 	}
 }
 
-/// Errors thrown when parsing an [Eth] network.
+/// Errors thrown when parsing an [Overlay] network.
 #[derive(Debug, thiserror::Error)]
-pub enum EthError {
-	#[error("invalid ethereum network: {0}")]
-	InvalidNetwork(#[source] Box<dyn std::error::Error + Send + Sync>),
+pub enum OverlayError {
+	#[error("invalid overlay selection: {0}")]
+	InvalidOverlaySelection(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-pub enum Eth {
-	/// The local network.
-	Local,
-}
-
-impl FromStr for Eth {
-	type Err = EthError;
+impl FromStr for Overlay {
+	type Err = OverlayError;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
 		Ok(match s {
-			"local" => Self::Local,
-			network => return Err(EthError::InvalidNetwork(network.into())),
+			"local" => Self::Local(Local),
+			"faucet" => Self::Faucet(Faucet),
+			"fullnode" => Self::Fullnode(Fullnode),
+			overlay => return Err(OverlayError::InvalidOverlaySelection(overlay.into())),
 		})
 	}
 }
 
-impl Eth {
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct Local;
+
+impl Local {
 	/// Returns the overlay as a string as would be used in a nix command.
 	pub fn overlay_arg(&self) -> &str {
-		match self {
-			Self::Local => "local",
-		}
+		"local"
 	}
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-pub enum Celestia {
-	/// The local network.
-	Local,
-}
+pub struct Faucet;
 
-/// Errors thrown when parsing a [Celestia] network.
-#[derive(Debug, thiserror::Error)]
-pub enum CelestiaError {
-	#[error("invalid celestia network: {0}")]
-	InvalidNetwork(#[source] Box<dyn std::error::Error + Send + Sync>),
-}
-
-impl FromStr for Celestia {
-	type Err = CelestiaError;
-
-	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		Ok(match s {
-			"local" => Self::Local,
-			network => return Err(CelestiaError::InvalidNetwork(network.into())),
-		})
+impl Faucet {
+	/// Returns the overlay as a string as would be used in a nix command.
+	pub fn overlay_arg(&self) -> &str {
+		"faucet"
 	}
 }
 
-impl Celestia {
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct Fullnode;
+
+impl Fullnode {
 	/// Returns the overlay as a string as would be used in a nix command.
 	pub fn overlay_arg(&self) -> &str {
-		match self {
-			Self::Local => "local",
-		}
+		"fullnode"
 	}
 }
 
@@ -141,6 +123,10 @@ impl Overlays {
 	pub fn to_overlay_args(&self) -> String {
 		self.0.iter().map(|o| o.overlay_arg()).collect::<Vec<_>>().join(".")
 	}
+
+	pub fn as_vec(&self) -> Vec<Overlay> {
+		self.0.iter().cloned().collect()
+	}
 }
 
 impl From<BTreeSet<Overlay>> for Overlays {
@@ -152,8 +138,8 @@ impl From<BTreeSet<Overlay>> for Overlays {
 impl Default for Overlays {
 	fn default() -> Self {
 		Self::new(BTreeSet::new())
-			.with(Overlay::Eth(Eth::Local))
-			.with(Overlay::Celestia(Celestia::Local))
+			.with(Overlay::Local(Local))
+			.with(Overlay::Faucet(Faucet))
 	}
 }
 
@@ -199,7 +185,7 @@ pub struct Movement {
 	/// Whether to ping the faucet to ensure it is responding to pings.
 	ping_faucet: bool,
 	/// The faucet state.
-	faucet: State<Faucet>,
+	faucet: State<FaucetApi>,
 }
 
 /// Errors thrown when running [Movement].
@@ -376,8 +362,8 @@ impl Movement {
 		&self.rest_api
 	}
 
-	/// Borrows the [Faucet] state.
-	pub fn faucet(&self) -> &State<Faucet> {
+	/// Borrows the [FaucetApi] state.
+	pub fn faucet(&self) -> &State<FaucetApi> {
 		&self.faucet
 	}
 
