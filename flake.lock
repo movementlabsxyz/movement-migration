@@ -110,17 +110,17 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1750413241,
-        "narHash": "sha256-ZGxEA4Gyo8CJQWjgctJxwNo/8WHAWEkBd+tY3jVYPh4=",
+        "lastModified": 1750649187,
+        "narHash": "sha256-6h9NCsCV1XlPI/teI0VzK3N1AFKmarSKPB6Vb3LniOY=",
         "owner": "movementlabsxyz",
         "repo": "movement",
-        "rev": "ecb4dddebfdd6363af26977163c0803e57a0bbad",
+        "rev": "278863e49276f280fb7c719c5fddeb3826fe85ee",
         "type": "github"
       },
       "original": {
         "owner": "movementlabsxyz",
         "repo": "movement",
-        "rev": "ecb4dddebfdd6363af26977163c0803e57a0bbad",
+        "rev": "278863e49276f280fb7c719c5fddeb3826fe85ee",
         "type": "github"
       }
     },

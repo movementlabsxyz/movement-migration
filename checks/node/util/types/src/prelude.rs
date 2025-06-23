@@ -132,7 +132,6 @@ impl Prelude {
 			movement_executor
 				.opt_executor_mut()
 				.execute_block(block)
-				.await
 				.map_err(|e| PreludeError::Internal(e.into()))?;
 		}
 

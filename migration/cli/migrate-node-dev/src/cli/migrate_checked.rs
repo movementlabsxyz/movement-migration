@@ -1,5 +1,4 @@
 use clap::Parser;
-use futures::channel::mpsc as futures_mpsc;
 use maptos_execution_util::config::Config as MaptosConfig;
 use movement_syncing::db::DbSync;
 use mtma_node_null_core::config::Config as MtmaNullConfig;
@@ -88,7 +87,7 @@ impl MigrateChecked {
 		};
 
 		// form the executor
-		let (sender, _receiver) = futures_mpsc::channel(100);
+		let (sender, _receiver) = tokio::sync::mpsc::unbounded_channel();
 		let mut config = MaptosConfig::default();
 		config.chain.maptos_db_path = Some(db_path.clone());
 		let movement_opt_executor = MovementOptExecutor::try_from_config(config, sender).await?;

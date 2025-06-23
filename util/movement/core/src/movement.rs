@@ -1,3 +1,4 @@
+use anyhow::Context;
 use include_vendor::vendor_workspace;
 use kestrel::{
 	fulfill::{custom::Custom, Fulfill},
@@ -9,6 +10,7 @@ use std::collections::BTreeSet;
 use std::str::FromStr;
 pub mod faucet;
 pub mod rest_api;
+use movement_core_util::aptos_types::chain_id::ChainId;
 use std::path::PathBuf;
 
 use faucet::{Faucet as FaucetApi, ParseFaucet};
@@ -32,6 +34,8 @@ pub enum Overlay {
 	Faucet(Faucet),
 	/// The fullnode overlay is best used for connecting to an existing network
 	Fullnode(Fullnode),
+	/// The da squencer overlay prompts the running of the DA seqeuncer
+	DaSequencer(DaSequencer),
 }
 
 impl Overlay {
@@ -41,6 +45,7 @@ impl Overlay {
 			Self::Local(local) => local.overlay_arg(),
 			Self::Faucet(faucet) => faucet.overlay_arg(),
 			Self::Fullnode(fullnode) => fullnode.overlay_arg(),
+			Self::DaSequencer(da_sequencer) => da_sequencer.overlay_arg(),
 		}
 	}
 }
@@ -65,65 +70,109 @@ impl FromStr for Overlay {
 	}
 }
 
+/// The Local network overlay
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct Local;
 
 impl Local {
 	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
 	pub fn overlay_arg(&self) -> &str {
 		"local"
 	}
 }
 
+/// The Faucet overlay
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct Faucet;
 
 impl Faucet {
 	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
 	pub fn overlay_arg(&self) -> &str {
 		"faucet"
 	}
 }
 
+/// The Fullnode overlay (generally needed for when you aren't running a local network).
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct Fullnode;
 
 impl Fullnode {
 	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
 	pub fn overlay_arg(&self) -> &str {
 		"fullnode"
 	}
 }
 
+/// The DaSequnecer network overlay
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
+///
+/// TODO: we could add some validation of either a DaSequencer URL being available or that selection [Local] requires also selecting [DaSeqeuncer]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct DaSequencer;
+
+impl DaSequencer {
+	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
+	pub fn overlay_arg(&self) -> &str {
+		"da-sequencer"
+	}
+}
+
+/// The set of overlays which shall compose the `movement` application.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Overlays(BTreeSet<Overlay>);
 
 impl Overlays {
+	/// Forms an empty [Overlays] set.
 	pub fn empty() -> Self {
 		Self(BTreeSet::new())
 	}
 
+	/// Forms an [Overlays] set from the inner type.
 	pub fn new(overlays: BTreeSet<Overlay>) -> Self {
 		Self(overlays)
 	}
 
+	/// Adds an overlay to the set as a constructor.
 	pub fn with(mut self, overlay: Overlay) -> Self {
 		self.add(overlay);
 		self
 	}
 
+	/// Adds an overlay to the set via mutation.
 	pub fn add(&mut self, overlay: Overlay) {
 		self.0.insert(overlay);
 	}
 
+	/// Adds a new set of Overlays (union/join) via mutation
 	pub fn add_all(&mut self, overlays: BTreeSet<Overlay>) {
 		self.0.extend(overlays);
 	}
 
+	/// Gets all of the overlay args
 	pub fn to_overlay_args(&self) -> String {
 		self.0.iter().map(|o| o.overlay_arg()).collect::<Vec<_>>().join(".")
 	}
 
+	/// Converts the overlay set to a Vec<Overlay> which can be useful in type-constrainted contexts such as [clap] args.
 	pub fn as_vec(&self) -> Vec<Overlay> {
 		self.0.iter().cloned().collect()
 	}
@@ -139,7 +188,8 @@ impl Default for Overlays {
 	fn default() -> Self {
 		Self::new(BTreeSet::new())
 			.with(Overlay::Local(Local))
-			.with(Overlay::Faucet(Faucet))
+			// .with(Overlay::Faucet(Faucet))
+			.with(Overlay::DaSequencer(DaSequencer))
 	}
 }
 
@@ -282,6 +332,16 @@ impl Movement {
 	/// NOTE: for the most part, you shouldn't use this method, this is internal to the runner.
 	pub fn container_movement_config(&self) -> Result<MovementConfig, MovementError> {
 		let mut movement_config: MovementConfig = self.movement_config.clone();
+
+		// todo: we pretty much need this to support the setup that already takes place.
+		// set the maptos path
+		movement_config.execution_config.maptos_config.chain.maptos_db_path = Some(self.db_dir());
+		movement_config.da_db.allow_sync_from_zero = true;
+		movement_config.execution_config.maptos_config.da_sequencer.connection_url =
+			"http://movement-da-sequencer:30730"
+				.parse()
+				.context("failed to parse url for da sequencer")
+				.map_err(|e| MovementError::Internal(e.into()))?;
 
 		// client
 		// rename for the container runtime which uses a `movement-full-node` container
@@ -521,6 +581,11 @@ impl Movement {
 		&self.workspace.get_workspace_path()
 	}
 
+	/// Gets the chain id
+	pub fn chain_id(&self) -> ChainId {
+		self.movement_config.execution_config.maptos_config.chain.maptos_chain_id
+	}
+
 	/// Gets the db dir.
 	pub fn db_dir(&self) -> PathBuf {
 		// this is fixed for now
@@ -528,7 +593,7 @@ impl Movement {
 			.get_workspace_path()
 			.join(".movement")
 			.join("maptos")
-			.join("27")
+			.join(self.chain_id().to_string())
 			.join(".maptos")
 	}
 
@@ -580,7 +645,7 @@ mod tests {
 	async fn test_movement_starts() -> Result<(), anyhow::Error> {
 		let mut movement = Movement::try_debug_home()?;
 		let rest_api = movement.rest_api().read();
-		let faucet = movement.faucet().read();
+		// let faucet = movement.faucet().read();
 		movement.set_overlays(Overlays::default());
 
 		// start movement
@@ -592,8 +657,8 @@ mod tests {
 
 		// wait for the faucet to be ready
 
-		let faucet = faucet.wait_for(Duration::from_secs(600)).await?;
-		assert_eq!(faucet.listen_url(), "http://0.0.0.0:30732");
+		// let faucet = faucet.wait_for(Duration::from_secs(600)).await?;
+		// assert_eq!(faucet.listen_url(), "http://0.0.0.0:30732");
 
 		// stop movement
 		kestrel::end!(movement_task)?;

@@ -112,16 +112,16 @@ portpicker = "0.1.0"
 
 
 # movement
-maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-movement-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-aptos-framework-pre-l1-merge-release = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-movement-signer = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-movement-signer-loader = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
-movement-config = { git = "https://github.com/movementlabsxyz/movement.git", rev = "e6592d45495835ff2323a56090d06e4ba64f8ca2" }
+maptos-opt-executor = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+movement-client = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+syncador = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+movement-types = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+maptos-execution-util = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+movement-full-node = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+aptos-framework-pre-l1-merge-release = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+movement-signer = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+movement-signer-loader = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
+movement-config = { git = "https://github.com/movementlabsxyz/movement.git", rev = "2abf42ea1eb192b7f877a7cdc7a3365c8912789d" }
 
 # aptos-core
 aptos-executor = { git = "https://github.com/movementlabsxyz/aptos-core.git", rev = "cb3b7b02f68c7d6982257e4c59955d0e63b513db" }

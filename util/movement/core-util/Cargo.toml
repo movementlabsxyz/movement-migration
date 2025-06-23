@@ -9,10 +9,11 @@ publish = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-movement-util = { workspace = true }
+
 movement-client = { workspace = true }
 maptos-opt-executor = { workspace = true }
 movement-config = { workspace = true }
+movement-full-node = { workspace = true }
 
 [lints]
 workspace = true
