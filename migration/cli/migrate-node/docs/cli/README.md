@@ -11,8 +11,8 @@ This document contains the help content for the `mtma-migrate-node` command-line
 * [`mtma-migrate-node markdown print`↴](#mtma-migrate-node-markdown-print)
 * [`mtma-migrate-node markdown workspace`↴](#mtma-migrate-node-markdown-workspace)
 * [`mtma-migrate-node migrate`↴](#mtma-migrate-node-migrate)
-* [`mtma-migrate-node migrate where`↴](#mtma-migrate-node-migrate-where)
-* [`mtma-migrate-node migrate using`↴](#mtma-migrate-node-migrate-using)
+* [`mtma-migrate-node migrate core`↴](#mtma-migrate-node-migrate-core)
+* [`mtma-migrate-node migrate select`↴](#mtma-migrate-node-migrate-select)
 
 ## `mtma-migrate-node`
 
@@ -94,16 +94,16 @@ Migrate from Movement to MovementAptos
 
 ###### **Subcommands:**
 
-* `where` — Run migrate with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
-* `using` — Run migrate with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+* `core` — Core migration over the node
+* `select` — Select migration over the node
 
 
 
-## `mtma-migrate-node migrate where`
+## `mtma-migrate-node migrate core`
 
-Run migrate with all parameters passed explicitly as CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+Core migration over the node
 
-**Usage:** `mtma-migrate-node migrate where --movement-state-db-path <MOVEMENT_STATE_DB_PATH> --movement-aptos-state-db-path <MOVEMENT_APTOS_STATE_DB_PATH>`
+**Usage:** `mtma-migrate-node migrate core --movement-state-db-path <MOVEMENT_STATE_DB_PATH> --movement-aptos-state-db-path <MOVEMENT_APTOS_STATE_DB_PATH>`
 
 ###### **Options:**
 
@@ -112,19 +112,29 @@ Run migrate with all parameters passed explicitly as CLI flags. See Orfile docum
 
 
 
-## `mtma-migrate-node migrate using`
+## `mtma-migrate-node migrate select`
 
-Run migrate with parameters from environment variables, config files, and CLI flags. See Orfile documentation for more details: <https://github.com/movementlabsxyz/orfile>
+Select migration over the node
 
-**Usage:** `mtma-migrate-node migrate using [OPTIONS] [EXTRA_ARGS]...`
+**Usage:** `mtma-migrate-node migrate select [OPTIONS] [-- <EXTRA_ARGS>...]`
 
 ###### **Arguments:**
 
-* `<EXTRA_ARGS>` — Extra arguments to be passed to the CLI
+* `<EXTRA_ARGS>` — Extra arguments to be passed to selections
 
 ###### **Options:**
 
-* `--config-path <CONFIG_PATH>` — Path to the config file for migrate
+* `--null` — Enable the null selection
+
+**Selection (1/1):** `null`
+The config for the migration
+
+Usage: --null.*
+
+Options:
+  -h, --help  Print help (see more with '--help')
+
+
 
 
 

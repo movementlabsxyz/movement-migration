@@ -8765,8 +8765,8 @@ dependencies = [
 
 [[package]]
 name = "clap-markdown"
-version = "0.1.4"
-source = "git+https://github.com/ConnorGray/clap-markdown.git?rev=1e1ae469444604d5b9ee650232abc2d3a0fa723b#1e1ae469444604d5b9ee650232abc2d3a0fa723b"
+version = "0.1.5"
+source = "git+https://github.com/movementlabsxyz/clap-markdown.git?rev=514b18abd22d7e6bb4f40d33df35379d6ea6352c#514b18abd22d7e6bb4f40d33df35379d6ea6352c"
 dependencies = [
  "clap 4.5.36",
 ]
@@ -8774,7 +8774,7 @@ dependencies = [
 [[package]]
 name = "clap-markdown-ext"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/clap-markdown-ext.git?rev=8f54fe424504bf37fb01dc69aaed8166e429fe6a#8f54fe424504bf37fb01dc69aaed8166e429fe6a"
+source = "git+https://github.com/movementlabsxyz/clap-markdown-ext.git?rev=a4c6c00193baa50eefa214bd74b4a1d50c3255a0#a4c6c00193baa50eefa214bd74b4a1d50c3255a0"
 dependencies = [
  "anyhow",
  "cargo_metadata 0.19.2",
@@ -12777,7 +12777,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc2f4eb4bc735547cfed7c0a4922cbd04a4655978c09b54f1f7b228750664c34"
 dependencies = [
  "cfg-if",
- "windows-targets 0.52.6",
+ "windows-targets 0.48.5",
 ]
 
 [[package]]
@@ -15726,6 +15726,7 @@ dependencies = [
  "orfile",
  "rand 0.7.3",
  "serde",
+ "slect",
  "sysinfo 0.34.2",
  "tokio",
  "tracing",
@@ -16874,7 +16875,7 @@ dependencies = [
 [[package]]
 name = "orfile"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=b49cb42495816fa00a1107be5bbf41aff3a8255d#b49cb42495816fa00a1107be5bbf41aff3a8255d"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "anyhow",
  "orfile-macro",
@@ -16885,7 +16886,7 @@ dependencies = [
 [[package]]
 name = "orfile-macro"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=b49cb42495816fa00a1107be5bbf41aff3a8255d#b49cb42495816fa00a1107be5bbf41aff3a8255d"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -16896,7 +16897,7 @@ dependencies = [
 [[package]]
 name = "orfile-util"
 version = "0.0.1"
-source = "git+https://github.com/movementlabsxyz/orfile.git?rev=b49cb42495816fa00a1107be5bbf41aff3a8255d#b49cb42495816fa00a1107be5bbf41aff3a8255d"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
 dependencies = [
  "serde",
  "serde_json",
@@ -20232,6 +20233,43 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f92a496fb766b417c996b9c5e57daf2f7ad3b0bebe1ccfca4856390e3d3bb67"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "slect"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
+dependencies = [
+ "anyhow",
+ "once_cell",
+ "serde_json",
+ "slect-macro",
+ "slect-util",
+]
+
+[[package]]
+name = "slect-macro"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
+dependencies = [
+ "heck 0.4.1",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
+
+[[package]]
+name = "slect-util"
+version = "0.0.1"
+source = "git+https://github.com/movementlabsxyz/orfile.git?rev=f02851242af77791b905efc19aef6af21918fb1e#f02851242af77791b905efc19aef6af21918fb1e"
+dependencies = [
+ "clap 4.5.36",
+ "once_cell",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
 ]
 
 [[package]]
