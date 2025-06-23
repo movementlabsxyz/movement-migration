@@ -60,7 +60,10 @@ jobs:
             docker pull ${{ inputs.registry }}/${{ inputs.registry_owner }}/$container:${{ inputs.github_sha }}
             
             # Run the check
-            if ! docker run --rm ${{ inputs.registry }}/${{ inputs.registry_owner }}/$container:${{ inputs.github_sha }} $command; then
+            if ! docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -e DOCKER_HOST=unix:///var/run/docker.sock \
+              ${{ inputs.registry }}/${{ inputs.registry_owner }}/$container:${{ inputs.github_sha }} $command; then
               echo "Check failed for container: $container"
               exit 1
             fi

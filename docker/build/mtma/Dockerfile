@@ -12,11 +12,12 @@ ENV BUILD=docker
 RUN nix --extra-experimental-features "nix-command flakes" \
         develop --command bash -c "mkdir -p  /tmp/executables"
 
-# Copy celestia-appd to /tmp/executables
 RUN nix --extra-experimental-features "nix-command flakes" \
         develop --command bash -c "cp \$(which podman) /tmp/executables/podman"
 
-        # Build the Rust application
+RUN nix --extra-experimental-features "nix-command flakes" \
+        develop --command bash -c "cp \$(which docker) /tmp/executables/docker"
+
 RUN nix --extra-experimental-features "nix-command flakes" \
         develop .#docker-build --command bash -c "cargo build --release --bin mtma"
 
@@ -44,15 +45,16 @@ COPY --from=builder /nix/store /nix/store
 
 # copy executables
 COPY --from=builder /tmp/executables/podman /usr/local/bin/podman
+COPY --from=builder /tmp/executables/docker /usr/local/bin/docker
 
 # Environment setup
 ENV PATH="/nix/var/nix/profiles/default/bin:$PATH"
 ENV XDG_RUNTIME_DIR="/run/user/1000"
 ENV TMPDIR="/tmp"
-ENV DOCKER_HOST="unix:///run/user/1000/podman/podman-machine-default-api.sock"
+# DOCKER_HOST will be set at runtime or passed in via environment
 
 # Create required runtime dirs with proper ownership
-RUN mkdir -p /run/user/1000/podman && \
+RUN mkdir -p /run/user/1000 && \
     chown -R mtma:mtma /run/user/1000 /app /nix
 
 # Copy runtime bootstrap script
