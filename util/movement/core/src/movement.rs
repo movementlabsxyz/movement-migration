@@ -610,22 +610,28 @@ impl Movement {
 
 impl Drop for Movement {
 	fn drop(&mut self) {
+		std::env::set_var("CONTAINER_REV", movement_core_util::CONTAINER_REV);
 		// run docker compose down on workspace path
 		info!("Dropping movement");
 		let workspace_path = self.workspace_path();
 		info!("Workspace path: {:?}", workspace_path);
-		let result = std::process::Command::new("docker")
-			.arg("compose")
-			.arg("-f")
-			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.yml"))
-			.arg("-f")
-			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.local.yml"))
+		let overlays = self.overlays.as_vec();
+		let mut command = std::process::Command::new("docker");
+		command.arg("compose");
+		command.arg("-f").arg("docker/compose/movement-full-node/docker-compose.yml");
+		for overlay in overlays {
+			let overlay_arg = overlay.overlay_arg();
+			let compose_file = workspace_path.join(format!(
+				"docker/compose/movement-full-node/docker-compose.{}.yml",
+				overlay_arg
+			));
+			command.arg("-f").arg(compose_file);
+		}
+		command
 			.arg("down")
 			.env("DOT_MOVEMENT_PATH", workspace_path.join(".movement"))
-			.current_dir(workspace_path)
-			.output()
-			.map_err(|e| MovementError::Internal(e.into()))
-			.unwrap();
+			.current_dir(workspace_path);
+		let result = command.output().map_err(|e| MovementError::Internal(e.into())).unwrap();
 
 		info!("Docker compose down result: {:?}", result);
 

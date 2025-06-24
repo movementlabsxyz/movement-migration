@@ -15842,7 +15842,6 @@ dependencies = [
  "clap 4.5.36",
  "clap-markdown-ext",
  "dotenv",
- "futures",
  "jemallocator",
  "maptos-execution-util",
  "movement-syncing",
@@ -16046,7 +16045,6 @@ name = "mtma-node-checks-mainnet"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "futures",
  "maptos-execution-util",
  "movement-syncing",
  "mtma-node-null-core",
@@ -16173,7 +16171,6 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "either",
- "futures-channel",
  "maptos-opt-executor",
  "movement-aptos-core",
  "movement-full-node",

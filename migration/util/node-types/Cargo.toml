@@ -15,7 +15,6 @@ thiserror = { workspace = true }
 either = { workspace = true }
 tracing = { workspace = true }
 movement-aptos-core = { workspace = true }
-futures-channel = { workspace = true }
 
 uuid = { workspace = true }
 walkdir = { workspace = true }

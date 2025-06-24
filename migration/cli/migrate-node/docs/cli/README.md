@@ -145,7 +145,8 @@ Usage: --environment-box.* [OPTIONS] --rest-api-url <REST_API_URL> --db-dir <DB_
 Options:
       --rest-api-url <REST_API_URL>  The rest api url of the box environment
       --db-dir <DB_DIR>              The db dir of the box environment
-      --snapshot-dir <SNAPSHOT_DIR>  Whether to isolate the box environment by snapshotting the movement runner and where to store the snapshot
+      --snapshot-dir <SNAPSHOT_DIR>  Whether to isolate the box environment by snapshotting the movement runner and where to
+                                     store the snapshot
   -h, --help                         Print help (see more with '--help')
 
 **Selection (3/4):** `environment-provisioner`
