@@ -8,3 +8,4 @@ debug
 .DS_Store
 .vendors
 .vendor
+*.log

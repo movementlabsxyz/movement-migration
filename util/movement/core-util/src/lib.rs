@@ -1,10 +1,10 @@
 pub use maptos_opt_executor::{self, *};
 pub use movement_client::{self, *};
 pub use movement_config;
-pub use movement_util::{self, *};
+pub use movement_full_node::{self, *};
 
 pub const CONTAINER_REPO: &str = "ghcr.io/movementlabsxyz";
-pub const CONTAINER_REV: &str = "c2372ff";
+pub const CONTAINER_REV: &str = "278863e";
 
 #[derive(Debug, Clone)]
 pub struct Container<'a> {
@@ -23,20 +23,7 @@ impl<'a> Container<'a> {
 	}
 }
 
-//   "movement-full-node"
-// "movement-celestia-da-light-node"
-// "movement-full-node-setup"
-// "movement-faucet-service"
-// "movement-celestia-bridge"
-// "movement-celestia-appd"
-// "wait-for-celestia-light-node"
-
 pub const CONTAINERS: &[Container] = &[
 	Container { repo: CONTAINER_REPO, name: "movement-full-node", rev: CONTAINER_REV },
-	Container { repo: CONTAINER_REPO, name: "movement-celestia-da-light-node", rev: CONTAINER_REV },
-	Container { repo: CONTAINER_REPO, name: "movement-full-node-setup", rev: CONTAINER_REV },
 	Container { repo: CONTAINER_REPO, name: "movement-faucet-service", rev: CONTAINER_REV },
-	Container { repo: CONTAINER_REPO, name: "movement-celestia-bridge", rev: CONTAINER_REV },
-	Container { repo: CONTAINER_REPO, name: "movement-celestia-appd", rev: CONTAINER_REV },
-	Container { repo: CONTAINER_REPO, name: "wait-for-celestia-light-node", rev: CONTAINER_REV },
 ];

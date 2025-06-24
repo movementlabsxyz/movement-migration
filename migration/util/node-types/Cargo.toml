@@ -15,12 +15,13 @@ thiserror = { workspace = true }
 either = { workspace = true }
 tracing = { workspace = true }
 movement-aptos-core = { workspace = true }
-futures-channel = { workspace = true }
-movement-util = { workspace = true }
+
 uuid = { workspace = true }
 walkdir = { workspace = true }
 mtma-types = { workspace = true }
 mtma-util = { workspace = true }
+movement-full-node = { workspace = true }
+tokio = { workspace = true }
 
 [dev-dependencies]
 tempfile = { workspace = true }

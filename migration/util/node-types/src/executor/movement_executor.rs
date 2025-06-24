@@ -1,7 +1,7 @@
 use anyhow::Context;
 use either::Either;
 pub use maptos_opt_executor::Executor as MovementOptExecutor;
-use movement_util::common_args::MovementArgs;
+use movement_full_node::common_args::MovementArgs;
 use mtma_types::movement::aptos_crypto::HashValue;
 use mtma_types::movement::aptos_storage_interface::state_view::DbStateView;
 use mtma_types::movement::aptos_storage_interface::DbReader;
@@ -113,7 +113,7 @@ impl MovementNode {
 
 		info!("maptos config: {:?}", maptos_config);
 
-		let (sender, _receiver) = futures_channel::mpsc::channel(1024);
+		let (sender, _receiver) = tokio::sync::mpsc::unbounded_channel();
 		let opt_executor = MovementOptExecutor::try_from_config(maptos_config, sender)
 			.await
 			.context("failed to create movement opt executor")?;

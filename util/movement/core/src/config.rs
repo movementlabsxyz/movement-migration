@@ -1,4 +1,4 @@
-use crate::movement::{Celestia, Eth, Movement, MovementWorkspace, Overlay, Overlays};
+use crate::movement::{Movement, MovementWorkspace, Overlay, Overlays};
 use clap::Parser;
 use jsonlvar::Jsonl;
 use movement_signer_loader::identifiers::SignerIdentifier;
@@ -23,21 +23,15 @@ pub struct Config {
 	/// Whether to use the setup overlay.
 	#[clap(long)]
 	pub setup: bool,
-	/// Which celestia network to use.
-	#[clap(long)]
-	pub celestia: Celestia,
-	/// Which ethereum network to use.
-	#[clap(long)]
-	pub eth: Eth,
-	/// Whether to use the BiarritizRc1ToPreL1Merge overlay.
-	#[clap(long)]
-	pub biarritz_rc1_to_pre_l1_merge: bool,
 	/// Whether to ping the rest api to ensure it is responding to pings.
 	#[clap(long)]
 	pub ping_rest_api: bool,
 	/// Whether to ping the faucet to ensure it is responding to pings.
 	#[clap(long)]
 	pub ping_faucet: bool,
+	/// Overlays
+	#[clap(long)]
+	pub overlays: Vec<Overlay>,
 }
 
 impl Config {
@@ -63,16 +57,7 @@ impl Config {
 
 	/// Computes the overlays for the movement runner.
 	pub fn overlays(&self) -> Overlays {
-		let mut overlays = Overlays::empty();
-
-		overlays.add(Overlay::Celestia(self.celestia));
-		overlays.add(Overlay::Eth(self.eth));
-
-		if self.biarritz_rc1_to_pre_l1_merge {
-			overlays.add(Overlay::TestMigrateBiarritzRc1ToPreL1Merge);
-		}
-
-		overlays
+		Overlays::new(self.overlays.iter().cloned().collect())
 	}
 
 	/// Builds the config into a [Movement] runner.

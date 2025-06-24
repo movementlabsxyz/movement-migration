@@ -16,7 +16,6 @@ mtma-node-test-global-storage-includes-criterion = { workspace = true }
 movement-syncing = { workspace = true }
 maptos-execution-util = { workspace = true }
 tokio = { workspace = true }
-futures = { workspace = true }
 sysinfo = { workspace = true }
 tracing = { workspace = true }
 

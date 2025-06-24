@@ -4,7 +4,7 @@
     rust-overlay.url = "github:oxalica/rust-overlay/47beae969336c05e892e1e4a9dbaac9593de34ab";
     flake-utils.url = "github:numtide/flake-utils";
     crane.url = "github:ipetkov/crane";
-    movement.url = "github:movementlabsxyz/movement/aa1ffed1a113441a65662792d15682ad52406108";
+    movement.url = "github:movementlabsxyz/movement/278863e49276f280fb7c719c5fddeb3826fe85ee";
   };
 
   outputs = { nixpkgs, rust-overlay, flake-utils, crane, movement, ... }:
@@ -127,27 +127,41 @@
                 export CPPFLAGS="-I/opt/homebrew/opt/zlib/include"
               fi
 
-              # Check if podman machine exists and is running
-              if [ "$BUILD" != "docker" ]; then
-                if ! podman machine inspect podman-machine-default &>/dev/null; then
-                  echo "Initializing podman machine..."
-                  podman machine init
-                  podman machine start
-                elif ! podman machine inspect podman-machine-default --format '{{.State}}' | grep -q 'running'; then
-                  echo "Starting podman machine..."
-                  podman machine start
+              # Always force recreation of the podman machine
+              if podman machine inspect podman-machine-default &>/dev/null; then
+                echo "Destroying existing podman machine..."
+                if ! podman machine stop podman-machine-default 2>podman_stop_err.log; then
+                  echo "podman machine stop failed. Error output:" >&2
+                  cat podman_stop_err.log >&2
                 fi
+                if ! podman machine rm podman-machine-default -f 2>podman_rm_err.log; then
+                  echo "podman machine rm failed. Error output:" >&2
+                  cat podman_rm_err.log >&2
+                  exit 1
+                fi
+              fi
 
-                # Find the actual podman socket location
-                PODMAN_SOCKET=$(find /tmp/nix-shell.*/podman -name "podman-machine-default-api.sock" -type s 2>/dev/null | head -n 1)
-                if [ -n "$PODMAN_SOCKET" ]; then
-                  export DOCKER_HOST="unix://$PODMAN_SOCKET"
-                  echo "Set DOCKER_HOST to Podman socket: $DOCKER_HOST"
-                else
-                  echo "Warning: Could not find Podman socket"
-                fi
-              else 
-                echo "Build is docker podman will not be started."
+              echo "Initializing podman machine..."
+              if ! podman machine init 2>podman_init_err.log; then
+                echo "podman machine init failed. Error output:" >&2
+                cat podman_init_err.log >&2
+                exit 1
+              fi
+              if ! podman machine start 2>podman_start_err.log; then
+                echo "podman machine start failed. Error output:" >&2
+                cat podman_start_err.log >&2
+                exit 1
+              fi
+
+              echo "Podman machine is running"
+
+              # Find the actual podman socket location
+              PODMAN_SOCKET=$(find /tmp/nix-shell.*/podman -name "podman-machine-default-api.sock" -type s 2>/dev/null | head -n 1)
+              if [ -n "$PODMAN_SOCKET" ]; then
+                export DOCKER_HOST="unix://$PODMAN_SOCKET"
+                echo "Set DOCKER_HOST to Podman socket: $DOCKER_HOST"
+              else
+                echo "Warning: Could not find Podman socket"
               fi
 
               # Add ./target/debug/* to PATH

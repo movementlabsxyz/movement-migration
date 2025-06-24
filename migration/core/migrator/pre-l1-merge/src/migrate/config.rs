@@ -4,10 +4,7 @@ use aptos_framework_pre_l1_merge_release::maptos_framework_release_util::{
 	LocalAccountReleaseSigner, OverrideAccountAddressReleaseSigner,
 };
 use clap::Parser;
-use movement_core::{
-	movement::{Celestia, Eth},
-	Config as MovementCoreConfig,
-};
+use movement_core::{Config as MovementCoreConfig, Overlays};
 use mtma_node_null_core::Config as MtmaNodeNullConfig;
 use mtma_types::movement::aptos_sdk::types::{
 	account_address::AccountAddress, account_config::aptos_test_root_address, LocalAccount,
@@ -46,9 +43,7 @@ impl Default for Config {
 		let mut movement_core = MovementCoreConfig {
 			movement_config_string: None,
 			setup: false,
-			celestia: Celestia::Local,
-			eth: Eth::Local,
-			biarritz_rc1_to_pre_l1_merge: false,
+			overlays: Overlays::default().as_vec(),
 			ping_rest_api: false,
 			ping_faucet: false,
 		};

@@ -1,3 +1,4 @@
+use anyhow::Context;
 use include_vendor::vendor_workspace;
 use kestrel::{
 	fulfill::{custom::Custom, Fulfill},
@@ -9,9 +10,10 @@ use std::collections::BTreeSet;
 use std::str::FromStr;
 pub mod faucet;
 pub mod rest_api;
+use movement_core_util::aptos_types::chain_id::ChainId;
 use std::path::PathBuf;
 
-use faucet::{Faucet, ParseFaucet};
+use faucet::{Faucet as FaucetApi, ParseFaucet};
 use movement_signer_loader::identifiers::SignerIdentifier;
 use mtma_types::movement::movement_config::Config as MovementConfig;
 use rest_api::{ParseRestApi, RestApi};
@@ -26,120 +28,153 @@ vendor_workspace!(MovementWorkspace, "movement");
 /// The different overlays that can be applied to the movement runner. s
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub enum Overlay {
-	/// The celestia overlay is used to run the movement runner on a select Celestia network.
-	Celestia(Celestia),
-	/// The eth overlay is used to run the movement runner on a select Ethereum network.
-	Eth(Eth),
-	/// The test migration overlay is used to run and check the migration to the L1 pre-merge chain.
-	///
-	/// TODO: in this repo, we may want to remove this from the runner and place it actual embeeded code under the -core lib for https://github.com/movementlabsxyz/movement-migration/issues/61
-	TestMigrateBiarritzRc1ToPreL1Merge,
+	/// The local overlay takes care of setting up the DA sequencer and the full nodd
+	Local(Local),
+	/// The faucet overlay adds the faucet to whatever orchestration
+	Faucet(Faucet),
+	/// The fullnode overlay is best used for connecting to an existing network
+	Fullnode(Fullnode),
+	/// The da squencer overlay prompts the running of the DA seqeuncer
+	DaSequencer(DaSequencer),
 }
 
 impl Overlay {
 	/// Returns the overlay as a string as would be used in a nix command.
 	pub fn overlay_arg(&self) -> &str {
 		match self {
-			Self::Celestia(celestia) => celestia.overlay_arg(),
-			Self::Eth(eth) => eth.overlay_arg(),
-			Self::TestMigrateBiarritzRc1ToPreL1Merge => "test-migrate-biarritz-rc1-to-pre-l1-merge",
+			Self::Local(local) => local.overlay_arg(),
+			Self::Faucet(faucet) => faucet.overlay_arg(),
+			Self::Fullnode(fullnode) => fullnode.overlay_arg(),
+			Self::DaSequencer(da_sequencer) => da_sequencer.overlay_arg(),
 		}
 	}
 }
 
-/// Errors thrown when parsing an [Eth] network.
+/// Errors thrown when parsing an [Overlay] network.
 #[derive(Debug, thiserror::Error)]
-pub enum EthError {
-	#[error("invalid ethereum network: {0}")]
-	InvalidNetwork(#[source] Box<dyn std::error::Error + Send + Sync>),
+pub enum OverlayError {
+	#[error("invalid overlay selection: {0}")]
+	InvalidOverlaySelection(#[source] Box<dyn std::error::Error + Send + Sync>),
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-pub enum Eth {
-	/// The local network.
-	Local,
-}
-
-impl FromStr for Eth {
-	type Err = EthError;
+impl FromStr for Overlay {
+	type Err = OverlayError;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
 		Ok(match s {
-			"local" => Self::Local,
-			network => return Err(EthError::InvalidNetwork(network.into())),
+			"local" => Self::Local(Local),
+			"faucet" => Self::Faucet(Faucet),
+			"fullnode" => Self::Fullnode(Fullnode),
+			overlay => return Err(OverlayError::InvalidOverlaySelection(overlay.into())),
 		})
 	}
 }
 
-impl Eth {
-	/// Returns the overlay as a string as would be used in a nix command.
-	pub fn overlay_arg(&self) -> &str {
-		match self {
-			Self::Local => "local",
-		}
-	}
-}
-
+/// The Local network overlay
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
-pub enum Celestia {
-	/// The local network.
-	Local,
-}
+pub struct Local;
 
-/// Errors thrown when parsing a [Celestia] network.
-#[derive(Debug, thiserror::Error)]
-pub enum CelestiaError {
-	#[error("invalid celestia network: {0}")]
-	InvalidNetwork(#[source] Box<dyn std::error::Error + Send + Sync>),
-}
-
-impl FromStr for Celestia {
-	type Err = CelestiaError;
-
-	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		Ok(match s {
-			"local" => Self::Local,
-			network => return Err(CelestiaError::InvalidNetwork(network.into())),
-		})
-	}
-}
-
-impl Celestia {
+impl Local {
 	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
 	pub fn overlay_arg(&self) -> &str {
-		match self {
-			Self::Local => "local",
-		}
+		"local"
 	}
 }
 
+/// The Faucet overlay
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct Faucet;
+
+impl Faucet {
+	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
+	pub fn overlay_arg(&self) -> &str {
+		"faucet"
+	}
+}
+
+/// The Fullnode overlay (generally needed for when you aren't running a local network).
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct Fullnode;
+
+impl Fullnode {
+	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
+	pub fn overlay_arg(&self) -> &str {
+		"fullnode"
+	}
+}
+
+/// The DaSequnecer network overlay
+///
+/// Note: we are using a struct for this at the moment as this may benefit from being parameterized.
+///
+/// TODO: we could add some validation of either a DaSequencer URL being available or that selection [Local] requires also selecting [DaSeqeuncer]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct DaSequencer;
+
+impl DaSequencer {
+	/// Returns the overlay as a string as would be used in a nix command.
+	///
+	/// NOTE: in theory, this could be multiple "."-separated overlays if there are certain overlays which, under parameterization, must be run to support this.
+	/// Such was the case at several points in the past.
+	pub fn overlay_arg(&self) -> &str {
+		"da-sequencer"
+	}
+}
+
+/// The set of overlays which shall compose the `movement` application.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Overlays(BTreeSet<Overlay>);
 
 impl Overlays {
+	/// Forms an empty [Overlays] set.
 	pub fn empty() -> Self {
 		Self(BTreeSet::new())
 	}
 
+	/// Forms an [Overlays] set from the inner type.
 	pub fn new(overlays: BTreeSet<Overlay>) -> Self {
 		Self(overlays)
 	}
 
+	/// Adds an overlay to the set as a constructor.
 	pub fn with(mut self, overlay: Overlay) -> Self {
 		self.add(overlay);
 		self
 	}
 
+	/// Adds an overlay to the set via mutation.
 	pub fn add(&mut self, overlay: Overlay) {
 		self.0.insert(overlay);
 	}
 
+	/// Adds a new set of Overlays (union/join) via mutation
 	pub fn add_all(&mut self, overlays: BTreeSet<Overlay>) {
 		self.0.extend(overlays);
 	}
 
+	/// Gets all of the overlay args
 	pub fn to_overlay_args(&self) -> String {
 		self.0.iter().map(|o| o.overlay_arg()).collect::<Vec<_>>().join(".")
+	}
+
+	/// Converts the overlay set to a Vec<Overlay> which can be useful in type-constrainted contexts such as [clap] args.
+	pub fn as_vec(&self) -> Vec<Overlay> {
+		self.0.iter().cloned().collect()
 	}
 }
 
@@ -152,8 +187,9 @@ impl From<BTreeSet<Overlay>> for Overlays {
 impl Default for Overlays {
 	fn default() -> Self {
 		Self::new(BTreeSet::new())
-			.with(Overlay::Eth(Eth::Local))
-			.with(Overlay::Celestia(Celestia::Local))
+			.with(Overlay::Local(Local))
+			// .with(Overlay::Faucet(Faucet))
+			.with(Overlay::DaSequencer(DaSequencer))
 	}
 }
 
@@ -199,7 +235,7 @@ pub struct Movement {
 	/// Whether to ping the faucet to ensure it is responding to pings.
 	ping_faucet: bool,
 	/// The faucet state.
-	faucet: State<Faucet>,
+	faucet: State<FaucetApi>,
 }
 
 /// Errors thrown when running [Movement].
@@ -297,6 +333,16 @@ impl Movement {
 	pub fn container_movement_config(&self) -> Result<MovementConfig, MovementError> {
 		let mut movement_config: MovementConfig = self.movement_config.clone();
 
+		// todo: we pretty much need this to support the setup that already takes place.
+		// set the maptos path
+		movement_config.execution_config.maptos_config.chain.maptos_db_path = Some(self.db_dir());
+		movement_config.da_db.allow_sync_from_zero = true;
+		movement_config.execution_config.maptos_config.da_sequencer.connection_url =
+			"http://movement-da-sequencer:30730"
+				.parse()
+				.context("failed to parse url for da sequencer")
+				.map_err(|e| MovementError::Internal(e.into()))?;
+
 		// client
 		// rename for the container runtime which uses a `movement-full-node` container
 		movement_config
@@ -376,8 +422,8 @@ impl Movement {
 		&self.rest_api
 	}
 
-	/// Borrows the [Faucet] state.
-	pub fn faucet(&self) -> &State<Faucet> {
+	/// Borrows the [FaucetApi] state.
+	pub fn faucet(&self) -> &State<FaucetApi> {
 		&self.faucet
 	}
 
@@ -535,6 +581,11 @@ impl Movement {
 		&self.workspace.get_workspace_path()
 	}
 
+	/// Gets the chain id
+	pub fn chain_id(&self) -> ChainId {
+		self.movement_config.execution_config.maptos_config.chain.maptos_chain_id
+	}
+
 	/// Gets the db dir.
 	pub fn db_dir(&self) -> PathBuf {
 		// this is fixed for now
@@ -542,7 +593,7 @@ impl Movement {
 			.get_workspace_path()
 			.join(".movement")
 			.join("maptos")
-			.join("27")
+			.join(self.chain_id().to_string())
 			.join(".maptos")
 	}
 
@@ -559,22 +610,28 @@ impl Movement {
 
 impl Drop for Movement {
 	fn drop(&mut self) {
+		std::env::set_var("CONTAINER_REV", movement_core_util::CONTAINER_REV);
 		// run docker compose down on workspace path
 		info!("Dropping movement");
 		let workspace_path = self.workspace_path();
 		info!("Workspace path: {:?}", workspace_path);
-		let result = std::process::Command::new("docker")
-			.arg("compose")
-			.arg("-f")
-			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.yml"))
-			.arg("-f")
-			.arg(workspace_path.join("docker/compose/movement-full-node/docker-compose.local.yml"))
+		let overlays = self.overlays.as_vec();
+		let mut command = std::process::Command::new("docker");
+		command.arg("compose");
+		command.arg("-f").arg("docker/compose/movement-full-node/docker-compose.yml");
+		for overlay in overlays {
+			let overlay_arg = overlay.overlay_arg();
+			let compose_file = workspace_path.join(format!(
+				"docker/compose/movement-full-node/docker-compose.{}.yml",
+				overlay_arg
+			));
+			command.arg("-f").arg(compose_file);
+		}
+		command
 			.arg("down")
 			.env("DOT_MOVEMENT_PATH", workspace_path.join(".movement"))
-			.current_dir(workspace_path)
-			.output()
-			.map_err(|e| MovementError::Internal(e.into()))
-			.unwrap();
+			.current_dir(workspace_path);
+		let result = command.output().map_err(|e| MovementError::Internal(e.into())).unwrap();
 
 		info!("Docker compose down result: {:?}", result);
 
@@ -594,7 +651,7 @@ mod tests {
 	async fn test_movement_starts() -> Result<(), anyhow::Error> {
 		let mut movement = Movement::try_debug_home()?;
 		let rest_api = movement.rest_api().read();
-		let faucet = movement.faucet().read();
+		// let faucet = movement.faucet().read();
 		movement.set_overlays(Overlays::default());
 
 		// start movement
@@ -606,8 +663,8 @@ mod tests {
 
 		// wait for the faucet to be ready
 
-		let faucet = faucet.wait_for(Duration::from_secs(600)).await?;
-		assert_eq!(faucet.listen_url(), "http://0.0.0.0:30732");
+		// let faucet = faucet.wait_for(Duration::from_secs(600)).await?;
+		// assert_eq!(faucet.listen_url(), "http://0.0.0.0:30732");
 
 		// stop movement
 		kestrel::end!(movement_task)?;
