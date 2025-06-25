@@ -31,7 +31,8 @@ members = [
     "util/movement/*",
     "util/movement-aptos/*",
     "util/bcs-ext",
-    "util/types"
+    "util/types",
+    "util/util"
 
 ]
 
@@ -149,8 +150,8 @@ include-vendor = { git = "https://github.com/movementlabsxyz/kestrel.git", rev =
 ready-docker = { git = "https://github.com/movementlabsxyz/kestrel.git", rev = "3220d704df7e06d1dcc5266e15eaf05db86fdb07" }
 
 # orfile
-orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "f02851242af77791b905efc19aef6af21918fb1e" }
-slect = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "f02851242af77791b905efc19aef6af21918fb1e" }
+orfile = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac" }
+select = { git = "https://github.com/movementlabsxyz/orfile.git", rev = "e3279f2fe4a9bafe1197e4d4f1c769d7255b94ac" }
 
 # docs
 clap-markdown-ext = { git = "https://github.com/movementlabsxyz/clap-markdown-ext.git", rev = "a4c6c00193baa50eefa214bd74b4a1d50c3255a0" }
@@ -215,6 +216,7 @@ movement-aptos = { path = "util/movement-aptos/movement-aptos" }
 movement-aptos-core = { path = "util/movement-aptos/core" }
 movement-aptos-core-util = { path = "util/movement-aptos/core-util" }
 mtma-types = { path = "util/types" }
+mtma-util = { path = "util/util" }
 
 ## Environments
 ### util
