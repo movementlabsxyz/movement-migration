@@ -21,7 +21,7 @@ jemallocator = { workspace = true }
 mtma-node-null-core = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
-slect = { workspace = true }
+select = { workspace = true }
 mtma-testing-environment = { workspace = true }
 mtma-box-environment = { workspace = true }
 mtma-provisioner-environment = { workspace = true }
